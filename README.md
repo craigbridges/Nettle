@@ -1,5 +1,5 @@
 # Nettle
-Nettle is a .NET Templating Language (.**Net**-**t**emplating-**l**anguage**e**) designed as a lightweight solution to solving content rendering problems faced in .NET applications.
+Nettle is a .NET Templating Language (.**_Net_**-**_T_**emplating-**_L_**anguag**_E_**) designed as a lightweight solution to solving content rendering problems faced in .NET applications.
 
 Using Nettle is simple, there are just 5 core areas to learn:
 
@@ -18,7 +18,7 @@ Nested properties are also supported:
 
 # Iteration
 
-For each loops are supported on any pointer that is of type IEnumerable. The syntax for a for each loop is as follows:
+For each loops are supported with any pointer that is of type IEnumerable. The syntax of a for each loop is as follows:
 
 ```
 {{foreach RoleAssignments}}
@@ -47,7 +47,7 @@ Nested for loops are also supported:
 
 # Selection
 
-If statements are supported on any pointer that is either of type bool or can be resolved as true or false. The syntax for an if statement is as follows:
+If statements are supported with any pointer that is either of type bool or can be resolved as true or false. The syntax for an if statement is as follows:
 
 ```
 {{if Active}}
@@ -69,18 +69,23 @@ Nested if statements are also supported:
 
 # Functions
 
-Functions can take zero or more parameters, which can be a string, number or a pointer. The syntax for a function is as follows:
+Functions can take zero or more parameters, which can be a string, number, pointer or variable. The syntax for a function is as follows:
 
 ```
 @Truncate("Hello World!", 5)
 ```
 
-This would return the result "Hello", which would be printed in place of the function.
+Which would generate:
+
+```
+Hello
+```
 
 There are various built in functions, these are:
 
 - @Truncate(Text, Length)
-- Encode
+- @Replace(OriginalText, FindText, ReplaceText)
+- @HtmlEncode(Text)
 
 # Variables
 
