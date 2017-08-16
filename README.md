@@ -1,5 +1,5 @@
 # Nettle
-Nettle is a .NET Templating Language (.**_Net_**-**_T_**emplating-**_L_**anguag**_E_**) designed as a lightweight solution to solving content rendering problems faced in .NET applications.
+Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguag**_E_**) designed as a lightweight solution to solving content rendering problems faced in .NET applications.
 
 Using Nettle is simple, there are just 5 core areas to learn:
 
