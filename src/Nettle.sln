@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle", "Nettle\Nettle.csproj", "{6D2A6A46-FEE4-4DC4-89DC-314808A89050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Tests", "Nettle.Tests\Nettle.Tests.csproj", "{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
