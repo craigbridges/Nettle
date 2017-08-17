@@ -8,7 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Nettle.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Craig Bridges")]
 [assembly: AssemblyProduct("Nettle.Tests")]
+[assembly: AssemblyCopyright("Copyright © Craig Bridges 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -1,0 +1,15 @@
+Change pointers to model bindings
+
+Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
+
+Create interface for IFunctionRepository with default implementation with built in functions but consider DI for extending.
+
+Use RegEx to parse things like {{if X}}Y{{endif}} etc so we don't need so much validation and can easily handle no line breaks.
+
+When compiling template, create a sort if tree structure that contains all the resolvable things and nested content blocks.
+
+Variables can only be used after declared/assigned so only resolve as we get to them - but validate during compilation.
+
+Validation - check for invalid references to properties or variables that don't exist.
+
+Store start and end coordinates for all blocks of code and content so they can easily be found and replaced. N.b. once one is the replace, the coordinates of anything after it will change so need to update everything after.
