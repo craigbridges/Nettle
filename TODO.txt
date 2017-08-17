@@ -1,5 +1,3 @@
-Change pointers to model bindings
-
 Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
 
 Create interface for IFunctionRepository with default implementation with built in functions but consider DI for extending.
@@ -13,3 +11,5 @@ Variables can only be used after declared/assigned so only resolve as we get to 
 Validation - check for invalid references to properties or variables that don't exist.
 
 Store start and end coordinates for all blocks of code and content so they can easily be found and replaced. N.b. once one is the replace, the coordinates of anything after it will change so need to update everything after.
+
+Need some sort of context/pipeline/stack while parsing to keep track of what is happening

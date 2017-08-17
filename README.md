@@ -1,7 +1,11 @@
 # Nettle
-Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguag**_E_**) engine designed as a lightweight solution to solving content rendering problems faced in .NET applications.
+Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguag**_E_**) engine designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
 
-Using Nettle is simple, there are just 5 core areas to learn:
+- Generating web pages for content management systems
+- Generating emails or notifications
+- Generating XML or CSV exports
+
+Using Nettle is simple, there are just 5 core concepts to learn:
 
 ### Model Bindings
 These are essentially the properties contained in the model. A string representation of the properties value will replace the pointer. The syntax for a model binding is as follows:
