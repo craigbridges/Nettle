@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,8 +50,15 @@
     <Compile Include="Functions\FunctionParameter.cs" />
     <Compile Include="Functions\FunctionParameterConfiguration.cs" />
     <Compile Include="Functions\IFunction.cs" />
+    <Compile Include="Functions\HtmlEncodeFunction.cs" />
+    <Compile Include="Functions\IFunctionRepository.cs" />
+    <Compile Include="Functions\ReplaceFunction.cs" />
+    <Compile Include="Functions\SimpleFunctionRepository.cs" />
     <Compile Include="Functions\TruncateFunction.cs" />
     <Compile Include="INettleCompiler.cs" />
+    <Compile Include="Parsing\ForEachLoop.cs" />
+    <Compile Include="Parsing\IfCondition.cs" />
+    <Compile Include="Parsing\VariableDeclaration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateModel.cs" />
   </ItemGroup>

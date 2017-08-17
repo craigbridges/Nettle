@@ -256,7 +256,10 @@
                 string alternative
             )
         {
-            return (String.IsNullOrEmpty(input) == false) ? input : alternative;
+            return 
+            (
+                (String.IsNullOrEmpty(input) == false) ? input : alternative
+            );
         }
 
         /// <summary>

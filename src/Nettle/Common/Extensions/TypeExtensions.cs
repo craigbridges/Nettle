@@ -181,16 +181,18 @@
         /// Determines if the type specified is an enumerable type
         /// </summary>
         /// <param name="type">The type to check</param>
+        /// <param name="acceptStrings">If true, string types will resolve to true</param>
         /// <returns>True, if the type is enumerable; otherwise false</returns>
         /// <remarks>
         /// All enumerable types are allowed, except for string
         /// </remarks>
         public static bool IsEnumerable
             (
-                this Type type
+                this Type type,
+                bool acceptStrings = true
             )
         {
-            if (type == typeof(string))
+            if (false == acceptStrings && type == typeof(string))
             {
                 return false;
             }

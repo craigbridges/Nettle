@@ -1,5 +1,7 @@
+![Alt text](Logo.png "Nettle")
+
 # Nettle
-Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguag**_E_**) engine designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
+Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguage **_E_**ngine) designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
 
 - Generating web pages for content management systems
 - Generating emails or notifications
@@ -8,7 +10,7 @@ Nettle is a .NET Templating Language (.**_NET_**-**_T_**emplating-**_L_**anguag*
 Using Nettle is simple, there are just 5 core concepts to learn:
 
 ### Model Bindings
-These are essentially the properties contained in the model. A string representation of the properties value will replace the pointer. The syntax for a model binding is as follows:
+These are essentially the properties contained in the model. A string representation of the properties value will replace the binding place holder. The syntax for a model binding is as follows:
 
 ```
 {{Name}}
@@ -22,7 +24,7 @@ Nested properties are also supported:
 
 ### Functions
 
-Functions can take zero or more parameters, which can be a string literal, number, property or variable. The syntax for a function is as follows:
+Functions can take zero or more parameters, which can be a string literal, number, property or variable. The syntax for a function is:
 
 ```
 @Truncate("Hello World!", 5)
@@ -42,7 +44,7 @@ There are various built in functions, these are:
 
 ### Variables
 
-The value of a property or the result of a function can be assigned to a variable. This gets added to the model and can then be used further down the template. The syntax for a variable declaration and assignment is as follows:
+The value of a property or the result of a function can be assigned to a variable. This gets added to the model and can then be used further down the template. The syntax for a variable declaration and assignment is:
 
 ```
 {{var truncatedText = @Truncate("Here is some text to truncate.", 10)}}
@@ -58,7 +60,7 @@ Here is so
 
 ### Iterators
 
-For each loops are supported with any property or variable that is of type IEnumerable. The syntax of a for each loop is as follows:
+_For each_ loops are supported with any property or variable that is of type IEnumerable. The syntax of a _for each_ loop is:
 
 ```
 {{foreach RoleAssignments}}
@@ -73,7 +75,7 @@ Which would generate something like:
 <p>Role Customer<p>
 ```
 
-Nested for loops are also supported:
+Nested loops are also supported:
 
 ```
 {{foreach Users}}
@@ -87,7 +89,7 @@ Nested for loops are also supported:
 
 ### Conditions
 
-If statements are supported with any property or variable that is either of type bool or can be resolved as true or false. The syntax for an if statement is as follows:
+_If_ statements are supported with any property or variable that is either of type bool or can be resolved as true or false. The syntax for an _if_ statement is:
 
 ```
 {{if Active}}
@@ -95,7 +97,7 @@ If statements are supported with any property or variable that is either of type
 {{endif}}
 ```
 
-Nested if statements are also supported:
+Nested _if_ statements are also supported:
 
 ```
 {{if Active}}

@@ -1,6 +1,6 @@
-Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
-
 Create interface for IFunctionRepository with default implementation with built in functions but consider DI for extending.
+
+Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
 
 Use RegEx to parse things like {{if X}}Y{{endif}} etc so we don't need so much validation and can easily handle no line breaks.
 
