@@ -3,6 +3,7 @@ Create interface for IFunctionRepository with default implementation with built 
 Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
 
 Use RegEx to parse things like {{if X}}Y{{endif}} etc so we don't need so much validation and can easily handle no line breaks.
+	- Won't work with nested loops etc!
 
 When compiling template, create a sort if tree structure that contains all the resolvable things and nested content blocks.
 
