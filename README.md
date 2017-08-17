@@ -1,6 +1,6 @@
 ![Alt text](Logo.png "Nettle")
 
-Nettle is a .NET Templating Language (.**NET**-**T**emplating-**L**anguage **E**ngine) designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
+Nettle is a .**NET** **T**emplating **L**anguage **E**ngine designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
 
 - Generating web pages for content management systems
 - Generating emails or notifications
