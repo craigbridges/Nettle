@@ -138,11 +138,14 @@
                 var endPosition = currentPosition - 1;
 
                 // Ensure the blocks body is valid
-                if (String.IsNullOrWhiteSpace(signatureBody))
+                if (false == IsValidSignatureBody(signatureBody))
                 {
                     throw new NettleParseException
                     (
-                        "Invalid block signature.",
+                        "Invalid block signature '{0}'.".With
+                        (
+                            signatureBody
+                        ),
                         currentPosition
                     );
                 }
@@ -215,6 +218,30 @@
             }
             
             return blocksFound.ToArray();
+        }
+
+        /// <summary>
+        /// Determines if a code blocks signature body is valid
+        /// </summary>
+        /// <param name="signatureBody">The signature body</param>
+        /// <returns>True, if the body is valid; otherwise false</returns>
+        private bool IsValidSignatureBody
+            (
+                string signatureBody
+            )
+        {
+            if (String.IsNullOrWhiteSpace(signatureBody))
+            {
+                return false;
+            }
+            else if (signatureBody.Contains("{"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>
