@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents a base class for a function
@@ -373,5 +374,45 @@
             TemplateModel model,
             params object[] parameterValues
         );
+
+        /// <summary>
+        /// Provides a syntax description of the content function
+        /// </summary>
+        /// <returns>A string representing the syntax of the function</returns>
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+
+            builder.Append("@");
+            builder.Append(this.Name);
+            builder.Append("(");
+
+            var parameterCount = 0;
+
+            foreach (var parameter in this.Parameters)
+            {
+                if (parameterCount > 0)
+                {
+                    builder.Append(", ");
+                }
+
+                if (parameter.DataType == typeof(string))
+                {
+                    builder.Append("\"");
+                    builder.Append(parameter.Name);
+                    builder.Append("\"");
+                }
+                else
+                {
+                    builder.Append(parameter.Name);
+                }
+
+                parameterCount++;
+            }
+
+            builder.Append(");");
+
+            return builder.ToString();
+        }
     }
 }

@@ -1,43 +1,62 @@
 ﻿namespace Nettle.Parsing
 {
+    using System.Linq;
+
     /// <summary>
     /// Represents a parsed template
     /// </summary>
     internal class Template
     {
         /// <summary>
-        /// Gets the parent template
+        /// Constructs the template with the raw text and blocks
         /// </summary>
-        public Template Parent { get; protected set; }
+        /// <param name="rawText">The raw text</param>
+        /// <param name="blocks">The blocks that make up the template</param>
+        public Template
+            (
+                string rawText,
+                params CodeBlock[] blocks
+            )
+        {
+            this.RawText = rawText;
+            this.Blocks = blocks;
+        }
 
         /// <summary>
         /// Gets the templates raw text
         /// </summary>
-        public string RawText { get; protected set; }
+        public string RawText { get; private set; }
 
         /// <summary>
-        /// Gets an array of the model bindings
+        /// Gets an array of code blocks that make up the template
         /// </summary>
-        public ModelBinding[] Bindings { get; protected set; }
+        public CodeBlock[] Blocks { get; private set; }
 
         /// <summary>
-        /// Gets an array of the function calls
+        /// Finds all blocks of the code block type specified
         /// </summary>
-        public FunctionCall[] Functions { get; protected set; }
+        /// <typeparam name="T">The block type</typeparam>
+        /// <returns>An array of matching code blocks</returns>
+        public T[] FindBlocks<T>() 
+            where T : CodeBlock
+        {
+            if (this.Blocks == null)
+            {
+                return new T[] {};
+            }
+            else
+            {
+                var matchingBlocks = this.Blocks.Where
+                (
+                    block => block.GetType() == typeof(T)
+                )
+                .Select
+                (
+                    block => block as T
+                );
 
-        /// <summary>
-        /// Gets an array of the variable assignments
-        /// </summary>
-        public VariableDeclaration[] Variables { get; protected set; }
-
-        /// <summary>
-        /// Gets an array of the for each loops
-        /// </summary>
-        public ForEachLoop[] Iterators { get; protected set; }
-
-        /// <summary>
-        /// Gets an array of the if statements
-        /// </summary>
-        public IfStatement[] Conditions { get; protected set; }
+                return matchingBlocks.ToArray();
+            }
+        }
     }
 }

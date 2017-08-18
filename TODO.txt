@@ -1,4 +1,22 @@
-Create interface for IFunctionRepository with default implementation with built in functions but consider DI for extending.
+Steps:
+------
+
+- Parse string template into a queue of blocks/segments (blocks can also has nested blocks/segments)
+	- Each block represents raw content, an if statement, for loop etc
+	- Validate each block as it is parsed
+- Compile parsed template into executable template (which includes any dependencies such as functions that it needs)
+- When the compiled template is run, the model that is passed is auto inspected and all property values are put into a template model
+	- The template model has a collection of initialised variables that can be added to at "runtime" and only used after they have been defined
+
+
+Notes:
+------
+
+Parsed templates should contain an ordered collection of blocks, including pure content. The compiler/executer will run through each block in order, resolve it and then append like a string builder.
+
+Blocks with nesting and content would do the same and recursively return the result until the entire block chain has resolved and single string is returned.
+
+
 
 Each 'content block' (i.e. content contained within an if or for each etc) will have it's own model based on what is passed in?
 

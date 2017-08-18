@@ -49,6 +49,8 @@
     <Compile Include="Functions\FunctionExecutionResult.cs" />
     <Compile Include="Functions\FunctionParameter.cs" />
     <Compile Include="Functions\FunctionParameterConfiguration.cs" />
+    <Compile Include="Parsing\ContentBlock.cs" />
+    <Compile Include="Parsing\DefaultNettleParser.cs" />
     <Compile Include="Parsing\FunctionCallParameter.cs" />
     <Compile Include="Parsing\FunctionCallParameterType.cs" />
     <Compile Include="Functions\IFunction.cs" />
@@ -62,7 +64,10 @@
     <Compile Include="Parsing\ForEachLoop.cs" />
     <Compile Include="Parsing\IfStatement.cs" />
     <Compile Include="Parsing\FunctionCall.cs" />
+    <Compile Include="Parsing\INettleParser.cs" />
     <Compile Include="Parsing\ModelBinding.cs" />
+    <Compile Include="Parsing\NestableCodeBlock.cs" />
+    <Compile Include="Parsing\NettleParseException.cs" />
     <Compile Include="Parsing\Template.cs" />
     <Compile Include="Parsing\VariableAssignmentType.cs" />
     <Compile Include="Parsing\VariableDeclaration.cs" />

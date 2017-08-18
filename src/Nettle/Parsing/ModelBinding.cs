@@ -6,8 +6,8 @@
     internal class ModelBinding : CodeBlock
     {
         /// <summary>
-        /// Gets the name of the property
+        /// Gets or sets the name of the property
         /// </summary>
-        public string PropertyName { get; protected set; }
+        public string PropertyName { get; set; }
     }
 }

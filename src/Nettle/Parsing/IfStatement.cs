@@ -3,16 +3,11 @@
     /// <summary>
     /// Represents an 'if' statement code block
     /// </summary>
-    internal class IfStatement : CodeBlock
+    internal class IfStatement : NestableCodeBlock
     {
         /// <summary>
-        /// Gets the statements condition name
+        /// Gets or sets the statements condition name
         /// </summary>
-        public string ConditionName { get; protected set; }
-
-        /// <summary>
-        /// Gets the statements body
-        /// </summary>
-        public Template Body { get; protected set; }
+        public string ConditionName { get; set; }
     }
 }

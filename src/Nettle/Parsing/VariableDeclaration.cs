@@ -6,23 +6,23 @@
     internal class VariableDeclaration : CodeBlock
     {
         /// <summary>
-        /// Gets the variable name
+        /// Gets or sets the variable name
         /// </summary>
-        public string VariableName { get; protected set; }
+        public string VariableName { get; set; }
 
         /// <summary>
-        /// Gets the signature of the assigned value
+        /// Gets or sets the signature of the assigned value
         /// </summary>
-        public string AssignedValueSignature { get; protected set; }
+        public string AssignedValueSignature { get; set; }
 
         /// <summary>
-        /// Gets the variables assignment type
+        /// Gets or sets the variables assignment type
         /// </summary>
-        public VariableAssignmentType AssignmentType { get; protected set; }
+        public VariableAssignmentType AssignmentType { get; set; }
 
         /// <summary>
-        /// Gets the function call block
+        /// Gets or sets the function call block
         /// </summary>
-        public FunctionCall FunctionCall { get; protected set; }
+        public FunctionCall FunctionCall { get; set; }
     }
 }

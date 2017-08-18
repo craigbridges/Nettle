@@ -6,13 +6,13 @@
     internal class FunctionCall : CodeBlock
     {
         /// <summary>
-        /// Gets the name of the function
+        /// Gets or sets the name of the function
         /// </summary>
-        public string FunctionName { get; protected set; }
+        public string FunctionName { get; set; }
 
         /// <summary>
-        /// Gets an array of the parameters supplied
+        /// Gets or sets an array of the parameters supplied
         /// </summary>
-        public FunctionCallParameter[] ParameterValues { get; protected set; }
+        public FunctionCallParameter[] ParameterValues { get; set; }
     }
 }
