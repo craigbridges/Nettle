@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a nestable code block
     /// </summary>
-    internal abstract class NestableCodeBlock : CodeBlock
+    internal class NestableCodeBlock : CodeBlock
     {
         /// <summary>
         /// Gets or sets the blocks raw body content

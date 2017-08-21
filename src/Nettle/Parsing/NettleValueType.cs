@@ -3,9 +3,9 @@
     using System.ComponentModel;
 
     /// <summary>
-    /// Defines a collection of function call parameter types
+    /// Defines a collection of Nettle value types
     /// </summary>
-    internal enum FunctionCallParameterType
+    internal enum NettleValueType
     {
         [Description("String")]
         String = 0,
@@ -17,6 +17,9 @@
         ModelBinding = 2,
 
         [Description("Variable")]
-        Variable = 4
+        Variable = 4,
+
+        [Description("Function Call")]
+        Function = 8
     }
 }

@@ -9,5 +9,10 @@
         /// Gets or sets the statements condition name
         /// </summary>
         public string ConditionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets a flag indicating if the collection is a model binding
+        /// </summary>
+        public bool IsModelBinding { get; set; }
     }
 }

@@ -42,6 +42,102 @@
         }
 
         /// <summary>
+        /// Crops a string by removing the characters preceding a start index
+        /// </summary>
+        /// <param name="value">The value to crop</param>
+        /// <param name="startIndex">The start index</param>
+        /// <returns>The cropped string</returns>
+        public static string Crop
+            (
+                this string value,
+                int startIndex
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                var endIndex = value.Length - 1;
+
+                return Crop
+                (
+                    value,
+                    startIndex,
+                    endIndex
+                );
+            }
+        }
+
+        /// <summary>
+        /// Crops a string by removing the characters between a two indexes
+        /// </summary>
+        /// <param name="value">The value to crop</param>
+        /// <param name="startIndex">The start index</param>
+        /// <param name="endIndex">The end index</param>
+        /// <returns>The cropped string</returns>
+        public static string Crop
+            (
+                this string value,
+                int startIndex,
+                int endIndex
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                if (startIndex < 0 || endIndex < 0)
+                {
+                    throw new ArgumentOutOfRangeException
+                    (
+                        "The index values cannot be less than zero."
+                    );
+                }
+
+                if (startIndex >= value.Length)
+                {
+                    throw new IndexOutOfRangeException
+                    (
+                        "The start index must be before the end of the string."
+                    );
+                }
+
+                if (endIndex >= value.Length)
+                {
+                    throw new IndexOutOfRangeException
+                    (
+                        "The end index must be before the end of the string."
+                    );
+                }
+
+                if (endIndex > startIndex)
+                {
+                    throw new ArgumentException
+                    (
+                        "The start index must be smaller than the end index."
+                    );
+                }
+
+                var length = (endIndex - startIndex);
+
+                if (length == 0)
+                {
+                    length = 1;
+                }
+
+                return value.Substring
+                (
+                    startIndex,
+                    length
+                );
+            }
+        }
+
+        /// <summary>
         /// Shortcut syntax sugar for String.Format() that just requires the args values
         /// </summary>
         /// <param name="value">The string to format</param>
@@ -294,6 +390,55 @@
             (
                 text
             );
+        }
+
+        /// <summary>
+        /// Determines if a string value is numeric
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True, if the string is numeric; otherwise false</returns>
+        public static bool IsNumeric
+            (
+                this string value
+            )
+        {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+            else
+            {
+                var number = default(double);
+
+                return Double.TryParse
+                (
+                    value,
+                    out number
+                );
+            }
+        }
+
+        /// <summary>
+        /// Determines if a string contains only alpha numeric characters
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True, if the string contains only alpha numeric; otherwise false</returns>
+        public static bool IsAlphaNumeric
+            (
+                this string value
+            )
+        {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+            else
+            {
+                return value.All
+                (
+                    Char.IsLetterOrDigit
+                );
+            }
         }
 
         /// <summary>

@@ -11,8 +11,8 @@
         public string Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameter type
+        /// Gets or sets the parameter value type
         /// </summary>
-        public FunctionCallParameterType Type { get; set; }
+        public NettleValueType Type { get; set; }
     }
 }

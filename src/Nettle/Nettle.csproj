@@ -52,7 +52,7 @@
     <Compile Include="Parsing\ContentBlock.cs" />
     <Compile Include="Parsing\DefaultNettleParser.cs" />
     <Compile Include="Parsing\FunctionCallParameter.cs" />
-    <Compile Include="Parsing\FunctionCallParameterType.cs" />
+    <Compile Include="Parsing\NettleValueType.cs" />
     <Compile Include="Functions\IFunction.cs" />
     <Compile Include="Functions\HtmlEncodeFunction.cs" />
     <Compile Include="Functions\IFunctionRepository.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="Parsing\NestableCodeBlock.cs" />
     <Compile Include="Parsing\NettleParseException.cs" />
     <Compile Include="Parsing\Template.cs" />
-    <Compile Include="Parsing\VariableAssignmentType.cs" />
     <Compile Include="Parsing\VariableDeclaration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateModel.cs" />

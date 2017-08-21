@@ -18,7 +18,7 @@
         /// <summary>
         /// Gets or sets the variables assignment type
         /// </summary>
-        public VariableAssignmentType AssignmentType { get; set; }
+        public NettleValueType ValueType { get; set; }
 
         /// <summary>
         /// Gets or sets the function call block
