@@ -282,18 +282,18 @@
         }
 
         /// <summary>
-        /// Executes the function against a template model and parameter values
+        /// Executes the function against a template context and parameter values
         /// </summary>
-        /// <param name="model">The template model</param>
+        /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The execution result</returns>
         public virtual FunctionExecutionResult Execute
             (
-                TemplateModel model,
+                TemplateContext context,
                 params object[] parameterValues
             )
         {
-            Validate.IsNotNull(model);
+            Validate.IsNotNull(context);
 
             var expectedCount = GetRequiredParameters().Count();
             var parameterCount = 0;
@@ -352,7 +352,7 @@
 
             var output = GenerateOutput
             (
-                model,
+                context,
                 parameterValues
             );
 
@@ -367,12 +367,12 @@
         /// <summary>
         /// When implemented in derived class, generates the functions output value
         /// </summary>
-        /// <param name="model">The template model</param>
+        /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The output value</returns>
         protected abstract object GenerateOutput
         (
-            TemplateModel model,
+            TemplateContext context,
             params object[] parameterValues
         );
 

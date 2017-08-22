@@ -45,8 +45,10 @@
     <Compile Include="Common\Extensions\TypeExtensions.cs" />
     <Compile Include="Common\Validation\TypeConverterChecker.cs" />
     <Compile Include="Common\Validation\Validate.cs" />
+    <Compile Include="Compiler\ITemplateRenderer.cs" />
     <Compile Include="Compiler\ITemplateValidator.cs" />
     <Compile Include="Compiler\NettleValidationException.cs" />
+    <Compile Include="Compiler\TemplateRenderer.cs" />
     <Compile Include="Compiler\TemplateValidationError.cs" />
     <Compile Include="Compiler\TemplateValidationResult.cs" />
     <Compile Include="Compiler\TemplateValidator.cs" />
@@ -76,8 +78,9 @@
     <Compile Include="Compiler\Parsing\NettleParseException.cs" />
     <Compile Include="Compiler\Template.cs" />
     <Compile Include="Compiler\Parsing\VariableDeclaration.cs" />
+    <Compile Include="NettleEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compiler\TemplateModel.cs" />
+    <Compile Include="Compiler\TemplateContext.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

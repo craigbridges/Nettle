@@ -69,6 +69,9 @@
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>An array of errors</returns>
+        /// <remarks>
+        /// Duplicate variable declarations are checked for first
+        /// </remarks>
         private TemplateValidationError[] ValidateVariables
             (
                 Template template
@@ -78,6 +81,46 @@
 
             var errors = new List<TemplateValidationError>();
             var declaredVariables = new List<VariableDeclaration>();
+            var allVariables = template.FindBlocks<VariableDeclaration>();
+            var duplicates = new List<string>();
+
+            // Check for duplicate variable declarations
+            foreach (var variable in allVariables)
+            {
+                var variableName = variable.VariableName;
+
+                var foundInDuplicates = duplicates.Contains
+                (
+                    variableName
+                );
+
+                if (false == foundInDuplicates)
+                {
+                    var matches = allVariables.Where
+                    (
+                        v => v.VariableName == variableName
+                    );
+
+                    var isDuplicate = matches.Count() > 1;
+
+                    if (isDuplicate)
+                    {
+                        errors.Add
+                        (
+                            new TemplateValidationError
+                            (
+                                matches.Last(),
+                                "A variable with the name '{0}' has already been defined.".With
+                                (
+                                    variableName
+                                )
+                            )
+                        );
+
+                        duplicates.Add(variableName);
+                    }
+                }
+            }
 
             ValidateVariables
             (

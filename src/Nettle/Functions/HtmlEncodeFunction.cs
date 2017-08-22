@@ -36,16 +36,16 @@
         /// <summary>
         /// HTML encodes some text
         /// </summary>
-        /// <param name="model">The template model</param>
+        /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The encoded text</returns>
         protected override object GenerateOutput
             (
-                TemplateModel model,
+                TemplateContext context,
                 params object[] parameterValues
             )
         {
-            Validate.IsNotNull(model);
+            Validate.IsNotNull(context);
 
             var text = GetParameterValue<string>
             (

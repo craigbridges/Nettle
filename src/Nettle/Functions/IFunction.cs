@@ -46,14 +46,14 @@
         );
 
         /// <summary>
-        /// Executes the function against a template model and parameter values
+        /// Executes the function against a template context and parameter values
         /// </summary>
-        /// <param name="model">The template model</param>
+        /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The execution result</returns>
         FunctionExecutionResult Execute
         (
-            TemplateModel model,
+            TemplateContext context,
             params object[] parameterValues
         );
     }

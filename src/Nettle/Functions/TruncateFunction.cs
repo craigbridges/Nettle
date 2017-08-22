@@ -41,16 +41,16 @@ namespace Nettle.Functions
         /// <summary>
         /// Truncates the string supplied to the length specified
         /// </summary>
-        /// <param name="model">The template model</param>
+        /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The truncated text</returns>
         protected override object GenerateOutput
             (
-                TemplateModel model,
+                TemplateContext context,
                 params object[] parameterValues
             )
         {
-            Validate.IsNotNull(model);
+            Validate.IsNotNull(context);
 
             var text = GetParameterValue<string>
             (
