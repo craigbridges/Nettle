@@ -23,7 +23,7 @@ Nested properties are also supported:
 
 ### Functions
 
-Functions can take zero or more parameters, which can be a string literal, number, property or variable. The syntax for using a function is:
+Functions can take zero or more parameters, which can be a string literal, number, boolean, property or variable. The syntax for using a function is:
 
 ```
 {{@Truncate("Hello World!", 5)}}

@@ -46,6 +46,7 @@
     <Compile Include="Common\Validation\TypeConverterChecker.cs" />
     <Compile Include="Common\Validation\Validate.cs" />
     <Compile Include="Compiler\ITemplateValidator.cs" />
+    <Compile Include="Compiler\NettleValidationException.cs" />
     <Compile Include="Compiler\TemplateValidationError.cs" />
     <Compile Include="Compiler\TemplateValidationResult.cs" />
     <Compile Include="Compiler\TemplateValidator.cs" />
