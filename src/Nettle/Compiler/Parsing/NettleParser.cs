@@ -1,4 +1,4 @@
-﻿namespace Nettle.Parsing
+﻿namespace Nettle.Compiler.Parsing
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents the default implementation of a Nettle parser
     /// </summary>
-    internal class DefaultNettleParser : INettleParser
+    internal sealed class NettleParser : INettleParser
     {
         /// <summary>
         /// Parses the content specified into a template
@@ -79,7 +79,7 @@
         {
             var nextCodeBlockIndex = templateContent.IndexOf
             (
-                "{{"
+                @"{{"
             );
 
             // Check if there is any content preceding the next code block
@@ -140,11 +140,11 @@
 
                     if (signature.Length > 1)
                     {
-                        if (signature.EndsWith("{{"))
+                        if (signature.EndsWith(@"{{"))
                         {
                             openTagCount++;
                         }
-                        else if (signature.EndsWith("}}"))
+                        else if (signature.EndsWith(@"}}"))
                         {
                             closeTagCount++;
                         }
@@ -231,7 +231,8 @@
                     {
                         Signature = signature,
                         StartPosition = startPosition,
-                        EndPosition = endPosition
+                        EndPosition = endPosition,
+                        ItemName = signatureBody
                     };
                 }
             }
@@ -251,7 +252,7 @@
             {
                 return false;
             }
-            else if (signatureBody.Contains("{"))
+            else if (signatureBody.StartsWith(@"}") || signatureBody.EndsWith(@"{"))
             {
                 return false;
             }
@@ -273,13 +274,17 @@
         {
             var body = String.Empty;
 
-            if (signature.StartsWith("{{") && signature.EndsWith("}}"))
+            if (signature.StartsWith(@"{{") && signature.EndsWith(@"}}"))
             {
                 body = signature.Substring
                 (
                     2,
                     signature.Length - 2
                 );
+            }
+            else
+            {
+                body = signature;
             }
 
             return body.Trim();
@@ -297,11 +302,15 @@
         {
             var type = default(NettleValueType);
 
-            if (value.StartsWith("\"") && value.EndsWith("\""))
+            if (String.IsNullOrWhiteSpace(value))
             {
                 type = NettleValueType.String;
             }
-            else if (value.StartsWith("{{") && value.EndsWith("}}"))
+            else if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                type = NettleValueType.String;
+            }
+            else if (value.StartsWith(@"{{") && value.EndsWith(@"}}"))
             {
                 type = NettleValueType.ModelBinding;
             }
@@ -315,6 +324,10 @@
                 if (value.IsNumeric())
                 {
                     type = NettleValueType.Number;
+                }
+                else if (value.ToLower() == "true" || value.ToLower() == "false")
+                {
+                    type = NettleValueType.Boolean;
                 }
                 else
                 {
@@ -570,22 +583,14 @@
                 collectionName
             );
 
-            var isModelBinding = false;
-
             switch (collectionType)
             {
-                case NettleValueType.ModelBinding:
-                    isModelBinding = true;
-                    break;
+                case NettleValueType.Number:
+                case NettleValueType.Boolean:
 
-                case NettleValueType.Variable:
-                    isModelBinding = false;
-                    break;
-
-                default:
                     throw new NettleParseException
                     (
-                        "'{0}' is not a valid collection",
+                        "'{0}' is not a valid collection.",
                         positionOffSet
                     );
             }
@@ -605,7 +610,7 @@
                 StartPosition = nestedBody.StartPosition,
                 EndPosition = nestedBody.EndPosition,
                 CollectionName = collectionName,
-                IsModelBinding = isModelBinding,
+                CollectionType = collectionType,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };
@@ -637,26 +642,6 @@
                 conditionName
             );
 
-            var isModelBinding = false;
-
-            switch (conditionType)
-            {
-                case NettleValueType.ModelBinding:
-                    isModelBinding = true;
-                    break;
-
-                case NettleValueType.Variable:
-                    isModelBinding = false;
-                    break;
-
-                default:
-                    throw new NettleParseException
-                    (
-                        "'{0}' is not a valid condition",
-                        positionOffSet
-                    );
-            }
-
             var nestedBody = ExtractNestedBody
             (
                 ref templateContent,
@@ -672,7 +657,7 @@
                 StartPosition = nestedBody.StartPosition,
                 EndPosition = nestedBody.EndPosition,
                 ConditionName = conditionName,
-                IsModelBinding = isModelBinding,
+                ConditionType = conditionType,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };
@@ -709,11 +694,11 @@
 
                 if (body.Length > 1)
                 {
-                    if (body.EndsWith("{{" + openTagName))
+                    if (body.EndsWith(@"{{" + openTagName))
                     {
                         openTagCount++;
                     }
-                    else if (body.EndsWith("{{" + closeTagName + "}}"))
+                    else if (body.EndsWith(@"{{" + closeTagName + @"}}"))
                     {
                         closeTagCount++;
                     }

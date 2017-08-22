@@ -1,4 +1,4 @@
-﻿namespace Nettle.Parsing
+﻿namespace Nettle.Compiler.Parsing
 {
     /// <summary>
     /// Defines a contract for a Nettle parser

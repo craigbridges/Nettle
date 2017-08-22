@@ -1,5 +1,6 @@
 ﻿namespace Nettle.Functions
 {
+    using Nettle.Compiler;
     using System.Collections.Generic;
 
     /// <summary>

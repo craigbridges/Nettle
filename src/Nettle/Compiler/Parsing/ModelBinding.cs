@@ -1,4 +1,4 @@
-﻿namespace Nettle.Parsing
+﻿namespace Nettle.Compiler.Parsing
 {
     /// <summary>
     /// Represents a model binding code block
@@ -6,8 +6,8 @@
     internal class ModelBinding : CodeBlock
     {
         /// <summary>
-        /// Gets or sets the name of the property
+        /// Gets or sets the name of the item
         /// </summary>
-        public string PropertyName { get; set; }
+        public string ItemName { get; set; }
     }
 }

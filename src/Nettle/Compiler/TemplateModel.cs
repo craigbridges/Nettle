@@ -1,4 +1,4 @@
-﻿namespace Nettle
+﻿namespace Nettle.Compiler
 {
     using System.Collections.Generic;
 

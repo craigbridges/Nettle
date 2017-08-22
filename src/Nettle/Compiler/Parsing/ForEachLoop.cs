@@ -1,4 +1,4 @@
-﻿namespace Nettle.Parsing
+﻿namespace Nettle.Compiler.Parsing
 {
     /// <summary>
     /// Represents a 'for each' loop code block
@@ -11,8 +11,8 @@
         public string CollectionName { get; set; }
 
         /// <summary>
-        /// Gets or sets a flag indicating if the collection is a model binding
+        /// Gets or sets the collections value type
         /// </summary>
-        public bool IsModelBinding { get; set; }
+        public NettleValueType CollectionType { get; set; }
     }
 }

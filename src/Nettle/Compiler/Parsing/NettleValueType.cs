@@ -1,4 +1,4 @@
-﻿namespace Nettle.Parsing
+﻿namespace Nettle.Compiler.Parsing
 {
     using System.ComponentModel;
 
@@ -13,13 +13,16 @@
         [Description("Number")]
         Number = 1,
 
+        [Description("Boolean")]
+        Boolean = 2,
+
         [Description("Model Binding")]
-        ModelBinding = 2,
+        ModelBinding = 4,
 
         [Description("Variable")]
-        Variable = 4,
+        Variable = 8,
 
         [Description("Function Call")]
-        Function = 8
+        Function = 16
     }
 }

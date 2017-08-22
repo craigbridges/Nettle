@@ -1,4 +1,5 @@
-﻿namespace Nettle.Functions
+﻿using Nettle.Compiler;
+namespace Nettle.Functions
 {
     /// <summary>
     /// Represent a truncate function implementation

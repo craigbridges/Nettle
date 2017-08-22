@@ -6,7 +6,7 @@ Nettle is a .**NET** **T**emplating **L**anguage **E**ngine designed as a lightw
 - Generating emails or notifications
 - Generating XML or CSV exports
 
-Using Nettle is simple, there are just 5 core concepts to learn:
+Using Nettle is simple, there are just five core concepts to learn:
 
 ### Model Bindings
 These are essentially the properties contained in the model. A string representation of the properties value will replace the binding place holder. The syntax for using a model binding is:

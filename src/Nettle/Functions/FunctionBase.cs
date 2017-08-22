@@ -1,5 +1,6 @@
 ﻿namespace Nettle.Functions
 {
+    using Nettle.Compiler;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -410,7 +411,7 @@
                 parameterCount++;
             }
 
-            builder.Append(");");
+            builder.Append(")");
 
             return builder.ToString();
         }
