@@ -1,24 +1,30 @@
-﻿namespace Nettle.Functions
+﻿namespace Nettle.Functions.Core
 {
     using Nettle.Compiler;
-    using System.Web;
 
     /// <summary>
-    /// Represent a HTML encode function implementation
+    /// Represent a truncate function implementation
     /// </summary>
-    public sealed class HtmlEncodeFunction : FunctionBase
+    public sealed class TruncateFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HtmlEncodeFunction() 
+        public TruncateFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Text",
-                "The text to encode",
+                "The text to truncate",
                 typeof(string)
+            );
+
+            DefineRequiredParameter
+            (
+                "Length",
+                "The texts maximum number of characters.",
+                typeof(int)
             );
         }
 
@@ -29,16 +35,16 @@
         {
             get
             {
-                return "HTML encodes text.";
+                return "Truncates a string to the length specified.";
             }
         }
 
         /// <summary>
-        /// HTML encodes some text
+        /// Truncates the string supplied to the length specified
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The encoded text</returns>
+        /// <returns>The truncated text</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -53,10 +59,13 @@
                 parameterValues
             );
 
-            return HttpUtility.HtmlEncode
+            var length = GetParameterValue<int>
             (
-                text
+                "Length",
+                parameterValues
             );
+
+            return text.Truncate(length);
         }
     }
 }

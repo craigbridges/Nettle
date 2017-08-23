@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler.Parsing
+﻿namespace Nettle.Compiler.Parsing.Blocks
 {
     /// <summary>
     /// Represents a variable declaration code block
@@ -14,6 +14,11 @@
         /// Gets or sets the signature of the assigned value
         /// </summary>
         public string AssignedValueSignature { get; set; }
+
+        /// <summary>
+        /// Gets or sets the assigned value
+        /// </summary>
+        public object AssignedValue { get; set; }
 
         /// <summary>
         /// Gets or sets the variables assignment type

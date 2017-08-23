@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler
 {
     using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
     using System.Collections.Generic;
     using System.Linq;
@@ -43,6 +44,7 @@
 
             var variableErrors = ValidateVariables(template);
             var functionErrors = ValidateFunctions(template);
+            var loopErrors = ValidateForLoops(template);
 
             if (variableErrors.Any())
             {
@@ -53,6 +55,12 @@
             if (functionErrors.Any())
             {
                 allErrors.AddRange(functionErrors);
+                isValid = false;
+            }
+
+            if (loopErrors.Any())
+            {
+                allErrors.AddRange(loopErrors);
                 isValid = false;
             }
             
@@ -189,7 +197,7 @@
                                 ref errors,
                                 declaredVariables,
                                 call,
-                                parameterValue.Value
+                                parameterValue.ValueSignature
                             );
                         }
                     }
@@ -390,6 +398,52 @@
 
                             counter++;
                         }
+                    }
+                }
+
+                return errors.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Validates the templates for each loops
+        /// </summary>
+        /// <param name="template">The template</param>
+        /// <returns>An array of errors</returns>
+        private TemplateValidationError[] ValidateForLoops
+            (
+                Template template
+            )
+        {
+            Validate.IsNotNull(template);
+
+            var loops = template.FindBlocks<ForEachLoop>();
+
+            if (false == loops.Any())
+            {
+                return new TemplateValidationError[] { };
+            }
+            else
+            {
+                var errors = new List<TemplateValidationError>();
+
+                foreach (var loop in loops)
+                {
+                    switch (loop.CollectionType)
+                    {
+                        case NettleValueType.Number:
+                        case NettleValueType.Boolean:
+
+                            errors.Add
+                            (
+                                new TemplateValidationError
+                                (
+                                    loop,
+                                    "Invalid for each loop collection type."
+                                )
+                            );
+
+                            break;
                     }
                 }
 

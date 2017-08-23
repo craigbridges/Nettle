@@ -1,6 +1,7 @@
-﻿using Nettle.Compiler;
-namespace Nettle.Functions
+﻿namespace Nettle.Functions.Core
 {
+    using Nettle.Compiler;
+
     /// <summary>
     /// Represent a replace function implementation
     /// </summary>

@@ -1,6 +1,6 @@
 ﻿namespace Nettle.Compiler
 {
-    using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Parsing.Blocks;
     using System.Linq;
 
     /// <summary>

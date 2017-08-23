@@ -1,8 +1,10 @@
 ﻿namespace Nettle.Compiler
 {
     using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Text;
 
@@ -122,46 +124,35 @@
         }
 
         /// <summary>
-        /// Defines a variable in the template context by initialising it
+        /// Resolves a value by converting it to the Nettle value type specified
         /// </summary>
         /// <param name="context">The template context</param>
-        /// <param name="binding">The variable code block</param>
-        private void DefineVariable
+        /// <param name="rawValue">The raw value</param>
+        /// <param name="type">The value type</param>
+        /// <param name="parsedFunction">The parsed function (optional)</param>
+        /// <returns>The resolved value</returns>
+        private object ResolveValue
             (
                 ref TemplateContext context,
-                VariableDeclaration variable
+                object rawValue,
+                NettleValueType type,
+                FunctionCall parsedFunction = null
             )
         {
-            Validate.IsNotNull(variable);
-
-            var value = default(object);
-            var assignedSignature = variable.AssignedValueSignature;
-
-            switch (variable.ValueType)
+            if (rawValue == null)
             {
-                case NettleValueType.String:
+                return null;
+            }
 
-                    // TODO: remove start and end " chars
+            var resolvedValue = default(object);
 
-                    value = assignedSignature;
-                    break;
-
-                case NettleValueType.Number:
-
-                    value = Double.Parse(assignedSignature);
-                    break;
-
-                case NettleValueType.Boolean:
-
-                    value = Boolean.Parse(assignedSignature);
-                    break;
-
+            switch (type)
+            {
                 case NettleValueType.ModelBinding:
 
-                    // TODO: extract the binding name from the signature
-                    var bindingName = assignedSignature;
+                    var bindingName = rawValue.ToString();
 
-                    value = ResolveBindingValue
+                    resolvedValue = ResolveBindingValue
                     (
                         ref context,
                         bindingName
@@ -171,24 +162,67 @@
 
                 case NettleValueType.Function:
 
-                    var result = ExecuteFunction
-                    (
-                        ref context,
-                        variable.FunctionCall
-                    );
+                    if (parsedFunction == null)
+                    {
+                        throw new NotSupportedException
+                        (
+                            "Function calls are not supported."
+                        );
+                    }
+                    else
+                    {
+                        var result = ExecuteFunction
+                        (
+                            ref context,
+                            parsedFunction
+                        );
 
-                    value = result.Output;
-                    break;
+                        resolvedValue = result.Output;
+                        break;
+                    }
 
                 case NettleValueType.Variable:
 
-                    value = context.Variables[variable.VariableName];
+                    var variableName = rawValue.ToString();
+
+                    resolvedValue = context.Variables[variableName];
+                    break;
+
+                default:
+
+                    resolvedValue = rawValue;
                     break;
             }
 
+            return resolvedValue;
+        }
+
+        /// <summary>
+        /// Defines a variable in the template context by initialising it
+        /// </summary>
+        /// <param name="context">The template context</param>
+        /// <param name="variable">The variable code block</param>
+        private void DefineVariable
+            (
+                ref TemplateContext context,
+                VariableDeclaration variable
+            )
+        {
+            Validate.IsNotNull(variable);
+
+            var value = ResolveValue
+            (
+                ref context,
+                variable.AssignedValue,
+                variable.ValueType,
+                variable.FunctionCall
+            );
+
+            var variableName = variable.VariableName;
+
             context.DefineVariable
             (
-                variable.VariableName,
+                variableName,
                 value
             );
         }
@@ -230,10 +264,17 @@
         {
             Validate.IsNotEmpty(itemName);
 
-            // TODO: resolve the binding (determine if it's a variable or property)
-            // TODO: get the bindings value (including nested properties and variables)
-
-            throw new NotImplementedException();
+            if (context.Variables.ContainsKey(itemName))
+            {
+                return context.Variables[itemName];
+            }
+            else
+            {
+                return context.ResolvePropertyValue
+                (
+                    itemName
+                );
+            }   
         }
 
         /// <summary>
@@ -312,9 +353,19 @@
 
             var parameterValues = new List<object>();
 
-            // TODO: resolve each parameter value based on what value type it is
+            foreach (var parameter in call.ParameterValues)
+            {
+                var value = ResolveValue
+                (
+                    ref context,
+                    parameter.Value,
+                    parameter.Type
+                );
 
-            throw new NotImplementedException();
+                parameterValues.Add(value);
+            }
+
+            return parameterValues.ToArray();
         }
 
         /// <summary>
@@ -331,10 +382,53 @@
         {
             Validate.IsNotNull(loop);
 
-            // TODO: resolve the collection instance
-            // TODO: for each item in the collection, render blocks in body
+            var collection = ResolveValue
+            (
+                ref context,
+                loop.CollectionName,
+                loop.CollectionType
+            );
 
-            throw new NotImplementedException();
+            if (collection == null)
+            {
+                throw new NettleRenderException
+                (
+                    "A null collection was invoked at {0}.".With
+                    (
+                        loop.StartPosition
+                    )
+                );
+            }
+            else if (false == collection.GetType().IsEnumerable())
+            {
+                throw new NettleRenderException
+                (
+                    "The type {0} is not a valid collection.".With
+                    (
+                        collection.GetType().Name
+                    )
+                );
+            }
+
+            var builder = new StringBuilder();
+
+            foreach (var item in collection as IEnumerable)
+            {
+                var nestedContext = context.CreateNestedContext
+                (
+                    item
+                );
+
+                var renderedContent = RenderBlocks
+                (
+                    ref nestedContext,
+                    loop.Blocks
+                );
+
+                builder.Append(renderedContent);
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -351,11 +445,60 @@
         {
             Validate.IsNotNull(statement);
 
-            // TODO: resolve the condition value (to true or false)
-            // TODO: if false, return empty string
-            // TODO: if true, render body blocks and return result
+            var condition = ResolveValue
+            (
+                ref context,
+                statement.ConditionName,
+                statement.ConditionType
+            );
 
-            throw new NotImplementedException();
+            var result = ToBool(condition);
+
+            if (false == result)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                var renderedBody = RenderBlocks
+                (
+                    ref context,
+                    statement.Blocks
+                );
+
+                return renderedBody;
+            }
+        }
+
+        /// <summary>
+        /// Converts an object into a boolean representation
+        /// </summary>
+        /// <param name="value">The value to convert</param>
+        /// <returns>The boolean representation</returns>
+        private bool ToBool
+            (
+                object value
+            )
+        {
+            var result = default(bool);
+
+            if (value != null)
+            {
+                if (value is bool)
+                {
+                    result = (bool)value;
+                }
+                else if (value.GetType().IsNumeric())
+                {
+                    result = (double)value > 0;
+                }
+                else
+                {
+                    result = value.ToString().Length > 0;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -374,9 +517,36 @@
             }
             else
             {
-                // TODO: format select types such as date and time, numbers etc
+                var valueType = value.GetType();
 
-                return value.ToString();
+                if (valueType == typeof(string))
+                {
+                    return (string)value;
+                }
+                else if (valueType == typeof(decimal))
+                {
+                    var roundedValue = Math.Round
+                    (
+                        (decimal)value,
+                        2
+                    );
+
+                    return roundedValue.ToString();
+                }
+                else if (valueType == typeof(double))
+                {
+                    var roundedValue = Math.Round
+                    (
+                        (double)value,
+                        2
+                    );
+
+                    return roundedValue.ToString();
+                }
+                else
+                {
+                    return value.ToString();
+                }
             }
         }
     }

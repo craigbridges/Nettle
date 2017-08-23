@@ -1,9 +1,9 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     /// <summary>
-    /// Defines a contract for a Nettle parser
+    /// Defines a contract for a Nettle template parser
     /// </summary>
-    internal interface INettleParser
+    internal interface ITemplateParser
     {
         /// <summary>
         /// Parses the content specified into a template

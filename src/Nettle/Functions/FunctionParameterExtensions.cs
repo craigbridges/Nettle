@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Functions
 {
     using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Parsing.Blocks;
 
     /// <summary>
     /// Represents various extension methods for function parameters

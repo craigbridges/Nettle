@@ -1,29 +1,24 @@
-﻿using Nettle.Compiler;
-namespace Nettle.Functions
+﻿namespace Nettle.Functions.Core
 {
+    using Nettle.Compiler;
+    using System.Web;
+
     /// <summary>
-    /// Represent a truncate function implementation
+    /// Represent a HTML encode function implementation
     /// </summary>
-    public sealed class TruncateFunction : FunctionBase
+    public sealed class HtmlEncodeFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public TruncateFunction() 
+        public HtmlEncodeFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Text",
-                "The text to truncate",
+                "The text to encode",
                 typeof(string)
-            );
-
-            DefineRequiredParameter
-            (
-                "Length",
-                "The texts maximum number of characters.",
-                typeof(int)
             );
         }
 
@@ -34,16 +29,16 @@ namespace Nettle.Functions
         {
             get
             {
-                return "Truncates a string to the length specified.";
+                return "HTML encodes text.";
             }
         }
 
         /// <summary>
-        /// Truncates the string supplied to the length specified
+        /// HTML encodes some text
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The truncated text</returns>
+        /// <returns>The encoded text</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -58,13 +53,10 @@ namespace Nettle.Functions
                 parameterValues
             );
 
-            var length = GetParameterValue<int>
+            return HttpUtility.HtmlEncode
             (
-                "Length",
-                parameterValues
+                text
             );
-
-            return text.Truncate(length);
         }
     }
 }

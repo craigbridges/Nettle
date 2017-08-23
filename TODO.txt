@@ -1,3 +1,19 @@
+* Finish template renderer and context
+* Create static 'Engine' entry point for Nettle that allows default dependencies to be resolve or overridden with custom IActivator (useful for injecting more functions with a customer function repository)
+* Write unit tests and run!
+
+Function Ideas:
+---------------
+
+- Call Web API and get JSON result (that can then be sued as model data)
+- Render partial (with ability to pass custom model or inherit)
+- Get current date and time
+- Format date and time
+- String.Format
+- Round number
+- Remove decimal places
+- Math formula evaluator (use 3rd party tool)
+
 Steps:
 ------
 

@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler.Parsing
+﻿namespace Nettle.Compiler.Parsing.Blocks
 {
     /// <summary>
     /// Represents a model binding code block
