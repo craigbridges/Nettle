@@ -5,20 +5,26 @@
     /// <summary>
     /// Defines a contract for a repository that manages registered templates
     /// </summary>
-    internal interface IRegisteredTemplateRepository
+    public interface IRegisteredTemplateRepository
     {
         /// <summary>
         /// Adds a registered template to the repository
         /// </summary>
         /// <param name="template">The registered template</param>
-        void Add(RegisteredTemplate template);
+        void Add
+        (
+            RegisteredTemplate template
+        );
 
         /// <summary>
         /// Gets a registered template from the repository
         /// </summary>
         /// <param name="name">The registered template name</param>
         /// <returns>The matching registered template</returns>
-        RegisteredTemplate Get(string name);
+        RegisteredTemplate Get
+        (
+            string name
+        );
 
         /// <summary>
         /// Gets a collection of all registered templates in the repository
@@ -30,6 +36,9 @@
         /// Removes a registered template from the repository
         /// </summary>
         /// <param name="name">The registered template name</param>
-        void Remove(string name);
+        void Remove
+        (
+            string name
+        );
     }
 }

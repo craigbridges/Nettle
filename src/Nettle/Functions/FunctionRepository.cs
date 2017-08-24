@@ -7,14 +7,14 @@
     /// <summary>
     /// Represents a simple implementation of a function repository
     /// </summary>
-    public class SimpleFunctionRepository : IFunctionRepository
+    public sealed class FunctionRepository : IFunctionRepository
     {
         private Dictionary<string, IFunction> _functions;
 
         /// <summary>
         /// Constructs the repository by auto resolving all functions
         /// </summary>
-        public SimpleFunctionRepository()
+        public FunctionRepository()
         {
             BuildFunctionsDictionary();
         }

@@ -6,18 +6,18 @@
     /// <summary>
     /// Represent a round number function implementation
     /// </summary>
-    public sealed class RoundNumberFunction : FunctionBase
+    public sealed class RoundFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public RoundNumberFunction() 
+        public RoundFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Number",
-                "The number",
+                "The number to round",
                 typeof(double)
             );
 

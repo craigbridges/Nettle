@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler.Parsing.Blocks
+﻿namespace Nettle.Compiler.Parsing
 {
     using System;
     using System.Text;

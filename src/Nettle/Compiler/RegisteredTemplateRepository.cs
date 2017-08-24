@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents the default implementation of a registered template repository
     /// </summary>
-    internal class RegisteredTemplateRepository : IRegisteredTemplateRepository
+    public sealed class RegisteredTemplateRepository : IRegisteredTemplateRepository
     {
         private Dictionary<string, RegisteredTemplate> _templates;
 

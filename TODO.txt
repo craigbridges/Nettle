@@ -11,7 +11,7 @@
 Function Ideas:
 ---------------
 
-- Call Web API and get JSON result (that can then be sued as model data)
+- Call Web API and get JSON result (that can then be used as model data)
 	- Async methods so we can handle things like API call function?
 	- How do we handle headers? (e.g. security like we use)
 	- Get specific value from JSON object function

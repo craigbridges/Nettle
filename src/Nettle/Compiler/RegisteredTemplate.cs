@@ -5,7 +5,7 @@
     /// <summary>
     /// Represents a registered template
     /// </summary>
-    internal class RegisteredTemplate
+    public sealed class RegisteredTemplate
     {
         /// <summary>
         /// Constructs the registered template with dependencies

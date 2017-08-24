@@ -48,6 +48,7 @@
     <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\ITemplateRenderer.cs" />
     <Compile Include="Compiler\ITemplateValidator.cs" />
+    <Compile Include="Compiler\NettleCompiler.cs" />
     <Compile Include="Compiler\NettleValidationException.cs" />
     <Compile Include="Compiler\Parsing\ModelBindingParser.cs" />
     <Compile Include="Compiler\Parsing\IfStatementParser.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="Functions\Core\FormatDateFunction.cs" />
     <Compile Include="Functions\Core\PadRightFunction.cs" />
     <Compile Include="Functions\Core\ToInt64Function.cs" />
-    <Compile Include="Functions\Core\RoundNumberFunction.cs" />
+    <Compile Include="Functions\Core\RoundFunction.cs" />
     <Compile Include="Functions\Core\PadLeftFunction.cs" />
     <Compile Include="Functions\FunctionBase.cs" />
     <Compile Include="Functions\FunctionExecutionResult.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Functions\Core\HtmlEncodeFunction.cs" />
     <Compile Include="Functions\IFunctionRepository.cs" />
     <Compile Include="Functions\Core\ReplaceFunction.cs" />
-    <Compile Include="Functions\SimpleFunctionRepository.cs" />
+    <Compile Include="Functions\FunctionRepository.cs" />
     <Compile Include="Functions\Core\TruncateFunction.cs" />
     <Compile Include="Compiler\INettleCompiler.cs" />
     <Compile Include="Compiler\Parsing\Blocks\CodeBlock.cs" />

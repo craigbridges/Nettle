@@ -20,13 +20,13 @@
         );
 
         /// <summary>
-        /// Compiles the template specified
+        /// Compiles the template content specified
         /// </summary>
-        /// <param name="template">The template to compile</param>
+        /// <param name="templateContent">The template content</param>
         /// <returns>A function that will generate rendered content</returns>
         Func<object, string> Compile
         (
-            string template
+            string templateContent
         );
 
         /// <summary>
@@ -43,11 +43,11 @@
         /// Registers a template to be used with the compiler
         /// </summary>
         /// <param name="name">The template name</param>
-        /// <param name="template">The template content</param>
+        /// <param name="templateContent">The template content</param>
         void RegisterTemplate
         (
             string name,
-            string template
+            string templateContent
         );
 
         /// <summary>

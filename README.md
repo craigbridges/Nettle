@@ -63,7 +63,7 @@ There are various built in functions, these are:
 - @PadLeft(Text, TotalWidth, PaddingChar)
 - @PadRight(Text, TotalWidth, PaddingChar)
 - @Replace(OriginalText, FindText, ReplaceText)
-- @RoundNumber(Number, Decimals)
+- @Round(Number, Decimals)
 - @ToInt64(Number)
 - @Truncate(Text, Length)
 
