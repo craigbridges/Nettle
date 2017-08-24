@@ -21,7 +21,7 @@ var template = compiler.Compile(source);
 var output = template(model);
 
 /* Result:
-Welcome John
+Welcome John Smith
 */
 ```
 
@@ -57,9 +57,15 @@ Hello
 
 There are various built in functions, these are:
 
-- @Truncate(Text, Length)
-- @Replace(OriginalText, FindText, ReplaceText)
+- @FormatDate(Date, Format)
+- @GetDate()
 - @HtmlEncode(Text)
+- @PadLeft(Text, TotalWidth, PaddingChar)
+- @PadRight(Text, TotalWidth, PaddingChar)
+- @Replace(OriginalText, FindText, ReplaceText)
+- @RoundNumber(Number, Decimals)
+- @ToInt64(Number)
+- @Truncate(Text, Length)
 
 ### Variables
 

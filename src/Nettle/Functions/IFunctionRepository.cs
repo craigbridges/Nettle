@@ -8,6 +8,15 @@
     public interface IFunctionRepository
     {
         /// <summary>
+        /// Adds a function to the repository
+        /// </summary>
+        /// <param name="function">The function to add</param>
+        void AddFunction
+        (
+            IFunction function
+        );
+
+        /// <summary>
         /// Determines if a function exists with the name specified
         /// </summary>
         /// <param name="name">The function name</param>

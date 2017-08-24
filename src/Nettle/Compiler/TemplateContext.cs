@@ -8,7 +8,7 @@
     /// <summary>
     /// Represents a Nettle template context
     /// </summary>
-    public class TemplateContext
+    public sealed class TemplateContext
     {
         /// <summary>
         /// Constructs the template context with a model
@@ -22,6 +22,32 @@
             this.PropertyValues = new Dictionary<string, object>();
             this.Variables = new Dictionary<string, object>();
 
+            PopulatePropertyValues(model);
+        }
+
+        /// <summary>
+        /// Gets the templates model
+        /// </summary>
+        public object Model { get; private set; }
+
+        /// <summary>
+        /// Gets the contexts property values
+        /// </summary>
+        public Dictionary<string, object> PropertyValues
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Populates the property values by scanning the model
+        /// </summary>
+        /// <param name="model">The model data</param>
+        private void PopulatePropertyValues
+            (
+                object model
+            )
+        {
             if (model != null)
             {
                 var properties = model.GetType().GetProperties
@@ -43,20 +69,6 @@
                     );
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the templates model
-        /// </summary>
-        public object Model { get; private set; }
-
-        /// <summary>
-        /// Gets the contexts property values
-        /// </summary>
-        public Dictionary<string, object> PropertyValues
-        {
-            get;
-            private set;
         }
 
         /// <summary>

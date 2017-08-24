@@ -40,6 +40,17 @@
         );
 
         /// <summary>
+        /// Registers a template to be used with the compiler
+        /// </summary>
+        /// <param name="name">The template name</param>
+        /// <param name="template">The template content</param>
+        void RegisterTemplate
+        (
+            string name,
+            string template
+        );
+
+        /// <summary>
         /// Registers the function specified with the compiler
         /// </summary>
         /// <param name="function">The function register</param>

@@ -45,6 +45,7 @@
     <Compile Include="Common\Extensions\TypeExtensions.cs" />
     <Compile Include="Common\Validation\TypeConverterChecker.cs" />
     <Compile Include="Common\Validation\Validate.cs" />
+    <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\ITemplateRenderer.cs" />
     <Compile Include="Compiler\ITemplateValidator.cs" />
     <Compile Include="Compiler\NettleValidationException.cs" />
@@ -60,10 +61,18 @@
     <Compile Include="Compiler\Parsing\FunctionParser.cs" />
     <Compile Include="Compiler\Parsing\IBlockParser.cs" />
     <Compile Include="Compiler\Parsing\NettleParser.cs" />
+    <Compile Include="Compiler\RegisteredTemplate.cs" />
+    <Compile Include="Compiler\RegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\TemplateRenderer.cs" />
     <Compile Include="Compiler\TemplateValidationError.cs" />
     <Compile Include="Compiler\TemplateValidationResult.cs" />
     <Compile Include="Compiler\TemplateValidator.cs" />
+    <Compile Include="Functions\Core\GetDateFunction.cs" />
+    <Compile Include="Functions\Core\FormatDateFunction.cs" />
+    <Compile Include="Functions\Core\PadRightFunction.cs" />
+    <Compile Include="Functions\Core\ToInt64Function.cs" />
+    <Compile Include="Functions\Core\RoundNumberFunction.cs" />
+    <Compile Include="Functions\Core\PadLeftFunction.cs" />
     <Compile Include="Functions\FunctionBase.cs" />
     <Compile Include="Functions\FunctionExecutionResult.cs" />
     <Compile Include="Functions\FunctionParameter.cs" />

@@ -1,9 +1,6 @@
 * Create static 'Engine' entry point for Nettle that allows default dependencies to be resolve or overridden with custom IActivator (useful for injecting more functions with a customer function repository)
-* Async methods so we can handle things like api call function?
-* Generic template model to hold http json result
-* When rendering partial, cache rendered templates for quick re-use
-* Create nuget package for integration with Sabre etc
-* Implement more functions
+* Create NuGet package for integration with Sabre etc
+
 * Write unit tests and run!
 	Unit tests:
 	Parser
@@ -14,15 +11,10 @@
 Function Ideas:
 ---------------
 
-Instead of using ioc container, perhaps provide a way of registering a function instance?
-
 - Call Web API and get JSON result (that can then be sued as model data)
+	- Async methods so we can handle things like API call function?
 	- How do we handle headers? (e.g. security like we use)
-	- Get specific value from json object function
+	- Get specific value from JSON object function
+	- Generic template model to hold HTTP JSON result
 - Render partial (with ability to pass custom model or inherit)
-- Get current date and time
-- Format date and time
-- String.Format
-- Round number
-- Remove decimal places
 - Math formula evaluator (use 3rd party tool)

@@ -62,10 +62,36 @@
                     type
                 );
 
-                var name = functionInstance.Name;
-
-                _functions[name] = functionInstance;
+                AddFunction(functionInstance);
             }
+        }
+
+        /// <summary>
+        /// Adds a function to the repository
+        /// </summary>
+        /// <param name="function">The function to add</param>
+        public void AddFunction
+            (
+                IFunction function
+            )
+        {
+            Validate.IsNotNull(function);
+
+            var name = function.Name;
+            var found = _functions.ContainsKey(name);
+
+            if (found)
+            {
+                throw new InvalidOperationException
+                (
+                    "A function with the name '{0}' has already been added.".With
+                    (
+                        name
+                    )
+                );
+            }
+
+            _functions.Add(name, function);
         }
 
         /// <summary>
