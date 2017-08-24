@@ -71,83 +71,31 @@
         {
             Validate.IsNotEmpty(propertyPath);
 
-            var isNested = TemplateContext.IsNestedProperty
+            var isNested = TemplateContext.IsNested
             (
                 propertyPath
             );
 
-            // Try to resolve a nested variable if it looks like one
+            // Try to resolve a nested property if it looks like one
             if (isNested)
             {
-                var segments = propertyPath.Split('.');
-                var nextName = segments[0];
-
-                var containsEmptyParts = segments.Any
+                var propertyName = ExtractNextSegment
                 (
-                    part => String.IsNullOrWhiteSpace(part)
+                    ref propertyPath
                 );
 
-                // Quickly validate the nested name syntax
-                if (containsEmptyParts)
-                {
-                    throw new NettleRenderException
-                    (
-                        "The property path '{0}' is invalid.".With
-                        (
-                            propertyPath
-                        )
-                    );
-                }
-
-                var currentValue = ResolvePropertyValue
+                var firstValue = ResolvePropertyValue
                 (
-                    nextName
+                    propertyName
                 );
 
-                // Try to resolve each segment one at a time until the end is reached
-                for (var i = 1; i < segments.Length; i++)
-                {
-                    if (currentValue == null)
-                    {
-                        throw new NettleRenderException
-                        (
-                            "The path '{0}' contains a null reference at '{1}'.".With
-                            (
-                                propertyPath,
-                                nextName
-                            )
-                        );
-                    }
+                var nestedValue = ResolveNestedPropertyValue
+                (
+                    firstValue,
+                    propertyPath
+                );
 
-                    nextName = segments[i];
-
-                    var currentType = currentValue.GetType();
-                    var propertyFound = currentType.HasProperty(nextName);
-
-                    if (false == propertyFound)
-                    {
-                        throw new NettleRenderException
-                        (
-                            "The path '{0}' does not contain a property named '{1}'.".With
-                            (
-                                propertyPath,
-                                nextName
-                            )
-                        );
-                    }
-
-                    var nextProperty = currentType.GetProperty
-                    (
-                        nextName
-                    );
-
-                    currentValue = nextProperty.GetValue
-                    (
-                        currentValue
-                    );
-                }
-
-                return currentValue;
+                return nestedValue;
             }
             else
             {
@@ -167,30 +115,125 @@
                     );
                 }
 
-                return this.PropertyValues[propertyPath];
+                return this.PropertyValues
+                [
+                    propertyPath
+                ];
             }
         }
 
         /// <summary>
-        /// Determines if a property path represents a nested property
+        /// Resolves a nested property value from the property path specified
         /// </summary>
-        /// <param name="propertyPath">The variable name</param>
-        /// <returns>True, if the variable name is nested; otherwise false</returns>
-        /// <remarks>
-        /// A nested variable is one that is separated by dots (".")
-        /// </remarks>
-        public static bool IsNestedProperty
+        /// <param name="model">The model</param>
+        /// <param name="propertyPath">The property path</param>
+        /// <returns>The property value found</returns>
+        private object ResolveNestedPropertyValue
             (
+                object model,
                 string propertyPath
             )
         {
-            if (String.IsNullOrEmpty(propertyPath))
+            Validate.IsNotEmpty(propertyPath);
+
+            if (model == null)
+            {
+                throw new NettleRenderException
+                (
+                    "{0} cannot be resolved because the model is null.".With
+                    (
+                        propertyPath
+                    )
+                );
+            }
+            
+            var segments = propertyPath.Split('.');
+            var nextName = segments[0];
+            var currentValue = model;
+
+            var containsEmptyParts = segments.Any
+            (
+                part => String.IsNullOrWhiteSpace(part)
+            );
+
+            // Quickly validate the nested name syntax
+            if (containsEmptyParts)
+            {
+                throw new NettleRenderException
+                (
+                    "The property path '{0}' is invalid.".With
+                    (
+                        propertyPath
+                    )
+                );
+            }
+
+            // Try to resolve each segment one at a time until the end is reached
+            for (var i = 1; i < segments.Length; i++)
+            {
+                if (currentValue == null)
+                {
+                    throw new NettleRenderException
+                    (
+                        "The path '{0}' contains a null reference at '{1}'.".With
+                        (
+                            propertyPath,
+                            nextName
+                        )
+                    );
+                }
+
+                nextName = segments[i];
+
+                var currentType = currentValue.GetType();
+                var propertyFound = currentType.HasProperty(nextName);
+
+                if (false == propertyFound)
+                {
+                    throw new NettleRenderException
+                    (
+                        "The path '{0}' does not contain a property named '{1}'.".With
+                        (
+                            propertyPath,
+                            nextName
+                        )
+                    );
+                }
+
+                var nextProperty = currentType.GetProperty
+                (
+                    nextName
+                );
+
+                currentValue = nextProperty.GetValue
+                (
+                    currentValue
+                );
+            }
+
+            return currentValue;
+        }
+
+        /// <summary>
+        /// Determines if a property or variable path represents a nested property
+        /// </summary>
+        /// <param name="path">The property or variable path</param>
+        /// <returns>True, if the path is nested; otherwise false</returns>
+        /// <remarks>
+        /// A nested path is one that is separated into segments by dots (".")
+        /// </remarks>
+        public static bool IsNested
+            (
+                string path
+            )
+        {
+            if (String.IsNullOrEmpty(path))
             {
                 return false;
             }
             else
             {
-                var segments = propertyPath.Split('.').Where
+                var segments = path.Split('.').Where
                 (
                     part => false == String.IsNullOrEmpty(part)
                 );
@@ -200,6 +243,34 @@
                     segments.Count() > 1
                 );
             }
+        }
+
+        /// <summary>
+        /// Extracts the next segment from a property or variable path
+        /// </summary>
+        /// <param name="path">The path</param>
+        /// <returns>The matching segment</returns>
+        private string ExtractNextSegment
+            (
+                ref string path
+            )
+        {
+            var segments = path.Split('.');
+            var nextSegment = segments[0];
+
+            if (segments.Length == 1)
+            {
+                path = String.Empty;
+            }
+            else
+            {
+                path = path.Crop
+                (
+                    nextSegment.Length
+                );
+            }
+
+            return nextSegment;
         }
 
         /// <summary>
@@ -236,6 +307,68 @@
             }
 
             this.Variables[name] = value;
+        }
+
+        /// <summary>
+        /// Resolves a variable value from the variable path specified
+        /// </summary>
+        /// <param name="variablePath">The variable path</param>
+        /// <returns>The variable value found</returns>
+        public object ResolveVariableValue
+            (
+                string variablePath
+            )
+        {
+            Validate.IsNotEmpty(variablePath);
+
+            var isNested = TemplateContext.IsNested
+            (
+                variablePath
+            );
+
+            if (isNested)
+            {
+                var variableName = ExtractNextSegment
+                (
+                    ref variablePath
+                );
+
+                var variableValue = ResolveVariableValue
+                (
+                    variableName
+                );
+
+                var nestedValue = ResolveNestedPropertyValue
+                (
+                    variableValue,
+                    variablePath
+                );
+
+                return nestedValue;
+            }
+            else
+            {
+                var variableFound = this.Variables.ContainsKey
+                (
+                    variablePath
+                );
+
+                if (false == variableFound)
+                {
+                    throw new NettleRenderException
+                    (
+                        "No variable has been defined with the name '{0}'.".With
+                        (
+                            variablePath
+                        )
+                    );
+                }
+
+                return this.Variables
+                [
+                    variablePath
+                ];
+            }
         }
 
         /// <summary>

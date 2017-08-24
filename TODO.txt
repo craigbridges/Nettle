@@ -1,11 +1,24 @@
-* Finish template renderer and context
 * Create static 'Engine' entry point for Nettle that allows default dependencies to be resolve or overridden with custom IActivator (useful for injecting more functions with a customer function repository)
+* Async methods so we can handle things like api call function?
+* Generic template model to hold http json result
+* When rendering partial, cache rendered templates for quick re-use
+* Create nuget package for integration with Sabre etc
+* Implement more functions
 * Write unit tests and run!
+	Unit tests:
+	Parser
+	Validator
+	Renderer
+	Full test using compiler
 
 Function Ideas:
 ---------------
 
+Instead of using ioc container, perhaps provide a way of registering a function instance?
+
 - Call Web API and get JSON result (that can then be sued as model data)
+	- How do we handle headers? (e.g. security like we use)
+	- Get specific value from json object function
 - Render partial (with ability to pass custom model or inherit)
 - Get current date and time
 - Format date and time
@@ -13,11 +26,3 @@ Function Ideas:
 - Round number
 - Remove decimal places
 - Math formula evaluator (use 3rd party tool)
-
-Steps:
-------
-
-- Compile parsed template into executable template (which includes any dependencies such as functions that it needs)
-	- Also validate variables references and function calls (function exits and valid parameters passed)
-- When the compiled template is run, the model that is passed is auto inspected and all property values are put into a template model
-	- The template model has a collection of initialised variables that can be added to at "runtime" and only used after they have been defined

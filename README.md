@@ -57,6 +57,14 @@ Which would generate:
 Here is so
 ```
 
+Nested property paths can also be referenced with variables:
+
+```
+{{var today = GetDate()}}
+
+{{today.Day}}
+```
+
 ### Iterators
 
 _For each_ loops are supported with any property or variable that is of type IEnumerable. The syntax for using a _for each_ loop is:

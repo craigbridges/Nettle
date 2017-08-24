@@ -65,7 +65,7 @@
                 }
 
                 var type = ResolveType(valueSignature);
-                var value = ConvertValue(valueSignature, type);
+                var value = type.ParseValue(valueSignature);
 
                 parameters.Add
                 (

@@ -8,16 +8,6 @@
     /// </summary>
     internal sealed class VariableParser : NettleParser, IBlockParser<VariableDeclaration>
     {
-        private FunctionParser _functionParser;
-
-        /// <summary>
-        /// Constructs the variable parser by initialising block parsers
-        /// </summary>
-        public VariableParser()
-        {
-            _functionParser = new FunctionParser();
-        }
-
         /// <summary>
         /// Parses the code block signature into a code block object
         /// </summary>
@@ -53,7 +43,7 @@
             var name = parts[0].Trim();
             var valueSignature = parts[1].Trim();
             var type = ResolveType(valueSignature);
-            var value = ConvertValue(valueSignature, type);
+            var value = type.ParseValue(valueSignature);
 
             if (false == IsValidVariableName(name))
             {
@@ -87,19 +77,6 @@
                 AssignedValue = value,
                 ValueType = type
             };
-
-            if (type == NettleValueType.Function)
-            {
-                var functionTemplate = String.Copy(valueSignature);
-                var assignmentStartIndex = default(int);
-
-                declaration.FunctionCall = _functionParser.Parse
-                (
-                    ref functionTemplate,
-                    ref assignmentStartIndex,
-                    valueSignature
-                );
-            }
 
             return declaration;
         }

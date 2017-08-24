@@ -55,6 +55,7 @@
     <Compile Include="Compiler\Parsing\IBlockifier.cs" />
     <Compile Include="Compiler\Parsing\Blockifier.cs" />
     <Compile Include="Compiler\NettleRenderException.cs" />
+    <Compile Include="Compiler\Parsing\NettleValueTypeExtensions.cs" />
     <Compile Include="Compiler\Parsing\VariableParser.cs" />
     <Compile Include="Compiler\Parsing\FunctionParser.cs" />
     <Compile Include="Compiler\Parsing\IBlockParser.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Compiler\Parsing\NettleParseException.cs" />
     <Compile Include="Compiler\Template.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableDeclaration.cs" />
+    <Compile Include="INettleActivator.cs" />
     <Compile Include="NettleEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compiler\TemplateContext.cs" />

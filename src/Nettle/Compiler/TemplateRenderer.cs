@@ -135,8 +135,7 @@
             (
                 ref TemplateContext context,
                 object rawValue,
-                NettleValueType type,
-                FunctionCall parsedFunction = null
+                NettleValueType type
             )
         {
             if (rawValue == null)
@@ -162,15 +161,10 @@
 
                 case NettleValueType.Function:
 
-                    if (parsedFunction == null)
+                    if (rawValue != null && rawValue is FunctionCall)
                     {
-                        throw new NotSupportedException
-                        (
-                            "Function calls are not supported."
-                        );
-                    }
-                    else
-                    {
+                        var parsedFunction = (FunctionCall)rawValue;
+
                         var result = ExecuteFunction
                         (
                             ref context,
@@ -179,6 +173,13 @@
 
                         resolvedValue = result.Output;
                         break;
+                    }
+                    else
+                    {
+                        throw new NettleRenderException
+                        (
+                            "The function call is invalid."
+                        );
                     }
 
                 case NettleValueType.Variable:
@@ -214,8 +215,7 @@
             (
                 ref context,
                 variable.AssignedValue,
-                variable.ValueType,
-                variable.FunctionCall
+                variable.ValueType
             );
 
             var variableName = variable.VariableName;

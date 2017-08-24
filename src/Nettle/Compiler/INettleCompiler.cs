@@ -1,5 +1,6 @@
 ﻿namespace Nettle.Compiler
 {
+    using Nettle.Functions;
     using System;
     using System.IO;
 
@@ -36,6 +37,15 @@
         Func<object, string> CompileView
         (
             string templatePath
+        );
+
+        /// <summary>
+        /// Registers the function specified with the compiler
+        /// </summary>
+        /// <param name="function">The function register</param>
+        void RegisterFunction
+        (
+            IFunction function
         );
     }
 }
