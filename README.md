@@ -65,6 +65,14 @@ Nested property paths can also be referenced with variables:
 {{today.Day}}
 ```
 
+In addition to properties and functions, variables can also be assigned a string literal, a number or another variable:
+
+```
+{{var pageTitle = "Nettle"}}
+{{var vatRate = 20.0}}
+{{var heading = pageTitle}}
+```
+
 ### Iterators
 
 _For each_ loops are supported with any property or variable that is of type IEnumerable. The syntax for using a _for each_ loop is:
