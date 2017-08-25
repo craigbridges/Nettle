@@ -3,7 +3,6 @@
     using Nettle.Compiler;
     using Nettle.Compiler.Parsing;
     using Nettle.Functions;
-    using System;
 
     /// <summary>
     /// Represents the entry point for all Nettle actions
@@ -31,23 +30,30 @@
         }
 
         /// <summary>
-        /// Gets a Nettle compiler using the activator specified
+        /// Gets a Nettle compiler with custom functions
         /// </summary>
-        /// <param name="activator">The activator</param>
+        /// <param name="customFunctions">The custom functions</param>
         /// <returns>The compiler</returns>
         public static INettleCompiler GetCompiler
             (
-                INettleActivator activator
+                params IFunction[] customFunctions
             )
         {
-            throw new NotImplementedException();
+            return GenerateCompiler
+            (
+                customFunctions
+            );
         }
 
         /// <summary>
-        /// Generates a new Nettle compiler
+        /// Generates a new Nettle compiler with custom functions
         /// </summary>
+        /// <param name="customFunctions">The custom functions</param>
         /// <returns>The compiler generated</returns>
-        private static INettleCompiler GenerateCompiler()
+        private static INettleCompiler GenerateCompiler
+            (
+                params IFunction[] customFunctions
+            )
         {
             var blockifier = new Blockifier();
             var functionRepository = new FunctionRepository();
@@ -76,6 +82,17 @@
                 functionRepository,
                 templateRepository
             );
+
+            if (customFunctions != null)
+            {
+                foreach (var function in customFunctions)
+                {
+                    compiler.RegisterFunction
+                    (
+                        function
+                    );
+                }
+            }
 
             return compiler;
         }

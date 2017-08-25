@@ -30,7 +30,11 @@
             {
                 case NettleValueType.String:
 
-                    if (signature.StartsWith("\"") && signature.EndsWith("\""))
+                    if (signature.Equals("\"\""))
+                    {
+                        convertedValue = String.Empty;
+                    }
+                    else if (signature.StartsWith("\"") && signature.EndsWith("\""))
                     {
                         convertedValue = signature.Crop
                         (
@@ -57,24 +61,33 @@
 
                 case NettleValueType.ModelBinding:
 
-                    if (signature.StartsWith(@"{{") && signature.EndsWith(@"}}"))
+                    var bindingPath = signature;
+
+                    if (bindingPath.StartsWith(@"{{") && bindingPath.EndsWith(@"}}"))
                     {
-                        convertedValue = signature.Crop
+                        bindingPath = bindingPath.Crop
                         (
                             2,
-                            signature.Length - 3
+                            bindingPath.Length - 3
                         );
                     }
-                    else
+
+                    if (bindingPath.StartsWith(@"$") && bindingPath.Length > 1)
                     {
-                        convertedValue = signature;
+                        // Ensure a property reference isn't being made on the model
+                        if (false == bindingPath.StartsWith(@"$."))
+                        {
+                            bindingPath = bindingPath.Crop(1);
+                        }
                     }
 
+                    convertedValue = bindingPath;
                     break;
 
                 case NettleValueType.Variable:
 
                     // NOTE: this isn't resolvable until runtime
+                    convertedValue = signature;
                     break;
 
                 case NettleValueType.Function:

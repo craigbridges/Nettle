@@ -6,8 +6,12 @@
     internal class ModelBinding : CodeBlock
     {
         /// <summary>
-        /// Gets or sets the name of the item
+        /// Gets or sets the bindings path
         /// </summary>
-        public string ItemName { get; set; }
+        /// <remarks>
+        /// The binding path can contain nested properties and 
+        /// these are donated by using a dot "." separator.
+        /// </remarks>
+        public string BindingPath { get; set; }
     }
 }

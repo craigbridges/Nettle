@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Represents a simple implementation of a function repository
@@ -27,16 +28,13 @@
             _functions = new Dictionary<string, IFunction>();
 
             var interfaceType = typeof(IFunction);
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            var allTypes = assemblies.SelectMany
-            (
-                s => s.GetTypes()
-            );
-
-            var typesFound = allTypes.Where
+            var assembly = Assembly.GetExecutingAssembly();
+            
+            var typesFound = assembly.GetTypes().Where
             (
                 p => interfaceType.IsAssignableFrom(p)
+                    && false == p.IsAbstract
+                    && false == p.IsInterface
             );
 
             foreach (var type in typesFound)

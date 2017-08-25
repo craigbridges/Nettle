@@ -64,7 +64,9 @@
             var startIndex = signature.Length;
             var templateLength = templateContent.Length;
             var body = String.Empty;
-            var openTagCount = 0;
+            var openTagSyntax = @"{{" + openTagName;
+            var closeTagSyntax = @"{{" + closeTagName + @"}}";
+            var openTagCount = 1;
             var closeTagCount = 0;
             var endFound = false;
 
@@ -74,17 +76,17 @@
 
                 if (body.Length > 1)
                 {
-                    if (body.EndsWith(@"{{" + openTagName))
+                    if (body.EndsWith(openTagSyntax))
                     {
                         openTagCount++;
                     }
-                    else if (body.EndsWith(@"{{" + closeTagName + @"}}"))
+                    else if (body.EndsWith(closeTagSyntax))
                     {
                         closeTagCount++;
                     }
                 }
 
-                if (openTagCount > 0 && openTagCount == closeTagCount)
+                if (openTagCount == closeTagCount)
                 {
                     //The final closing tag was found
                     endFound = true;
@@ -96,15 +98,16 @@
             {
                 throw new NettleParseException
                 (
-                    "No '{{{0}}}' tag was found.".With
+                    "No '{0}' tag was found.".With
                     (
-                        closeTagName
+                        closeTagSyntax
                     ),
                     templateLength
                 );
             }
 
-            signature += body + "{{{0}}}".With(closeTagName);
+            signature += body;
+            body = body.LeftOf(closeTagSyntax);
 
             var blocks = this.Blockifier.Blockify(body);
             var startPosition = positionOffSet;

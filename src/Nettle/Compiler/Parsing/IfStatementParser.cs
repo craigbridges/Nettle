@@ -34,14 +34,17 @@
                 string signature
             )
         {
-            var ifStatement = UnwrapSignatureBody(signature);
+            var ifStatement = UnwrapSignatureBody
+            (
+                signature
+            );
 
-            var conditionName = ifStatement.RightOf
+            var conditionSignature = ifStatement.RightOf
             (
                 "if "
             );
 
-            if (String.IsNullOrWhiteSpace(conditionName))
+            if (String.IsNullOrWhiteSpace(conditionSignature))
             {
                 throw new NettleParseException
                 (
@@ -52,7 +55,12 @@
 
             var conditionType = ResolveType
             (
-                conditionName
+                conditionSignature
+            );
+
+            var conditionValue = conditionType.ParseValue
+            (
+                conditionSignature
             );
 
             var nestedBody = ExtractNestedBody
@@ -60,8 +68,8 @@
                 ref templateContent,
                 ref positionOffSet,
                 signature,
-                "foreach",
-                "endfor"
+                "if",
+                "endif"
             );
 
             return new IfStatement()
@@ -69,8 +77,9 @@
                 Signature = nestedBody.Signature,
                 StartPosition = nestedBody.StartPosition,
                 EndPosition = nestedBody.EndPosition,
-                ConditionName = conditionName,
+                ConditionSignature = conditionSignature,
                 ConditionType = conditionType,
+                ConditionValue  =conditionValue,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };

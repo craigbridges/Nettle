@@ -184,9 +184,11 @@
 
                 case NettleValueType.Variable:
 
-                    var variableName = rawValue.ToString();
+                    resolvedValue = context.ResolveVariableValue
+                    (
+                        rawValue.ToString()
+                    );
 
-                    resolvedValue = context.Variables[variableName];
                     break;
 
                 default:
@@ -244,37 +246,68 @@
             var value = ResolveBindingValue
             (
                 ref context,
-                binding.ItemName
+                binding.BindingPath
             );
 
             return ToString(value);
         }
 
         /// <summary>
-        /// Resolves a model binding value from the context and binding name
+        /// Resolves a model binding value from the context and binding path
         /// </summary>
         /// <param name="context">The template context</param>
-        /// <param name="itemName">The binding item name</param>
+        /// <param name="bindingPath">The bindings path</param>
         /// <returns>The model bindings value</returns>
+        /// <remarks>
+        /// A check is made to see if the binding path refers to a variable.
+        /// If not variable is found then it is assumed to be a property.
+        /// </remarks>
         private object ResolveBindingValue
             (
                 ref TemplateContext context,
-                string itemName
+                string bindingPath
             )
         {
-            Validate.IsNotEmpty(itemName);
+            Validate.IsNotEmpty(bindingPath);
 
-            if (context.Variables.ContainsKey(itemName))
+            var name = bindingPath;
+
+            var isNested = TemplateContext.IsNested
+            (
+                bindingPath
+            );
+
+            // Extract the name of the root variable or property
+            if (isNested)
             {
-                return context.Variables[itemName];
+                var pathCopy = String.Copy(bindingPath);
+
+                name = TemplateContext.ExtractNextSegment
+                (
+                    ref pathCopy
+                );
+            }
+
+            var variableFound = context.Variables.ContainsKey
+            (
+                name
+            );
+
+            // Check if it's a variable or property
+            if (variableFound)
+            {
+                return context.ResolveVariableValue
+                (
+                    bindingPath
+                );
             }
             else
             {
                 return context.ResolvePropertyValue
                 (
-                    itemName
+                    bindingPath
                 );
-            }   
+            }
         }
 
         /// <summary>
@@ -385,7 +418,7 @@
             var collection = ResolveValue
             (
                 ref context,
-                loop.CollectionName,
+                loop.CollectionValue,
                 loop.CollectionType
             );
 
@@ -393,7 +426,7 @@
             {
                 throw new NettleRenderException
                 (
-                    "A null collection was invoked at {0}.".With
+                    "A null collection was invoked at index {0}.".With
                     (
                         loop.StartPosition
                     )
@@ -448,7 +481,7 @@
             var condition = ResolveValue
             (
                 ref context,
-                statement.ConditionName,
+                statement.ConditionValue,
                 statement.ConditionType
             );
 

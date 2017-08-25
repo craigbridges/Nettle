@@ -36,7 +36,7 @@
 
                 return 
                 (
-                    allowedLength ? input : input.Substring(0, length) + "..."
+                    allowedLength ? input : input.Substring(0, length)
                 );
             }
         }
@@ -59,7 +59,16 @@
             }
             else
             {
-                var endIndex = value.Length - 1;
+                var endIndex = default(int);
+                
+                if (startIndex == value.Length)
+                {
+                    endIndex = startIndex;
+                }
+                else
+                {
+                    endIndex = value.Length - 1;
+                }
 
                 return Crop
                 (
@@ -98,7 +107,7 @@
                     );
                 }
 
-                if (startIndex >= value.Length)
+                if (startIndex > value.Length)
                 {
                     throw new IndexOutOfRangeException
                     (
@@ -106,7 +115,7 @@
                     );
                 }
 
-                if (endIndex >= value.Length)
+                if (endIndex > value.Length)
                 {
                     throw new IndexOutOfRangeException
                     (
@@ -114,7 +123,7 @@
                     );
                 }
 
-                if (endIndex > startIndex)
+                if (startIndex > endIndex)
                 {
                     throw new ArgumentException
                     (
@@ -122,18 +131,25 @@
                     );
                 }
 
-                var length = (endIndex - startIndex);
-
-                if (length == 0)
+                if (startIndex == value.Length)
                 {
-                    length = 1;
+                    return String.Empty;
                 }
+                else
+                {
+                    var length = (endIndex - startIndex) + 1;
 
-                return value.Substring
-                (
-                    startIndex,
-                    length
-                );
+                    if (length == 0)
+                    {
+                        length = 1;
+                    }
+
+                    return value.Substring
+                    (
+                        startIndex,
+                        length
+                    );
+                }
             }
         }
 
@@ -545,7 +561,7 @@
                 return input.Substring
                 (
                     0,
-                    (firstIndex - 1)
+                    firstIndex
                 );
             }
         }
@@ -572,7 +588,12 @@
             }
             else
             {
-                return input.Substring(lastIndex + 1);
+                var startIndex = 
+                (
+                    lastIndex + value.Length
+                );
+
+                return input.Substring(startIndex);
             }
         }
     }

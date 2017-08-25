@@ -45,10 +45,10 @@
 
             if (signature.StartsWith(@"{{") && signature.EndsWith(@"}}"))
             {
-                body = signature.Substring
+                body = signature.Crop
                 (
                     2,
-                    signature.Length - 2
+                    signature.Length - 3
                 );
             }
             else
@@ -80,6 +80,10 @@
                 type = NettleValueType.String;
             }
             else if (value.StartsWith(@"{{") && value.EndsWith(@"}}"))
+            {
+                type = NettleValueType.ModelBinding;
+            }
+            else if (value.StartsWith(@"$"))
             {
                 type = NettleValueType.ModelBinding;
             }
@@ -120,7 +124,7 @@
                 string signature
             )
         {
-            var endPosition = signature.Length - 1;
+            var endPosition = signature.Length;
 
             positionOffSet += endPosition;
 

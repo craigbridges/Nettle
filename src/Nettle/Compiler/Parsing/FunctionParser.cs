@@ -43,39 +43,41 @@
             }
 
             var name = body.LeftOf("(");
-            var parameterSegment = body.RightOf("(").LeftOf(")");
-            var parameterValues = parameterSegment.Split(',').ToList();
             var parameters = new List<FunctionCallParameter>();
-
-            parameterValues.ForEach
-            (
-                value => value.Trim()
-            );
-
-            // Parse each parameter signature and check what type it is
-            foreach (var valueSignature in parameterValues)
+            var parameterSegment = body.RightOf("(").LeftOf(")");
+            
+            if (false == String.IsNullOrEmpty(parameterSegment))
             {
-                if (String.IsNullOrWhiteSpace(valueSignature))
+                var parameterValues = parameterSegment.Split(',').Select
+                (
+                    s => s.Trim()
+                );
+
+                // Parse each parameter signature and check what type it is
+                foreach (var valueSignature in parameterValues)
                 {
-                    throw new NettleParseException
+                    if (String.IsNullOrWhiteSpace(valueSignature))
+                    {
+                        throw new NettleParseException
+                        (
+                            "Parameter values cannot be empty.",
+                            positionOffSet
+                        );
+                    }
+
+                    var type = ResolveType(valueSignature);
+                    var value = type.ParseValue(valueSignature);
+
+                    parameters.Add
                     (
-                        "Parameter values cannot be empty.",
-                        positionOffSet
+                        new FunctionCallParameter()
+                        {
+                            ValueSignature = valueSignature,
+                            Value = value,
+                            Type = type
+                        }
                     );
                 }
-
-                var type = ResolveType(valueSignature);
-                var value = type.ParseValue(valueSignature);
-
-                parameters.Add
-                (
-                    new FunctionCallParameter()
-                    {
-                        ValueSignature = valueSignature,
-                        Value = value,
-                        Type = type
-                    }
-                );
             }
 
             var startPosition = positionOffSet;

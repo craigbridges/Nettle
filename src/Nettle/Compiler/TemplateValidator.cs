@@ -3,6 +3,7 @@
     using Nettle.Compiler.Parsing;
     using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -213,7 +214,7 @@
                             ref errors,
                             declaredVariables,
                             loop,
-                            loop.CollectionName
+                            loop.CollectionSignature
                         );
                     }
 
@@ -236,7 +237,7 @@
                         ref errors,
                         declaredVariables,
                         statement,
-                        statement.ConditionName
+                        statement.ConditionSignature
                     );
 
                     if (statement.Blocks != null)
@@ -267,6 +268,21 @@
                 string variableName
             )
         {
+            var isNested = TemplateContext.IsNested
+            (
+                variableName
+            );
+
+            if (isNested)
+            {
+                var path = String.Copy(variableName);
+
+                variableName = TemplateContext.ExtractNextSegment
+                (
+                    ref path
+                );
+            }
+
             var variableFound = declaredVariables.Any
             (
                 v => v.VariableName == variableName

@@ -21,16 +21,27 @@
                 string signature
             )
         {
-            var signatureBody = UnwrapSignatureBody(signature);
+            var bindingValue = NettleValueType.ModelBinding.ParseValue
+            (
+                signature
+            );
+
             var startPosition = positionOffSet;
             var endPosition = startPosition + (signature.Length - 1);
+
+            TrimTemplate
+            (
+                ref templateContent,
+                ref positionOffSet,
+                signature
+            );
 
             return new ModelBinding()
             {
                 Signature = signature,
                 StartPosition = startPosition,
                 EndPosition = endPosition,
-                ItemName = signatureBody
+                BindingPath = bindingValue.ToString()
             };
         }
     }

@@ -57,16 +57,21 @@
 
                 foreach (var property in properties)
                 {
-                    var propertyValue = property.GetValue
-                    (
-                        model
-                    );
+                    var indexParamaters = property.GetIndexParameters();
 
-                    this.PropertyValues.Add
-                    (
-                        property.Name,
-                        propertyValue
-                    );
+                    if (indexParamaters == null || indexParamaters.Length == 0)
+                    {
+                        var propertyValue = property.GetValue
+                        (
+                            model
+                        );
+
+                        this.PropertyValues.Add
+                        (
+                            property.Name,
+                            propertyValue
+                        );
+                    }
                 }
             }
         }
@@ -82,6 +87,16 @@
             )
         {
             Validate.IsNotEmpty(propertyPath);
+
+            var isModelRef = TemplateContext.IsModelReference
+            (
+                propertyPath
+            );
+
+            if (isModelRef)
+            {
+                return this.Model;
+            }
 
             var isNested = TemplateContext.IsNested
             (
@@ -181,7 +196,7 @@
             }
 
             // Try to resolve each segment one at a time until the end is reached
-            for (var i = 1; i < segments.Length; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
                 if (currentValue == null)
                 {
@@ -227,6 +242,30 @@
         }
 
         /// <summary>
+        /// Determines if a property path is a model reference
+        /// </summary>
+        /// <param name="path">The property path</param>
+        /// <returns>True, if the path is a model reference; otherwise false</returns>
+        /// <remarks>
+        /// A model reference indicates that the entire model should be 
+        /// issued instead of a specific property value.
+        /// </remarks>
+        public static bool IsModelReference
+            (
+                string path
+            )
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+            else
+            {
+                return path.Trim().Equals(@"$");
+            }
+        }
+
+        /// <summary>
         /// Determines if a property or variable path represents a nested property
         /// </summary>
         /// <param name="path">The property or variable path</param>
@@ -262,7 +301,7 @@
         /// </summary>
         /// <param name="path">The path</param>
         /// <returns>The matching segment</returns>
-        private string ExtractNextSegment
+        internal static string ExtractNextSegment
             (
                 ref string path
             )
@@ -278,7 +317,7 @@
             {
                 path = path.Crop
                 (
-                    nextSegment.Length
+                    nextSegment.Length + 1
                 );
             }
 

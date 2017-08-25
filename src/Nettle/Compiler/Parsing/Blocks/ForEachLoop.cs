@@ -6,13 +6,18 @@
     internal class ForEachLoop : NestableCodeBlock
     {
         /// <summary>
-        /// Gets or sets the loops collection name
+        /// Gets or sets the loops collection signature
         /// </summary>
-        public string CollectionName { get; set; }
+        public string CollectionSignature { get; set; }
 
         /// <summary>
         /// Gets or sets the collections value type
         /// </summary>
         public NettleValueType CollectionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collections value
+        /// </summary>
+        public object CollectionValue { get; set; }
     }
 }

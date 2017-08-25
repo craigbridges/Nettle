@@ -1,12 +1,19 @@
-* Create static 'Engine' entry point for Nettle that allows default dependencies to be resolve or overridden with custom IActivator (useful for injecting more functions with a customer function repository)
-* Create NuGet package for integration with Sabre etc
+Bugs:
+-----
 
-* Write unit tests and run!
-	Unit tests:
-	Parser
-	Validator
-	Renderer
-	Full test using compiler
+TODO:
+-----
+- Nettle comments {{! This comment will not be in the output }}
+- Render partial template - not as function but a built in expression (e.g. {{> TemplateName Model}})
+- Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
+- Create NuGet package for integration with Sabre etc
+
+- Write unit tests and run!
+	- Parser
+	- Validator
+	- Renderer
+	- Full test using compiler
+
 
 Function Ideas:
 ---------------
@@ -16,5 +23,4 @@ Function Ideas:
 	- How do we handle headers? (e.g. security like we use)
 	- Get specific value from JSON object function
 	- Generic template model to hold HTTP JSON result
-- Render partial (with ability to pass custom model or inherit)
 - Math formula evaluator (use 3rd party tool)

@@ -6,13 +6,18 @@
     internal class IfStatement : NestableCodeBlock
     {
         /// <summary>
-        /// Gets or sets the statements condition name
+        /// Gets or sets the statements conditions signature
         /// </summary>
-        public string ConditionName { get; set; }
+        public string ConditionSignature { get; set; }
 
         /// <summary>
         /// Gets or sets the conditions value type
         /// </summary>
         public NettleValueType ConditionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the statements conditions value
+        /// </summary>
+        public object ConditionValue { get; set; }
     }
 }

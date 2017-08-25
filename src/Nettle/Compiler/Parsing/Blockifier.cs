@@ -79,7 +79,7 @@
                 var blockContent = templateContent.Substring
                 (
                     0,
-                    nextCodeBlockIndex + 1
+                    nextCodeBlockIndex
                 );
 
                 var startPosition = positionOffSet;

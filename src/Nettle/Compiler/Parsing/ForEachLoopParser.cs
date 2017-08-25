@@ -34,14 +34,17 @@
                 string signature
             )
         {
-            var forLoop = UnwrapSignatureBody(signature);
+            var forLoop = UnwrapSignatureBody
+            (
+                signature
+            );
 
-            var collectionName = forLoop.RightOf
+            var collectionSignature = forLoop.RightOf
             (
                 "foreach "
             );
 
-            if (String.IsNullOrWhiteSpace(collectionName))
+            if (String.IsNullOrWhiteSpace(collectionSignature))
             {
                 throw new NettleParseException
                 (
@@ -52,7 +55,12 @@
 
             var collectionType = ResolveType
             (
-                collectionName
+                collectionSignature
+            );
+
+            var collectionValue = collectionType.ParseValue
+            (
+                collectionSignature
             );
 
             var nestedBody = ExtractNestedBody
@@ -69,8 +77,9 @@
                 Signature = nestedBody.Signature,
                 StartPosition = nestedBody.StartPosition,
                 EndPosition = nestedBody.EndPosition,
-                CollectionName = collectionName,
+                CollectionSignature = collectionSignature,
                 CollectionType = collectionType,
+                CollectionValue = collectionValue,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };

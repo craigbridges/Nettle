@@ -41,6 +41,28 @@ Nested properties are also supported:
 {{User.Identity.Name}}
 ```
 
+The dollar sign $ can be used to explicitly denote a property. This is useful when properties are referenced outside of bindings (such as a for loop) where the {{ and }} tags are not supported. 
+
+```
+{{$Name}}
+```
+
+A single $ can be used to reference the scopes model. This is useful when inside a for loop where the collection is an array of strings.
+
+```
+{{foreach $Names}}
+	{{$}}
+{{endfor}}
+```
+
+Which would generate something like:
+
+```
+Craig
+John
+Simon
+```
+
 ### Functions
 
 Functions can take zero or more parameters, which can be a string literal, number, boolean, property or variable. The syntax for using a function is:
@@ -104,7 +126,7 @@ In addition to properties and functions, variables can also be assigned a string
 _For each_ loops are supported with any property or variable that is of type IEnumerable. The syntax for using a _for each_ loop is:
 
 ```
-{{foreach RoleAssignments}}
+{{foreach $RoleAssignments}}
 	<p>Role {{RoleName}}</p>
 {{endfor}}
 ```
@@ -119,10 +141,10 @@ Which would generate something like:
 Nested loops are also supported:
 
 ```
-{{foreach Users}}
+{{foreach $Users}}
 	<p>User {{UserName}}</p>
 
-	{{foreach RoleAssignments}}
+	{{foreach $RoleAssignments}}
 		<p>Role {{RoleName}}</p>
 	{{endfor}}
 {{endfor}}
@@ -133,7 +155,7 @@ Nested loops are also supported:
 _If_ statements are supported with any property or variable that is either of type bool or can be resolved as true or false. The syntax for using an _if_ statement is:
 
 ```
-{{if Active}}
+{{if $Active}}
 	<p>Currently Active</p>
 {{endif}}
 ```
@@ -141,7 +163,7 @@ _If_ statements are supported with any property or variable that is either of ty
 Nested _if_ statements are also supported:
 
 ```
-{{if Active}}
+{{if $Active}}
 	<p>Currently Active</p>
 	
 	{{if HasProfile}}
