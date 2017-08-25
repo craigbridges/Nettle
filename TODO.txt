@@ -3,7 +3,6 @@ Bugs:
 
 TODO:
 -----
-- Nettle comments {{! This comment will not be in the output }}
 - Render partial template - not as function but a built in expression (e.g. {{> TemplateName Model}})
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
 - Create NuGet package for integration with Sabre etc
