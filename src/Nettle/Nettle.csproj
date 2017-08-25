@@ -50,6 +50,8 @@
     <Compile Include="Compiler\ITemplateValidator.cs" />
     <Compile Include="Compiler\NettleCompiler.cs" />
     <Compile Include="Compiler\NettleValidationException.cs" />
+    <Compile Include="Compiler\Parsing\Blocks\Comment.cs" />
+    <Compile Include="Compiler\Parsing\CommentParser.cs" />
     <Compile Include="Compiler\Parsing\ModelBindingParser.cs" />
     <Compile Include="Compiler\Parsing\IfStatementParser.cs" />
     <Compile Include="Compiler\Parsing\ForEachLoopParser.cs" />

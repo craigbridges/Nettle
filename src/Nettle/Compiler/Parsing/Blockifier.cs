@@ -9,6 +9,7 @@
     /// </summary>
     internal sealed class Blockifier : NettleParser, IBlockifier
     {
+        private CommentParser _commentParser;
         private ModelBindingParser _bindingParser;
         private FunctionParser _functionParser;
         private VariableParser _variableParser;
@@ -20,6 +21,7 @@
         /// </summary>
         public Blockifier()
         {
+            _commentParser = new CommentParser();
             _bindingParser = new ModelBindingParser();
             _functionParser = new FunctionParser();
             _variableParser = new VariableParser();
@@ -172,8 +174,18 @@
                     );
                 }
 
+                // Comment
+                if (signatureBody.StartsWith("!"))
+                {
+                    return _commentParser.Parse
+                    (
+                        ref templateContent,
+                        ref positionOffSet,
+                        signature
+                    );
+                }
                 // Function call
-                if (signatureBody.StartsWith("@"))
+                else if (signatureBody.StartsWith("@"))
                 {
                     return _functionParser.Parse
                     (

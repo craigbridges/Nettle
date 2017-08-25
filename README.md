@@ -26,7 +26,14 @@ Welcome John Smith
 ```
 
 ## Nettle Language
-The Nettle templating language is simple, there are just five core concepts to learn:
+The Nettle templating language is simple, there are just six core concepts to learn:
+
+### Comments
+Comments allow you to annotate the code and are not rendered:
+
+```
+{{! This is a comment, it can span multiple lines}}
+```
 
 ### Model Bindings
 These are essentially the properties contained in the model. A string representation of the properties value will replace the binding place holder. The syntax for using a model binding is:
