@@ -3,11 +3,15 @@ Bugs:
 
 TODO:
 -----
+- Auto register views
+- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Render partial template - not as function but a built in expression (e.g. {{> TemplateName Model}})
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
+- Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+- Get Chris to do some testing (using the demo and also create his own test project and integrate using NuGet)
 - Create NuGet package for integration with Sabre etc
 
-- Write unit tests and run!
+- Write unit tests:
 	- Parser
 	- Validator
 	- Renderer
@@ -17,6 +21,7 @@ TODO:
 Function Ideas:
 ---------------
 
+- Maths operations such as add, take away, divide and multiply
 - Call Web API and get JSON result (that can then be used as model data)
 	- Async methods so we can handle things like API call function?
 	- How do we handle headers? (e.g. security like we use)

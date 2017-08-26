@@ -139,6 +139,25 @@
         }
 
         /// <summary>
+        /// Automatically registers all views found in a directory
+        /// </summary>
+        /// <param name="directoryPath">The directory path</param>
+        public void AutoRegisterViews
+            (
+                string directoryPath
+            )
+        {
+            Validate.IsNotEmpty(directoryPath);
+
+            // TODO: ensure directoryPath points to a valid directory
+            // TODO: scan for all Nettle specific views in the directory
+            // TODO: use the filename (excluding extension) as the registered name
+            // TODO: compile the each view and add to repository
+
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Registers a template to be used with the compiler
         /// </summary>
         /// <param name="name">The template name</param>

@@ -40,6 +40,15 @@
         );
 
         /// <summary>
+        /// Automatically registers all views found in a directory
+        /// </summary>
+        /// <param name="directoryPath">The directory path</param>
+        void AutoRegisterViews
+        (
+            string directoryPath
+        );
+
+        /// <summary>
         /// Registers a template to be used with the compiler
         /// </summary>
         /// <param name="name">The template name</param>

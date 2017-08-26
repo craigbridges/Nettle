@@ -13,6 +13,11 @@
         private static object _compilerLock = new object();
 
         /// <summary>
+        /// Defines the file extension for Nettle views
+        /// </summary>
+        internal const string ViewFileExtension = "nettle";
+
+        /// <summary>
         /// Gets a Nettle compiler instance
         /// </summary>
         /// <returns>The compiler</returns>

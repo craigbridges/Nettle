@@ -107,7 +107,12 @@
             }
 
             signature += body;
-            body = body.LeftOf(closeTagSyntax);
+
+            body = body.Substring
+            (
+                0,
+                body.Length - closeTagSyntax.Length
+            );
 
             var blocks = this.Blockifier.Blockify(body);
             var startPosition = positionOffSet;

@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -68,18 +69,21 @@
         {
             Validate.IsNotNull(blocks);
 
-            var matchingBlocks = blocks.Where
+            var matchingBlocks = new List<CodeBlock>();
+
+            var blockFilterResults = blocks.Where
             (
                 block => block.GetType() == typeof(T)
             )
             .Select
             (
                 block => block as T
-            )
-            .ToList();
+            );
 
-            foreach (var block in matchingBlocks)
+            foreach (var block in blockFilterResults)
             {
+                matchingBlocks.Add(block);
+
                 var isNested = typeof(NestableCodeBlock).IsAssignableFrom
                 (
                     typeof(T)
@@ -107,7 +111,7 @@
                 }
             }
 
-            return matchingBlocks.ToArray();
+            return blockFilterResults.ToArray();
         }
     }
 }

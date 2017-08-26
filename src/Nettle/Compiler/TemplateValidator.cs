@@ -232,13 +232,16 @@
                 {
                     var statement = (IfStatement)block;
 
-                    RunVariableCheck
-                    (
-                        ref errors,
-                        declaredVariables,
-                        statement,
-                        statement.ConditionSignature
-                    );
+                    if (statement.ConditionType == NettleValueType.Variable)
+                    {
+                        RunVariableCheck
+                        (
+                            ref errors,
+                            declaredVariables,
+                            statement,
+                            statement.ConditionSignature
+                        );
+                    }
 
                     if (statement.Blocks != null)
                     {

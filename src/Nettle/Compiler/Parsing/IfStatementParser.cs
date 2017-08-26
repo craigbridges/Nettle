@@ -79,7 +79,7 @@
                 EndPosition = nestedBody.EndPosition,
                 ConditionSignature = conditionSignature,
                 ConditionType = conditionType,
-                ConditionValue  =conditionValue,
+                ConditionValue = conditionValue,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };

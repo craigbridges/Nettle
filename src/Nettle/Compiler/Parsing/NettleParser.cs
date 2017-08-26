@@ -21,6 +21,10 @@
             {
                 return false;
             }
+            else if (signatureBody.StartsWith(" "))
+            {
+                return false;
+            }
             else if (signatureBody.StartsWith(@"}") || signatureBody.EndsWith(@"{"))
             {
                 return false;
