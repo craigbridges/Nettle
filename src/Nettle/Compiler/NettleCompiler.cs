@@ -1,9 +1,9 @@
 ﻿namespace Nettle.Compiler
 {
     using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Rendering;
     using Nettle.Functions;
     using System;
-    using System.IO;
 
     /// <summary>
     /// Represents the default implantation of a NEttle compiler
@@ -44,21 +44,6 @@
             _validator = validator;
             _functionRepository = functionRepository;
             _templateRepository = templateRepository;
-        }
-
-        /// <summary>
-        /// Compiles the template specified
-        /// </summary>
-        /// <param name="template">The template to compile</param>
-        /// <returns>An action that will write to a text writer</returns>
-        public Action<TextWriter, object> Compile
-            (
-                TextReader template
-            )
-        {
-            Validate.IsNotNull(template);
-
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -113,29 +98,12 @@
         {
             Validate.IsNotEmpty(templatePath);
 
-            var fileContents = ReadViewContent
+            var view = ViewReader.Read
             (
                 templatePath
             );
 
-            return Compile(fileContents);
-        }
-
-        /// <summary>
-        /// Reads the contents of a template view into a string
-        /// </summary>
-        /// <param name="filePath">The views file path</param>
-        /// <returns>The views content as a string</returns>
-        private string ReadViewContent
-            (
-                string filePath
-            )
-        {
-            Validate.IsNotEmpty(filePath);
-
-            // TODO: load file and extract into string
-
-            throw new NotImplementedException();
+            return Compile(view.Content);
         }
 
         /// <summary>
@@ -149,12 +117,19 @@
         {
             Validate.IsNotEmpty(directoryPath);
 
-            // TODO: ensure directoryPath points to a valid directory
-            // TODO: scan for all Nettle specific views in the directory
-            // TODO: use the filename (excluding extension) as the registered name
-            // TODO: compile the each view and add to repository
+            var matchingViews = ViewReader.ReadAll
+            (
+                directoryPath
+            );
 
-            throw new NotImplementedException();
+            foreach (var view in matchingViews)
+            {
+                RegisterTemplate
+                (
+                    view.Name,
+                    view.Content
+                );
+            }
         }
 
         /// <summary>

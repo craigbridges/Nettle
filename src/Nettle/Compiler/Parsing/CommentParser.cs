@@ -5,8 +5,21 @@
     /// <summary>
     /// Represents a comment code block parser
     /// </summary>
-    internal sealed class CommentParser : NettleParser, IBlockParser<Comment>
+    internal sealed class CommentParser : NettleParser, IBlockParser
     {
+        /// <summary>
+        /// Determines if a signature matches the block type of the parser
+        /// </summary>
+        /// <param name="signatureBody">The signature body</param>
+        /// <returns>True, if it matches; otherwise false</returns>
+        public bool Matches
+            (
+                string signatureBody
+            )
+        {
+            return signatureBody.StartsWith(@"!");
+        }
+
         /// <summary>
         /// Parses the code block signature into a code block object
         /// </summary>
@@ -14,7 +27,7 @@
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public Comment Parse
+        public CodeBlock Parse
             (
                 ref string templateContent,
                 ref int positionOffSet,

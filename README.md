@@ -1,6 +1,6 @@
 ![Alt text](Logo.png "Nettle")
 
-Nettle is a .**NET** **T**emplating **L**anguage **E**ngine designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
+Nettle is a .**NET** **T**emplating **L**anguage **E**ngine inspired by Handlebars, designed as a lightweight solution to solving various content rendering problems faced in .NET applications. Typical problems Nettle can be used to solve include:
 
 - Generating web pages for content management systems
 - Generating emails or notifications
@@ -26,7 +26,7 @@ Welcome John Smith
 ```
 
 ## Nettle Language
-The Nettle templating language is simple, there are just six core concepts to learn:
+The Nettle templating language is simple, there are just seven core concepts to learn:
 
 ### Comments
 Comments allow you to annotate the code and are not rendered:
@@ -178,3 +178,22 @@ Nested _if_ statements are also supported:
 	{{endif}}
 {{endif}}
 ```
+
+### Partials
+
+Nettle supports partial rendering with registered templates. A template can be registered with:
+
+```c#
+var partialContent = @"Partial content...";
+var compiler = NettleEngine.GetCompiler();
+
+compiler.RegisterTemplate("SamplePartial", partialContent);
+```
+
+The syntax for rendering a partial is:
+
+```
+{{> PartialName Model}}
+```
+
+The model is optional and if left empty, the current templates model is used instead. The model can be any value that can also be assigned to a variable, including a variable reference.

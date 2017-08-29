@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a for each loop code block parser
     /// </summary>
-    internal sealed class ForEachLoopParser : NestedBlockParser<ForEachLoop>
+    internal sealed class ForEachLoopParser : NestedBlockParser
     {
         /// <summary>
         /// Constructs the parser with a blockifier
@@ -21,13 +21,35 @@
         { }
 
         /// <summary>
+        /// Gets the open tag name
+        /// </summary>
+        protected override string OpenTagName
+        {
+            get
+            {
+                return "foreach";
+            }
+        }
+
+        /// <summary>
+        /// Gets the close tag name
+        /// </summary>
+        protected override string CloseTagName
+        {
+            get
+            {
+                return "endfor";
+            }
+        }
+
+        /// <summary>
         /// Extracts the 'for each' signature into a code block object
         /// </summary>
         /// <param name="templateContent">The template content</param>
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The variable signature</param>
         /// <returns>The parsed for each code block</returns>
-        public override ForEachLoop Parse
+        public override CodeBlock Parse
             (
                 ref string templateContent,
                 ref int positionOffSet,
@@ -67,9 +89,7 @@
             (
                 ref templateContent,
                 ref positionOffSet,
-                signature,
-                "foreach",
-                "endfor"
+                signature
             );
 
             return new ForEachLoop()

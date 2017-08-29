@@ -14,6 +14,14 @@
             InitializeComponent();
 
             _compiler = NettleEngine.GetCompiler();
+
+            var partialContent = @"Partial Content: {{$}}";
+
+            _compiler.RegisterTemplate
+            (
+                "PartialSample",
+                partialContent
+            );
         }
 
         private void renderButton_Click

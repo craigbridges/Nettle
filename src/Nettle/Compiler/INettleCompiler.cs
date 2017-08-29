@@ -2,7 +2,6 @@
 {
     using Nettle.Functions;
     using System;
-    using System.IO;
 
     /// <summary>
     /// Defines a contract for Nettle compiler
@@ -14,10 +13,10 @@
         /// </summary>
         /// <param name="template">The template to compile</param>
         /// <returns>An action that will write to a text writer</returns>
-        Action<TextWriter, object> Compile
-        (
-            TextReader template
-        );
+        //Action<TextWriter, object> Compile
+        //(
+        //    TextReader template
+        //);
 
         /// <summary>
         /// Compiles the template content specified

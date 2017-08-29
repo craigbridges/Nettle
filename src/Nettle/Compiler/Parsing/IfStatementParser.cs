@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents an if statement code block parser
     /// </summary>
-    internal sealed class IfStatementParser : NestedBlockParser<IfStatement>
+    internal sealed class IfStatementParser : NestedBlockParser
     {
         /// <summary>
         /// Constructs the parser with a blockifier
@@ -19,6 +19,28 @@
 
             : base(blockifier)
         { }
+        
+        /// <summary>
+        /// Gets the open tag name
+        /// </summary>
+        protected override string OpenTagName
+        {
+            get
+            {
+                return "if";
+            }
+        }
+
+        /// <summary>
+        /// Gets the close tag name
+        /// </summary>
+        protected override string CloseTagName
+        {
+            get
+            {
+                return "endif";
+            }
+        }
 
         /// <summary>
         /// Parses the 'if statement' signature into a code block object
@@ -27,7 +49,7 @@
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The variable signature</param>
         /// <returns>The parsed if statement</returns>
-        public override IfStatement Parse
+        public override CodeBlock Parse
             (
                 ref string templateContent,
                 ref int positionOffSet,
@@ -67,9 +89,7 @@
             (
                 ref templateContent,
                 ref positionOffSet,
-                signature,
-                "if",
-                "endif"
+                signature
             );
 
             return new IfStatement()

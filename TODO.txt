@@ -3,10 +3,14 @@ Bugs:
 
 TODO:
 -----
-- Auto register views
-- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
-- Render partial template - not as function but a built in expression (e.g. {{> TemplateName Model}})
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
+	- Create Nettle.Web project with dependencies like json.net etc which has functions for pulling and pushing http resources as well as specialised web api call functions that return json models.
+- Create support for json and xml type models in terms of model bindings.
+- Create some sort of IFunctionResolver that gets all functions for the assembly. Then Nettle can scan all assemblies for resolvers.
+
+- Render partial template - not as function but a built in expression (e.g. {{> TemplateName Model}})
+
+- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 - Get Chris to do some testing (using the demo and also create his own test project and integrate using NuGet)
 - Create NuGet package for integration with Sabre etc

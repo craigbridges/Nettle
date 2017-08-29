@@ -2,6 +2,7 @@
 {
     using Nettle.Compiler;
     using Nettle.Compiler.Parsing;
+    using Nettle.Compiler.Rendering;
     using Nettle.Functions;
 
     /// <summary>
@@ -71,7 +72,8 @@
 
             var renderer = new TemplateRenderer
             (
-                functionRepository
+                functionRepository,
+                templateRepository
             );
 
             var validator = new TemplateValidator

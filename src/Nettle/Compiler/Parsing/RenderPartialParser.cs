@@ -1,12 +1,12 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
-    using System.Linq;
+    using System;
 
     /// <summary>
-    /// Represents a model binding code block parser
+    /// Represents a render partial code block parser
     /// </summary>
-    internal sealed class ModelBindingParser : NettleParser, IBlockParser
+    internal sealed class RenderPartialParser : NettleParser, IBlockParser
     {
         /// <summary>
         /// Determines if a signature matches the block type of the parser
@@ -18,23 +18,7 @@
                 string signatureBody
             )
         {
-            var excludedValues = new string[]
-            {
-                "!",
-                "@",
-                ">",
-                "var ",
-                "foreach ",
-                "if ",
-            };
-
-            return false == excludedValues.Any
-            (
-                value => signatureBody.StartsWith
-                (
-                    value
-                )
-            );
+            return signatureBody.StartsWith(@">");
         }
 
         /// <summary>
@@ -51,10 +35,43 @@
                 string signature
             )
         {
-            var bindingValue = NettleValueType.ModelBinding.ParseValue
+            var signatureBody = UnwrapSignatureBody
             (
                 signature
             );
+
+            signatureBody = signatureBody.RightOf(@">").Replace
+            (
+                "  ",
+                " "
+            );
+
+            if (String.IsNullOrWhiteSpace(signatureBody))
+            {
+                throw new NettleParseException
+                (
+                    "The template name must be specified.",
+                    positionOffSet
+                );
+            }
+
+            var parts = signatureBody.Trim().Split(' ');
+
+            var templateName = parts[0];
+            var modelSignature = default(string);
+            var modelType = default(NettleValueType?);
+            var modelValue = default(object);
+
+            if (parts.Length > 1)
+            {
+                modelSignature = parts[1];
+                modelType = ResolveType(modelSignature);
+
+                modelValue = modelType.Value.ParseValue
+                (
+                    modelSignature
+                );
+            }
 
             var startPosition = positionOffSet;
             var endPosition = startPosition + (signature.Length - 1);
@@ -66,12 +83,15 @@
                 signature
             );
 
-            return new ModelBinding()
+            return new RenderPartial()
             {
                 Signature = signature,
                 StartPosition = startPosition,
                 EndPosition = endPosition,
-                BindingPath = bindingValue.ToString()
+                TemplateName = templateName,
+                ModelSignature = modelSignature,
+                ModelType = modelType,
+                ModelValue = modelValue
             };
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler
+﻿namespace Nettle.Compiler.Rendering
 {
     /// <summary>
     /// Defines a contract for a template renderer

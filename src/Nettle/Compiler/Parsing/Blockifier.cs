@@ -9,24 +9,31 @@
     /// </summary>
     internal sealed class Blockifier : NettleParser, IBlockifier
     {
-        private CommentParser _commentParser;
-        private ModelBindingParser _bindingParser;
-        private FunctionParser _functionParser;
-        private VariableParser _variableParser;
-        private ForEachLoopParser _loopParser;
-        private IfStatementParser _ifParser;
+        private List<IBlockParser> _parsers;
 
         /// <summary>
         /// Constructs the blockifier by initialising block parsers
         /// </summary>
         public Blockifier()
         {
-            _commentParser = new CommentParser();
-            _bindingParser = new ModelBindingParser();
-            _functionParser = new FunctionParser();
-            _variableParser = new VariableParser();
-            _loopParser = new ForEachLoopParser(this);
-            _ifParser = new IfStatementParser(this);
+            var commentParser = new CommentParser();
+            var bindingParser = new ModelBindingParser();
+            var functionParser = new FunctionParser();
+            var variableParser = new VariableParser();
+            var loopParser = new ForEachLoopParser(this);
+            var ifParser = new IfStatementParser(this);
+            var partialParser = new RenderPartialParser();
+
+            _parsers = new List<IBlockParser>()
+            {
+                commentParser,
+                bindingParser,
+                functionParser,
+                variableParser,
+                loopParser,
+                ifParser,
+                partialParser
+            };
         }
 
         /// <summary>
@@ -174,67 +181,51 @@
                     );
                 }
 
-                // Comment
-                if (signatureBody.StartsWith("!"))
+                var parser = FindParser
+                (
+                    signatureBody,
+                    positionOffSet
+                );
+
+                return parser.Parse
+                (
+                    ref templateContent,
+                    ref positionOffSet,
+                    signature
+                );
+            }
+        }
+
+        /// <summary>
+        /// Finds a code block parser for the signature body specified
+        /// </summary>
+        /// <param name="signatureBody">The signature body</param>
+        /// <param name="positionOffSet">The position offset</param>
+        /// <returns>The parser found</returns>
+        private IBlockParser FindParser
+            (
+                string signatureBody,
+                int positionOffSet
+            )
+        {
+            foreach (var parser in _parsers)
+            {
+                var matches = parser.Matches(signatureBody);
+
+                if (matches)
                 {
-                    return _commentParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
-                }
-                // Function call
-                else if (signatureBody.StartsWith("@"))
-                {
-                    return _functionParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
-                }
-                // Variable declaration
-                else if (signatureBody.StartsWith("var"))
-                {
-                    return _variableParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
-                }
-                // For each loop
-                else if (signatureBody.StartsWith("foreach"))
-                {
-                    return _loopParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
-                }
-                // If statement
-                else if (signatureBody.StartsWith("if"))
-                {
-                    return _ifParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
-                }
-                // Model binding
-                else
-                {
-                    return _bindingParser.Parse
-                    (
-                        ref templateContent,
-                        ref positionOffSet,
-                        signature
-                    );
+                    return parser;
                 }
             }
+
+            throw new NettleParseException
+            (
+                "No parser could be found for the signature '{0}'.".With
+                (
+                    signatureBody
+                ),
+                positionOffSet
+            );
         }
     }
 }
