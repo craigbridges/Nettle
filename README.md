@@ -181,7 +181,7 @@ Nested _if_ statements are also supported:
 
 ### Partials
 
-Nettle supports partial rendering with registered templates. A template can be registered with:
+Nettle supports partial rendering with registered templates. A template can be registered as follows:
 
 ```c#
 var partialContent = @"Partial content...";
@@ -196,4 +196,4 @@ The syntax for rendering a partial is:
 {{> PartialName Model}}
 ```
 
-The model is optional and if left empty, the current templates model is used instead. The model can be any value that can also be assigned to a variable, including a variable reference.
+The model is optional and if left empty, the current templates model is used instead. The model can be any value assignable to a variable, including a variable reference.
