@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nettle</id>
+    <version>$version$</version>
+    <title>Nettle</title>
+    <authors>Craig Bridges</authors>
+    <owners>Craig Bridges</owners>
+    <licenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/craigbridges/Nettle</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A lightweight .NET templating engine</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Nettle Templating Language Engine</tags>
+  </metadata>
+</package>

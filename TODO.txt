@@ -31,6 +31,7 @@ Low Priority:
 
 - Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+- Add support for caching
 
 
 Function Ideas:
