@@ -25,7 +25,7 @@ Code Cleanup:
 
 - Split validator like with parser and render code
 
-	
+
 Low Priority:
 -------------
 

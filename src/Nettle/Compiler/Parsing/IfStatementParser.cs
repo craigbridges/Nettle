@@ -21,24 +21,13 @@
         { }
         
         /// <summary>
-        /// Gets the open tag name
+        /// Gets the tag name
         /// </summary>
-        protected override string OpenTagName
+        protected override string TagName
         {
             get
             {
                 return "if";
-            }
-        }
-
-        /// <summary>
-        /// Gets the close tag name
-        /// </summary>
-        protected override string CloseTagName
-        {
-            get
-            {
-                return "endif";
             }
         }
 
@@ -63,7 +52,10 @@
 
             var conditionSignature = ifStatement.RightOf
             (
-                "if "
+                "{0} ".With
+                (
+                    this.TagName
+                )
             );
 
             if (String.IsNullOrWhiteSpace(conditionSignature))

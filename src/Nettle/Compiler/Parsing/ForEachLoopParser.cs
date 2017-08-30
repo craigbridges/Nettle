@@ -23,22 +23,11 @@
         /// <summary>
         /// Gets the open tag name
         /// </summary>
-        protected override string OpenTagName
+        protected override string TagName
         {
             get
             {
-                return "foreach";
-            }
-        }
-
-        /// <summary>
-        /// Gets the close tag name
-        /// </summary>
-        protected override string CloseTagName
-        {
-            get
-            {
-                return "endfor";
+                return "each";
             }
         }
 
@@ -63,7 +52,10 @@
 
             var collectionSignature = forLoop.RightOf
             (
-                "foreach "
+                "{0} ".With
+                (
+                    this.TagName
+                )
             );
 
             if (String.IsNullOrWhiteSpace(collectionSignature))

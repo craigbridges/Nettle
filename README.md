@@ -57,9 +57,9 @@ The dollar sign $ can be used to explicitly denote a property. This is useful wh
 A single $ can be used to reference the scopes model. This is useful when inside a for loop where the collection is an array of strings.
 
 ```
-{{foreach $Names}}
+{{each $Names}}
 	{{$}}
-{{endfor}}
+{{/each}}
 ```
 
 Which would generate something like:
@@ -133,9 +133,9 @@ In addition to properties and functions, variables can also be assigned a string
 _For each_ loops are supported with any property or variable that is of type IEnumerable. The syntax for using a _for each_ loop is:
 
 ```
-{{foreach $RoleAssignments}}
+{{each $RoleAssignments}}
 	<p>Role {{RoleName}}</p>
-{{endfor}}
+{{/each}}
 ```
 
 Which would generate something like:
@@ -148,13 +148,13 @@ Which would generate something like:
 Nested loops are also supported:
 
 ```
-{{foreach $Users}}
+{{each $Users}}
 	<p>User {{UserName}}</p>
 
-	{{foreach $RoleAssignments}}
+	{{each $RoleAssignments}}
 		<p>Role {{RoleName}}</p>
-	{{endfor}}
-{{endfor}}
+	{{/each}}
+{{/each}}
 ```
 
 ### Conditions
@@ -164,7 +164,7 @@ _If_ statements are supported with any property or variable that is either of ty
 ```
 {{if $Active}}
 	<p>Currently Active</p>
-{{endif}}
+{{/if}}
 ```
 
 Nested _if_ statements are also supported:
@@ -175,8 +175,8 @@ Nested _if_ statements are also supported:
 	
 	{{if HasProfile}}
 		<p>The user has a profile</p>
-	{{endif}}
-{{endif}}
+	{{/if}}
+{{/if}}
 ```
 
 ### Partials
@@ -187,9 +187,8 @@ Nettle supports partial rendering with registered templates. A template can be r
 var partialContent = @"Partial content...";
 var compiler = NettleEngine.GetCompiler();
 
-compiler.RegisterTemplate("SamplePartial", partialContent);
-
 // NOTE: Partial names must be alphanumeric and cannot contain spaces.
+compiler.RegisterTemplate("SamplePartial", partialContent);
 ```
 
 The syntax for rendering a partial is:

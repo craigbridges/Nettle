@@ -30,12 +30,7 @@
         /// <summary>
         /// Gets the open tag name
         /// </summary>
-        protected abstract string OpenTagName { get;  }
-
-        /// <summary>
-        /// Gets the close tag name
-        /// </summary>
-        protected abstract string CloseTagName { get; }
+        protected abstract string TagName { get; }
 
         /// <summary>
         /// Determines if a signature matches the block type of the parser
@@ -49,7 +44,7 @@
         {
             return signatureBody.StartsWith
             (
-                this.OpenTagName
+                this.TagName
             );
         }
 
@@ -68,6 +63,24 @@
         );
 
         /// <summary>
+        /// Gets the code blocks open tag syntax based on the tag name
+        /// </summary>
+        /// <returns>The open tag syntax</returns>
+        protected string GetOpenTagSyntax()
+        {
+            return @"{{" + this.TagName + " ";
+        }
+
+        /// <summary>
+        /// Gets the code blocks close tag syntax based on the tag name
+        /// </summary>
+        /// <returns>The close tag syntax</returns>
+        protected string GetCloseTagSyntax()
+        {
+            return @"{{/" + this.TagName + @"}}";
+        }
+
+        /// <summary>
         /// Extracts the body of a nested code block
         /// </summary>
         /// <param name="templateContent">The template content</param>
@@ -84,8 +97,8 @@
             var startIndex = signature.Length;
             var templateLength = templateContent.Length;
             var body = String.Empty;
-            var openTagSyntax = @"{{" + this.OpenTagName + " ";
-            var closeTagSyntax = @"{{" + this.CloseTagName + @"}}";
+            var openTagSyntax = GetOpenTagSyntax();
+            var closeTagSyntax = GetCloseTagSyntax();
             var openTagCount = 1;
             var closeTagCount = 0;
             var endFound = false;
