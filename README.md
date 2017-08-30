@@ -12,7 +12,7 @@ Install the NuGet package:
 Install-Package Nettle
 ```
 
-The following code will create a Nettle compiler and compile a simple template.
+The following code will create a Nettle compiler and compile a simple template:
 	
 ```c#
 var source = @"Welcome {{Name}}";

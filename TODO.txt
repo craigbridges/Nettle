@@ -4,13 +4,16 @@ Bugs:
 TODO:
 -----
 
+- Check for circular references when rendering partials:
+	- Keep track of all partial calls (from > to) in TemplateContext
+	- Every time a partial is called check if that partial also calls itself or the caller
+		- if above true then throw exception
+		- else chain back through previous call stack to see if the next call is for the partial being called (i.e. we are going back to the start of the loop again)
+
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
 	- Create Nettle.Web project with dependencies like json.net etc which has functions for pulling and pushing http resources as well as specialised web api call functions that return json models.
 	- Create support for json and xml type models in terms of model bindings.
 - Create some sort of IFunctionResolver that gets all functions for the assembly. Then Nettle can scan all assemblies for resolvers.
-
-- Check for circular references when rendering partials
-- Create NuGet package and publish
 
 - Get Chris to do some testing (using the demo and also create his own test project and integrate using NuGet)
 - Write unit tests:
@@ -31,6 +34,7 @@ Low Priority:
 
 - Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+- Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
 - Add support for caching
 
 
@@ -38,9 +42,9 @@ Function Ideas:
 ---------------
 
 - Maths operations such as add, take away, divide and multiply
+- Math formula evaluator (use 3rd party tool)
 - Call Web API and get JSON result (that can then be used as model data)
 	- Async methods so we can handle things like API call function?
 	- How do we handle headers? (e.g. security like we use)
 	- Get specific value from JSON object function
 	- Generic template model to hold HTTP JSON result
-- Math formula evaluator (use 3rd party tool)
