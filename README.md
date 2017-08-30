@@ -191,6 +191,16 @@ var compiler = NettleEngine.GetCompiler();
 compiler.RegisterTemplate("SamplePartial", partialContent);
 ```
 
+Template views contained in a directory can be automatically registered as follows:
+
+```c#
+var compiler = NettleEngine.GetCompiler();
+
+compiler.AutoRegisterViews("../Templates");
+```
+
+A template view must use the file extension .nettle and the filename is used as the registered template name, therefore it must be alphanumeric and cannot contain spaces.
+
 The syntax for rendering a partial is:
 
 ```
