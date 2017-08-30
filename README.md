@@ -7,8 +7,10 @@ Nettle is a .**NET** **T**emplating **L**anguage **E**ngine inspired by Handleba
 - Generating XML or CSV exports
 
 ## Usage
-First install the NuGet package:
-	Install-Package Nettle
+Install the NuGet package:
+```
+Install-Package Nettle
+```
 
 The following code will create a Nettle compiler and compile a simple template.
 	
