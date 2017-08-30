@@ -188,6 +188,8 @@ var partialContent = @"Partial content...";
 var compiler = NettleEngine.GetCompiler();
 
 compiler.RegisterTemplate("SamplePartial", partialContent);
+
+// NOTE: Partial names must be alphanumeric and cannot contain spaces.
 ```
 
 The syntax for rendering a partial is:

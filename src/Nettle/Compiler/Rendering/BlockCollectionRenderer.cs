@@ -41,6 +41,11 @@
                 functionRepository
             );
 
+            var variableRenderer = new VariableRenderer
+            (
+                functionRepository
+            );
+
             var functionRenderer = new FunctionRenderer
             (
                 functionRepository
@@ -69,6 +74,7 @@
                 commentRenderer,
                 contentRenderer,
                 bindingRenderer,
+                variableRenderer,
                 functionRenderer,
                 loopRenderer,
                 ifStatementRenderer,

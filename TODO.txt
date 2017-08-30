@@ -3,22 +3,34 @@ Bugs:
 
 TODO:
 -----
+
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
 	- Create Nettle.Web project with dependencies like json.net etc which has functions for pulling and pushing http resources as well as specialised web api call functions that return json models.
-- Create support for json and xml type models in terms of model bindings.
+	- Create support for json and xml type models in terms of model bindings.
 - Create some sort of IFunctionResolver that gets all functions for the assembly. Then Nettle can scan all assemblies for resolvers.
 
-- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
-- Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+- Check for circular references when rendering partials
+- Create NuGet package and publish
 
 - Get Chris to do some testing (using the demo and also create his own test project and integrate using NuGet)
-- Create NuGet package for integration with Sabre etc
-
 - Write unit tests:
 	- Parser
 	- Validator
 	- Renderer
 	- Full test using compiler
+
+
+Code Cleanup:
+-------------
+
+- Split validator like with parser and render code
+
+	
+Low Priority:
+-------------
+
+- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
+- Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 
 
 Function Ideas:

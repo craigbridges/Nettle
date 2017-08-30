@@ -21,6 +21,18 @@
             Validate.IsNotEmpty(name);
             Validate.IsNotNull(template);
 
+            if (false == name.IsAlphaNumeric())
+            {
+                throw new ArgumentException
+                (
+                    "The name '{0}' is invalid for a template. " +
+                    "Names must be alphanumeric.".With
+                    (
+                        name
+                    )
+                );
+            }
+
             this.Name = name;
             this.Template = template;
         }

@@ -15,12 +15,9 @@
 
             _compiler = NettleEngine.GetCompiler();
 
-            var partialContent = @"Partial Content: {{$}}";
-
-            _compiler.RegisterTemplate
+            _compiler.AutoRegisterViews
             (
-                "PartialSample",
-                partialContent
+                "../../Templates"
             );
         }
 
@@ -45,7 +42,8 @@
                         "Craig",
                         "John",
                         "Simon"
-                    }
+                    },
+                    Success = true
                 };
 
                 var output = template(model);
