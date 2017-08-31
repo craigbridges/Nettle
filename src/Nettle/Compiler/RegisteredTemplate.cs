@@ -10,16 +10,19 @@
         /// <summary>
         /// Constructs the registered template with dependencies
         /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="template">The compiled template</param>
-        public RegisteredTemplate
+        /// <param name="name">The template name</param>
+        /// <param name="parsedTemplate">The parsed template</param>
+        /// <param name="compiledTemplate">The compiled template</param>
+        internal RegisteredTemplate
             (
                 string name,
-                Func<object, string> template
+                Template parsedTemplate,
+                Func<object, string> compiledTemplate
             )
         {
             Validate.IsNotEmpty(name);
-            Validate.IsNotNull(template);
+            Validate.IsNotNull(parsedTemplate);
+            Validate.IsNotNull(compiledTemplate);
 
             if (false == name.IsAlphaNumeric())
             {
@@ -34,7 +37,8 @@
             }
 
             this.Name = name;
-            this.Template = template;
+            this.ParsedTemplate = parsedTemplate;
+            this.CompiledTemplate = compiledTemplate;
         }
 
         /// <summary>
@@ -43,8 +47,21 @@
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets the parsed template
+        /// </summary>
+        internal Template ParsedTemplate
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets the compiled template
         /// </summary>
-        public Func<object, string> Template { get; private set; }
+        public Func<object, string> CompiledTemplate
+        {
+            get;
+            private set;
+        }
     }
 }

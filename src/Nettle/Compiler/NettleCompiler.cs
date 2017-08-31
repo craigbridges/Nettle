@@ -56,6 +56,46 @@
                 string templateContent
             )
         {
+            var parsedTemplate = ParseTemplate
+            (
+                templateContent
+            );
+
+            return Compile(parsedTemplate);
+        }
+        
+        /// <summary>
+        /// Compiles a parsed template
+        /// </summary>
+        /// <param name="parsedTemplate">The parsed template</param>
+        /// <returns>A function that will generate rendered content</returns>
+        private Func<object, string> Compile
+            (
+                Template parsedTemplate
+            )
+        {
+            Func<object, string> template =
+            (
+                (model) => _renderer.Render
+                (
+                    parsedTemplate,
+                    model
+                )
+            );
+
+            return template;
+        }
+
+        /// <summary>
+        /// Parses and validates the template content
+        /// </summary>
+        /// <param name="templateContent">The template content</param>
+        /// <returns>The parsed template</returns>
+        private Template ParseTemplate
+            (
+                string templateContent
+            )
+        {
             var parsedTemplate = _parser.Parse
             (
                 templateContent
@@ -73,17 +113,8 @@
                     validationResults.Errors
                 );
             }
-
-            Func<object, string> template = 
-            (
-                (model) => _renderer.Render
-                (
-                    parsedTemplate,
-                    model
-                )
-            );
-
-            return template;
+            
+            return parsedTemplate;
         }
 
         /// <summary>
@@ -145,15 +176,21 @@
         {
             Validate.IsNotEmpty(name);
 
-            var template = Compile
+            var parsedTemplate = ParseTemplate
             (
                 templateContent
+            );
+
+            var compiledTemplate = Compile
+            (
+                parsedTemplate
             );
 
             var registeredTemplate = new RegisteredTemplate
             (
                 name,
-                template
+                parsedTemplate,
+                compiledTemplate
             );
 
             _templateRepository.Add

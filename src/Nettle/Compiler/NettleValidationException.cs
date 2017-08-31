@@ -6,6 +6,7 @@
     /// <summary>
     /// Represents a Nettle validation exception
     /// </summary>
+    [Serializable]
     public class NettleValidationException : Exception
     {
         private TemplateValidationError[] _errors;

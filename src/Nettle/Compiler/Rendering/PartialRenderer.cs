@@ -9,21 +9,28 @@
     internal class PartialRenderer : NettleRenderer, IBlockRenderer
     {
         private IRegisteredTemplateRepository _templateRepository;
+        private BlockCollectionRenderer _collectionRenderer;
 
         /// <summary>
         /// Constructs the renderer with required dependencies
         /// </summary>
         /// <param name="functionRepository">The function repository</param>
         /// <param name="templateRepository">The template repository</param>
+        /// <param name="collectionRenderer">The block collection renderer</param>
         public PartialRenderer
             (
                 IFunctionRepository functionRepository,
-                IRegisteredTemplateRepository templateRepository
+                IRegisteredTemplateRepository templateRepository,
+                BlockCollectionRenderer collectionRenderer
             )
 
             : base(functionRepository)
         {
+            Validate.IsNotNull(templateRepository);
+            Validate.IsNotNull(collectionRenderer);
+
             _templateRepository = templateRepository;
+            _collectionRenderer = collectionRenderer;
         }
 
         /// <summary>
@@ -62,12 +69,18 @@
 
             var partial = (RenderPartial)block;
 
-            var registeredTemplate = _templateRepository.Get
+            CheckForCircularReference
+            (
+                ref context,
+                partial
+            );
+
+            var template = _templateRepository.Get
             (
                 partial.TemplateName
             );
 
-            var template = registeredTemplate.Template;
+            var partialContent = template.ParsedTemplate.Blocks;
             var model = context.Model;
 
             if (partial.ModelType.HasValue && partial.ModelValue != null)
@@ -80,7 +93,53 @@
                 );
             }
 
-            return template(model);
+            var newContext = context.CreateNestedContext
+            (
+                model
+            );
+
+            newContext.Variables.Clear();
+
+            newContext.PartialCallStack.Add
+            (
+                partial.TemplateName
+            );
+
+            return _collectionRenderer.Render
+            (
+                ref newContext,
+                partialContent
+            );
+        }
+
+        /// <summary>
+        /// Checks for circular reference calls to a partial that has already been called
+        /// </summary>
+        /// <param name="context">The template context</param>
+        /// <param name="partial">The partial code block</param>
+        private void CheckForCircularReference
+            (
+                ref TemplateContext context,
+                RenderPartial partial
+            )
+        {
+            Validate.IsNotNull(partial);
+
+            var previousCallFound = context.PartialCallStack.Contains
+            (
+                partial.TemplateName
+            );
+
+            if (previousCallFound)
+            {
+                throw new NettleRenderException
+                (
+                    "A circular reference to '{0}' was detected.".With
+                    (
+                        partial.TemplateName
+                    )
+                );
+            }
         }
     }
 }

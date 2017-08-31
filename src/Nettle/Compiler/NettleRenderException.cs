@@ -5,6 +5,7 @@
     /// <summary>
     /// Represents a Nettle render exception
     /// </summary>
+    [Serializable]
     public class NettleRenderException : Exception
     {
         internal NettleRenderException

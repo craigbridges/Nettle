@@ -5,6 +5,7 @@
     /// <summary>
     /// Represents a Nettle parse exception
     /// </summary>
+    [Serializable]
     public class NettleParseException : Exception
     {
         internal NettleParseException

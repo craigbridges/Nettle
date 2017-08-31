@@ -66,7 +66,8 @@
             var partialRenderer = new PartialRenderer
             (
                 functionRepository,
-                templateRepository
+                templateRepository,
+                this
             );
 
             _renderers = new List<IBlockRenderer>()

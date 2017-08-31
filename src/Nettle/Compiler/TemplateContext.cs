@@ -19,6 +19,7 @@
             )
         {
             this.Model = model;
+            this.PartialCallStack = new List<string>();
             this.PropertyValues = new Dictionary<string, object>();
             this.Variables = new Dictionary<string, object>();
 
@@ -29,6 +30,11 @@
         /// Gets the templates model
         /// </summary>
         public object Model { get; private set; }
+
+        /// <summary>
+        /// Gets a call stack of partials that have been rendered
+        /// </summary>
+        internal List<string> PartialCallStack { get; private set; }
 
         /// <summary>
         /// Gets the contexts property values
@@ -436,6 +442,15 @@
             (
                 model
             );
+
+            // Copy the partial call stack across
+            foreach (var partial in this.PartialCallStack)
+            {
+                context.PartialCallStack.Add
+                (
+                    partial
+                );
+            }
 
             // Migrate any properties that do not conflict with the new model
             foreach (var item in this.PropertyValues)

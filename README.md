@@ -104,7 +104,7 @@ There are various built in functions, these are:
 - @ToInt64(Number)
 - @Truncate(Text, Length)
 
-Custom functions can be created by implementing the IFunction interface (there is also a base class FunctionBase that contains most of the scaffolding code needed). To make the functions available to Nettle, they can either be injected when creating a new compiler instance or registered individually using the compilers _RegisterFunction_ method. For example:
+Custom functions can be created by implementing the IFunction interface (there is also a base class _FunctionBase_ that contains most of the scaffolding code needed). To make new functions available to Nettle, they can either be injected when creating a new compiler instance or registered individually using the compilers _RegisterFunction_ method. For example:
 
 ```c#
 var userFunction = new GetUserFunction();
