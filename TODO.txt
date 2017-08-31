@@ -9,6 +9,10 @@ TODO:
 	- Every time a partial is called check if that partial also calls itself or the caller
 		- if above true then throw exception
 		- else chain back through previous call stack to see if the next call is for the partial being called (i.e. we are going back to the start of the loop again)
+		
+	All that is needed is for each partial context to inherit a list of called partial names and if the next called partial is in the list then it's a circular reference.
+
+	Problem - a new context is created every time a partial/template is rendered. Perhaps we can extend Func<string, object> to include extra properties so we can pass those into the context when we create it? Then we would need the compiler to generate that instead.
 
 - Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
 	- Create Nettle.Web project with dependencies like json.net etc which has functions for pulling and pushing http resources as well as specialised web api call functions that return json models.
