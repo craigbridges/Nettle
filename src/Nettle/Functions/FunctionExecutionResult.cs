@@ -5,7 +5,7 @@
     /// <summary>
     /// Represents the result of a function execution
     /// </summary>
-    public class FunctionExecutionResult
+    public sealed class FunctionExecutionResult
     {
         /// <summary>
         /// Constructs the function execution result with dependencies

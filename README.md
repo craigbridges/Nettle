@@ -6,6 +6,8 @@ Nettle is a .**NET** **T**emplating **L**anguage **E**ngine inspired by Handleba
 - Generating emails or notifications
 - Generating XML or CSV exports
 
+The main difference between Nettle and Handlebars is that Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell), only the template needs to be edited.
+
 ## Usage
 Install the NuGet package:
 ```
@@ -101,6 +103,27 @@ There are various built in functions, these are:
 - @Round(Number, Decimals)
 - @ToInt64(Number)
 - @Truncate(Text, Length)
+
+Custom functions can be created by implementing the IFunction interface (there is also a base class FunctionBase that contains most of the scaffolding code needed). To make the functions available to Nettle, they can either be injected when creating a new compiler instance or registered individually using the compilers _RegisterFunction_ method. For example:
+
+```c#
+var userFunction = new GetUserFunction();
+var addressFunction = new GetUserAddressesFunction();
+
+var compiler = NettleEngine.GetCompiler
+(
+	userFunction,
+	addressFunction
+);
+
+// OR
+
+var compiler = NettleEngine.GetCompiler();
+
+compiler.RegisterFunction(userFunction);
+compiler.RegisterFunction(addressFunction);
+
+```
 
 ### Variables
 
