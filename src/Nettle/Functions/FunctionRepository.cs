@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// Represents a simple implementation of a function repository
@@ -15,52 +14,40 @@
         /// <summary>
         /// Constructs the repository by auto resolving all functions
         /// </summary>
-        public FunctionRepository()
+        /// <param name="resolvers">The resolvers</param>
+        public FunctionRepository
+            (
+                params INettleResolver[] resolvers
+            )
         {
-            BuildFunctionsDictionary();
+            Validate.IsNotNull(resolvers);
+
+            BuildFunctionsDictionary(resolvers);
         }
 
         /// <summary>
         /// Builds a dictionary of functions using reflection
         /// </summary>
-        private void BuildFunctionsDictionary()
+        /// <param name="resolvers">The resolvers</param>
+        private void BuildFunctionsDictionary
+            (
+                params INettleResolver[] resolvers
+            )
         {
+            Validate.IsNotNull(resolvers);
+            
             _functions = new Dictionary<string, IFunction>();
 
-            var interfaceType = typeof(IFunction);
-            var assembly = Assembly.GetExecutingAssembly();
-            
-            var typesFound = assembly.GetTypes().Where
-            (
-                p => interfaceType.IsAssignableFrom(p)
-                    && false == p.IsAbstract
-                    && false == p.IsInterface
-            );
-
-            foreach (var type in typesFound)
+            foreach (var resolver in resolvers)
             {
-                var constructor = type.GetConstructor
-                (
-                    Type.EmptyTypes
-                );
+                var resolvedFunctions = resolver.ResolveFunctions();
 
-                if (constructor == null)
+                foreach (var function in resolvedFunctions)
                 {
-                    throw new InvalidOperationException
-                    (
-                        "Could not resolve type {0}. An empty constructor is required.".With
-                        (
-                            type.Name
-                        )
-                    );
+                    var name = function.Name;
+
+                    _functions[name] = function;
                 }
-
-                var functionInstance = (IFunction)Activator.CreateInstance
-                (
-                    type
-                );
-
-                AddFunction(functionInstance);
             }
         }
 

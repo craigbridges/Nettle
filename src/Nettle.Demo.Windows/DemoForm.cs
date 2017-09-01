@@ -1,6 +1,8 @@
 ﻿namespace Nettle.Demo.Windows
 {
     using Nettle.Compiler;
+    using Nettle.Data;
+    using Nettle.Web;
     using System;
     using System.Drawing;
     using System.Windows.Forms;
@@ -12,6 +14,13 @@
         public DemoForm()
         {
             InitializeComponent();
+
+            NettleEngine.RegisterResolvers
+            (
+                new DefaultNettleResolver(),
+                new NettleDataResolver(),
+                new NettleWebResolver()
+            );
 
             _compiler = NettleEngine.GetCompiler();
 

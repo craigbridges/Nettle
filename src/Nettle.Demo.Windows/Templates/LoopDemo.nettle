@@ -1,0 +1,7 @@
+Nested loop example:
+{{each $Names}}
+	{{$}}
+	{{each $}}
+		{{$}}
+	{{/each}}
+{{/each}}

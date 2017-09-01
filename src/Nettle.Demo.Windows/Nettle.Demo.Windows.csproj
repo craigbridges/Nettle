@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nettle.Demo.Windows</RootNamespace>
     <AssemblyName>Nettle.Demo.Windows</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -66,6 +67,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -81,6 +83,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nettle.Data\Nettle.Data.csproj">
+      <Project>{424aa266-e3aa-48b3-95cd-400e36266fcb}</Project>
+      <Name>Nettle.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nettle.Web\Nettle.Web.csproj">
+      <Project>{0ce3e0e8-8375-4471-aafc-65b62441d0a7}</Project>
+      <Name>Nettle.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nettle\Nettle.csproj">
       <Project>{6d2a6a46-fee4-4dc4-89dc-314808a89050}</Project>
       <Name>Nettle</Name>

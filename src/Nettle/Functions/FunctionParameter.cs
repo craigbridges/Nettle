@@ -46,9 +46,20 @@
 
             var defaultValue = configuration.DefaultValue;
 
+            this.Name = configuration.Name;
+            this.Description = configuration.Description;
+            this.DataType = configuration.DataType;
+            this.Optional = configuration.Optional;
+            this.DefaultValue = defaultValue;
+
             if (defaultValue != null)
             {
-                if (false == IsValidParameterValue(defaultValue))
+                var isValid = IsValidParameterValue
+                (
+                    defaultValue
+                );
+
+                if (false == isValid)
                 {
                     throw new ArgumentException
                     (
@@ -59,12 +70,6 @@
                     );
                 }
             }
-
-            this.Name = configuration.Name;
-            this.Description = configuration.Description;
-            this.DataType = configuration.DataType;
-            this.Optional = configuration.Optional;
-            this.DefaultValue = defaultValue;
         }
 
         /// <summary>

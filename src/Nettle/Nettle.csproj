@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nettle</RootNamespace>
     <AssemblyName>Nettle</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,7 @@
     <Compile Include="Common\IO\ViewReader.cs" />
     <Compile Include="Common\Validation\TypeConverterChecker.cs" />
     <Compile Include="Common\Validation\Validate.cs" />
+    <Compile Include="Compiler\DefaultNettleResolver.cs" />
     <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
     <Compile Include="Compiler\Parsing\RenderPartialParser.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Compiler\Template.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableDeclaration.cs" />
     <Compile Include="INettleActivator.cs" />
+    <Compile Include="INettleResolver.cs" />
     <Compile Include="NettleEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Compiler\TemplateContext.cs" />

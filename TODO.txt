@@ -4,8 +4,6 @@ Bugs:
 TODO:
 -----
 
-- Create some sort of IFunctionResolver that gets all functions for the assembly. Then Nettle can scan all assemblies for resolvers.
-
 - Write unit tests:
 	- Parser
 	- Validator
@@ -24,6 +22,9 @@ Extensions:
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
 
+- Create Nettle.Math
+	- Integrate NCalc so we can define custom formulas
+
 
 Code Cleanup:
 -------------
@@ -34,6 +35,7 @@ Code Cleanup:
 Low Priority:
 -------------
 
+- Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 - Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
@@ -44,6 +46,7 @@ Low Priority:
 Function Ideas:
 ---------------
 
+- Read file as string (in Nettle.Data)
 - Maths operations such as add, take away, divide and multiply
 - Math formula evaluator (use 3rd party tool)
 - Call Web API and get JSON result (that can then be used as model data)
