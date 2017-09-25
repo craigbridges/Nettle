@@ -29,7 +29,7 @@
                 return this.GetType().Name.Replace
                 (
                     "Function",
-                    String.Empty
+                    string.Empty
                 );
             }
         }
@@ -318,7 +318,7 @@
                 }
             }
             
-            if (parameterValues != null)
+            if (parameterValues != null && this.Parameters.Any())
             {
                 if (parameterCount > this.Parameters.Count)
                 {

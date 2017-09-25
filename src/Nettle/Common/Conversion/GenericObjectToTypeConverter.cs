@@ -19,6 +19,10 @@
             {
                 return default(T);
             }
+            else if (typeof(T) == typeof(object))
+            {
+                return (T)value;
+            }
             else
             {
                 if (value.GetType().CanConvert(typeof(T), value))

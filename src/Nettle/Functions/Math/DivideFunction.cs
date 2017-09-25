@@ -1,30 +1,31 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.Math
 {
     using Nettle.Compiler;
+    using System;
 
     /// <summary>
-    /// Represent a truncate function implementation
+    /// Represent a divide numbers function implementation
     /// </summary>
-    public sealed class TruncateFunction : FunctionBase
+    public sealed class DivideFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public TruncateFunction() 
+        public DivideFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Text",
-                "The text to truncate",
-                typeof(string)
+                "NumberOne",
+                "The first number.",
+                typeof(double)
             );
 
             DefineRequiredParameter
             (
-                "Length",
-                "The texts maximum number of characters.",
-                typeof(int)
+                "NumberTwo",
+                "The second number.",
+                typeof(double)
             );
         }
 
@@ -35,16 +36,16 @@
         {
             get
             {
-                return "Truncates a string to the length specified.";
+                return "Divides two numbers.";
             }
         }
 
         /// <summary>
-        /// Truncates the string supplied to the length specified
+        /// Divides two numbers
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The truncated text</returns>
+        /// <returns>The rounded number</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -53,19 +54,28 @@
         {
             Validate.IsNotNull(context);
 
-            var text = GetParameterValue<string>
+            var number1 = GetParameterValue<double>
             (
-                "Text",
+                "NumberOne",
                 parameterValues
             );
 
-            var length = GetParameterValue<int>
+            var number2 = GetParameterValue<double>
             (
-                "Length",
+                "NumberTwo",
                 parameterValues
             );
 
-            return text.Truncate(length);
+            var total = (number1 / number2);
+
+            if (total.IsWholeNumber())
+            {
+                return Convert.ToInt64(total);
+            }
+            else
+            {
+                return total;
+            }
         }
     }
 }

@@ -1,24 +1,25 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.Math
 {
     using Nettle.Compiler;
-    using System;
+    using System.Linq;
+    using System.Collections;
 
     /// <summary>
-    /// Represent a convert to Int64 (long) function implementation
+    /// Represent a count function implementation
     /// </summary>
-    public sealed class ToInt64Function : FunctionBase
+    public sealed class CountFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToInt64Function() 
+        public CountFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Number",
-                "The number",
-                typeof(double)
+                "Collection",
+                "The collection to count",
+                typeof(IEnumerable)
             );
         }
 
@@ -29,12 +30,12 @@
         {
             get
             {
-                return "Converts a double to an equivalent 64-bit signed integer.";
+                return "Counts the number of items in a collection.";
             }
         }
 
         /// <summary>
-        /// Rounds a number to the decimal places specified
+        /// Counts the number of items in the collection supplied
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -47,13 +48,27 @@
         {
             Validate.IsNotNull(context);
 
-            var number = GetParameterValue<double>
+            var collection = GetParameterValue<object>
             (
-                "Number",
+                "Collection",
                 parameterValues
             );
+            
+            if (collection == null)
+            {
+                return 0;
+            }
+            else
+            {
+                var count = default(int);
 
-            return Convert.ToInt64(number);
+                foreach (var item in collection as IEnumerable)
+                {
+                    count++;
+                }
+
+                return count;
+            }
         }
     }
 }

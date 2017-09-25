@@ -1,31 +1,31 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.Math
 {
     using Nettle.Compiler;
     using System;
 
     /// <summary>
-    /// Represent a round number function implementation
+    /// Represent a multiply numbers function implementation
     /// </summary>
-    public sealed class RoundFunction : FunctionBase
+    public sealed class MultiplyFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public RoundFunction() 
+        public MultiplyFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Number",
-                "The number to round",
+                "NumberOne",
+                "The first number.",
                 typeof(double)
             );
 
             DefineRequiredParameter
             (
-                "Decimals",
-                "The number of decimal places.",
-                typeof(int)
+                "NumberTwo",
+                "The second number.",
+                typeof(double)
             );
         }
 
@@ -36,12 +36,12 @@
         {
             get
             {
-                return "Rounds a number to a set number of decimal places.";
+                return "Multiples two numbers together.";
             }
         }
 
         /// <summary>
-        /// Rounds a number to the decimal places specified
+        /// Multiplys two numbers
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -54,19 +54,28 @@
         {
             Validate.IsNotNull(context);
 
-            var number = GetParameterValue<double>
+            var number1 = GetParameterValue<double>
             (
-                "Number",
+                "NumberOne",
                 parameterValues
             );
 
-            var decimals = GetParameterValue<int>
+            var number2 = GetParameterValue<double>
             (
-                "Decimals",
+                "NumberTwo",
                 parameterValues
             );
 
-            return Math.Round(number, decimals);
+            var total = (number1 * number2);
+
+            if (total.IsWholeNumber())
+            {
+                return Convert.ToInt64(total);
+            }
+            else
+            {
+                return total;
+            }
         }
     }
 }

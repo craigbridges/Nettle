@@ -3,27 +3,52 @@ Bugs:
 
 TODO:
 -----
+Functions.Average
+- gets the average value in a sequenceof numbers
 
-- Write unit tests:
-	- Parser
-	- Validator
-	- Renderer
-	- Full test using compiler
+Functions.Largest
+- gets the largest number in a collection of numbers
+
+Functions.Smallest
+- gets the smallest number in a collection of numbers
+
+Functions.RandomInteger
+- generates a random integer between 2 ranges
+
+Functions.RandomDecimal
+- generates a random decimal between 2 ranges
 
 
 Extensions:
 -----------
-- Create separate projects for integrations with 3rd party tools like json.net, ncalc etc (would have separate nuget - like Autofac)
-	- Create Nettle.Web project with dependencies like json.net etc which has functions for pulling and pushing http resources as well as specialised web api call functions that return json models.
-	- Create support for json and xml type models in terms of model bindings.
+- Create Nettle.Web project
+	HttpGet
+	- gets a string result of a http get call
+
+	Functions.CallWebApi
+	- call a web api and get json result, this will depend on Nettle.Data extension
+
+	Http post and delete? Anything else?
 
 - Create Nettle.Data project
-	- With custom functions and models to read data like csv, xml etc. Functions to read through the imported data model too.
+	Functions.Csv
+	- read csv into grid with functions to get arrays of column headers, all rows, top x rows, all cell values in a row. Perhaps if we create a generic grid, can have functions to perform some sort of search and sort?
+
+	Functions.Xml
+	- read xml into generic xml container with functions to find all tags of a name and then within that to find sub tags etc. Each tag group would be represented as a mini model and each tag value would be treated as a property.
+
+	Functions.Json
+	- as above for xml but for json format
+
+	Functions.ReadTextFile
+	- read a plain text file from the file system into a string.
+
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
 
 - Create Nettle.Math
-	- Integrate NCalc so we can define custom formulas
+	Functions.Evaluate
+	- evaluates a maths formula using NCalc with support for model bindings
 
 
 Code Cleanup:
@@ -35,6 +60,7 @@ Code Cleanup:
 Low Priority:
 -------------
 
+- Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})

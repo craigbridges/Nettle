@@ -1,4 +1,4 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.String
 {
     using Nettle.Compiler;
     using System;

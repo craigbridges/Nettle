@@ -1,36 +1,30 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.DateTime
 {
     using Nettle.Compiler;
+    using System;
 
     /// <summary>
-    /// Represent a replace function implementation
+    /// Represent a format date and time function implementation
     /// </summary>
-    public sealed class ReplaceFunction : FunctionBase
+    public sealed class FormatDateFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ReplaceFunction() 
+        public FormatDateFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Text",
-                "The original text",
-                typeof(string)
+                "Date",
+                "The date and time to format.",
+                typeof(DateTime)
             );
 
             DefineRequiredParameter
             (
-                "OldValue",
-                "The old value",
-                typeof(string)
-            );
-
-            DefineRequiredParameter
-            (
-                "NewValue",
-                "The new value",
+                "Format",
+                "A standard or custom date and time format string.",
                 typeof(string)
             );
         }
@@ -42,16 +36,16 @@
         {
             get
             {
-                return "Replaces text in a string with other text.";
+                return "Replicates the String.Format method.";
             }
         }
 
         /// <summary>
-        /// Replaces a value in some text with the value specified
+        /// Formats the date time supplied to the format specified
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The updated text</returns>
+        /// <returns>The formatted date</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -60,29 +54,19 @@
         {
             Validate.IsNotNull(context);
 
-            var text = GetParameterValue<string>
+            var date = GetParameterValue<DateTime>
             (
-                "Text",
+                "Date",
                 parameterValues
             );
 
-            var oldValue = GetParameterValue<string>
+            var format = GetParameterValue<string>
             (
-                "OldValue",
+                "Format",
                 parameterValues
             );
 
-            var newValue = GetParameterValue<string>
-            (
-                "NewValue",
-                parameterValues
-            );
-
-            return text.Replace
-            (
-                oldValue,
-                newValue
-            );
+            return date.ToString(format);
         }
     }
 }

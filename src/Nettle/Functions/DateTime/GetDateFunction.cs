@@ -1,26 +1,19 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.DateTime
 {
     using Nettle.Compiler;
-    using System.Web;
+    using System;
 
     /// <summary>
-    /// Represent a HTML encode function implementation
+    /// Represent a get date and time function implementation
     /// </summary>
-    public sealed class HtmlEncodeFunction : FunctionBase
+    public sealed class GetDateFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HtmlEncodeFunction() 
+        public GetDateFunction() 
             : base()
-        {
-            DefineRequiredParameter
-            (
-                "Text",
-                "The text to encode",
-                typeof(string)
-            );
-        }
+        { }
 
         /// <summary>
         /// Gets a description of the function
@@ -29,16 +22,16 @@
         {
             get
             {
-                return "HTML encodes text.";
+                return "Gets the current local date and time.";
             }
         }
 
         /// <summary>
-        /// HTML encodes some text
+        /// Gets the current date and time
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The encoded text</returns>
+        /// <returns>The date and time</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -47,16 +40,7 @@
         {
             Validate.IsNotNull(context);
 
-            var text = GetParameterValue<string>
-            (
-                "Text",
-                parameterValues
-            );
-
-            return HttpUtility.HtmlEncode
-            (
-                text
-            );
+            return DateTime.Now;
         }
     }
 }

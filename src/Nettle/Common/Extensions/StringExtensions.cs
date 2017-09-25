@@ -424,12 +424,10 @@
             }
             else
             {
-                var number = default(double);
-
                 return Double.TryParse
                 (
                     value,
-                    out number
+                    out double number
                 );
             }
         }

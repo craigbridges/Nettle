@@ -1,31 +1,31 @@
-﻿namespace Nettle.Functions.Core
+﻿namespace Nettle.Functions.Math
 {
     using Nettle.Compiler;
     using System;
 
     /// <summary>
-    /// Represent a format date and time function implementation
+    /// Represent a subtract numbers function implementation
     /// </summary>
-    public sealed class FormatDateFunction : FunctionBase
+    public sealed class SubtractFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public FormatDateFunction() 
+        public SubtractFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Date",
-                "The date and time to format.",
-                typeof(DateTime)
+                "NumberOne",
+                "The first number.",
+                typeof(double)
             );
 
             DefineRequiredParameter
             (
-                "Format",
-                "A standard or custom date and time format string.",
-                typeof(string)
+                "NumberTwo",
+                "The second number.",
+                typeof(double)
             );
         }
 
@@ -36,16 +36,16 @@
         {
             get
             {
-                return "Replicates the String.Format method.";
+                return "Subtracts two numbers from each other.";
             }
         }
 
         /// <summary>
-        /// Formats the date time supplied to the format specified
+        /// Subtracts two numbers
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The formatted date</returns>
+        /// <returns>The rounded number</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -54,19 +54,28 @@
         {
             Validate.IsNotNull(context);
 
-            var date = GetParameterValue<DateTime>
+            var number1 = GetParameterValue<double>
             (
-                "Date",
+                "NumberOne",
                 parameterValues
             );
 
-            var format = GetParameterValue<string>
+            var number2 = GetParameterValue<double>
             (
-                "Format",
+                "NumberTwo",
                 parameterValues
             );
 
-            return date.ToString(format);
+            var total = (number1 - number2);
+
+            if (total.IsWholeNumber())
+            {
+                return Convert.ToInt64(total);
+            }
+            else
+            {
+                return total;
+            }
         }
     }
 }

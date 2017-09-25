@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Conversion\GenericObjectToTypeConverter.cs" />
+    <Compile Include="Common\Extensions\DoubleExtensions.cs" />
     <Compile Include="Common\Extensions\StringExtensions.cs" />
     <Compile Include="Common\Extensions\TypeExtensions.cs" />
     <Compile Include="Common\IO\NettleView.cs" />
@@ -90,12 +91,18 @@
     <Compile Include="Compiler\TemplateValidationError.cs" />
     <Compile Include="Compiler\TemplateValidationResult.cs" />
     <Compile Include="Compiler\TemplateValidator.cs" />
-    <Compile Include="Functions\Core\GetDateFunction.cs" />
-    <Compile Include="Functions\Core\FormatDateFunction.cs" />
-    <Compile Include="Functions\Core\PadRightFunction.cs" />
-    <Compile Include="Functions\Core\ToInt64Function.cs" />
-    <Compile Include="Functions\Core\RoundFunction.cs" />
-    <Compile Include="Functions\Core\PadLeftFunction.cs" />
+    <Compile Include="Functions\DateTime\GetDateFunction.cs" />
+    <Compile Include="Functions\DateTime\FormatDateFunction.cs" />
+    <Compile Include="Functions\Math\MultiplyFunction.cs" />
+    <Compile Include="Functions\Math\DivideFunction.cs" />
+    <Compile Include="Functions\Math\SubtractFunction.cs" />
+    <Compile Include="Functions\Math\CountFunction.cs" />
+    <Compile Include="Functions\Math\AddFunction.cs" />
+    <Compile Include="Functions\Math\SumFunction.cs" />
+    <Compile Include="Functions\String\PadRightFunction.cs" />
+    <Compile Include="Functions\Conversion\ToInt64Function.cs" />
+    <Compile Include="Functions\Math\RoundFunction.cs" />
+    <Compile Include="Functions\String\PadLeftFunction.cs" />
     <Compile Include="Functions\FunctionBase.cs" />
     <Compile Include="Functions\FunctionExecutionResult.cs" />
     <Compile Include="Functions\FunctionParameter.cs" />
@@ -106,11 +113,11 @@
     <Compile Include="Compiler\Parsing\NettleValueType.cs" />
     <Compile Include="Functions\FunctionParameterExtensions.cs" />
     <Compile Include="Functions\IFunction.cs" />
-    <Compile Include="Functions\Core\HtmlEncodeFunction.cs" />
+    <Compile Include="Functions\String\HtmlEncodeFunction.cs" />
     <Compile Include="Functions\IFunctionRepository.cs" />
-    <Compile Include="Functions\Core\ReplaceFunction.cs" />
+    <Compile Include="Functions\String\ReplaceFunction.cs" />
     <Compile Include="Functions\FunctionRepository.cs" />
-    <Compile Include="Functions\Core\TruncateFunction.cs" />
+    <Compile Include="Functions\String\TruncateFunction.cs" />
     <Compile Include="Compiler\INettleCompiler.cs" />
     <Compile Include="Compiler\Parsing\Blocks\CodeBlock.cs" />
     <Compile Include="Compiler\Parsing\Blocks\ForEachLoop.cs" />
@@ -131,6 +138,7 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

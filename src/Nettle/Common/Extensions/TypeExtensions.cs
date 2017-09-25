@@ -138,18 +138,21 @@
                     return true;
 
                 case TypeCode.Object:
-
-                    var isNullable =
-                    (
-                        type.GetGenericTypeDefinition() == typeof(Nullable<>)
-                    );
-
-                    if (acceptNullables && type.IsGenericType && isNullable)
+                    
+                    if (acceptNullables && type.IsGenericType)
                     {
-                        return IsNumeric
+                        var isNullable =
                         (
-                            Nullable.GetUnderlyingType(type)
+                            type.GetGenericTypeDefinition() == typeof(Nullable<>)
                         );
+                        
+                        if (isNullable)
+                        {
+                            return IsNumeric
+                            (
+                                Nullable.GetUnderlyingType(type)
+                            );
+                        }
                     }
 
                     return false;
