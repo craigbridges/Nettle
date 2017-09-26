@@ -2,6 +2,7 @@
 {
     using Nettle.Compiler;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -279,6 +280,63 @@
             (
                 rawValue
             );
+        }
+
+        /// <summary>
+        /// Converts all the parameter values specified to an array of doubles
+        /// </summary>
+        /// <param name="parameterValues">An array of values</param>
+        /// <returns>An array of doubles</returns>
+        protected virtual double[] ConvertToNumbers
+            (
+                params object[] parameterValues
+            )
+        {
+            Validate.IsNotNull(parameterValues);
+
+            var numbers = new List<double>();
+
+            foreach (var value in parameterValues)
+            {
+                if (value != null)
+                {
+                    if (value.ToString().IsNumeric())
+                    {
+                        numbers.Add
+                        (
+                            Double.Parse
+                            (
+                                value.ToString()
+                            )
+                        );
+                    }
+                    else if (value.GetType().IsEnumerable())
+                    {
+                        var items = new List<object>();
+
+                        foreach (var item in value as IEnumerable)
+                        {
+                            items.Add(item);
+                        }
+
+                        var nestedNumbers = ConvertToNumbers
+                        (
+                            items.ToArray()
+                        );
+
+                        numbers.AddRange(nestedNumbers);
+                    }
+                    else
+                    {
+                        throw new ArgumentException
+                        (
+                            "Only numeric values are supported."
+                        );
+                    }
+                }
+            }
+
+            return numbers.ToArray();
         }
 
         /// <summary>

@@ -1,18 +1,17 @@
 ﻿namespace Nettle.Functions.Math
 {
     using Nettle.Compiler;
-    using System;
     using System.Linq;
 
     /// <summary>
-    /// Represent a sum numbers function implementation
+    /// Represent a average numbers function implementation
     /// </summary>
-    public sealed class SumFunction : FunctionBase
+    public sealed class AverageFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public SumFunction() 
+        public AverageFunction() 
             : base()
         { }
 
@@ -23,12 +22,12 @@
         {
             get
             {
-                return "Computes the sum of a sequence of numeric values.";
+                return "Computes the average from a sequence of numeric values.";
             }
         }
 
         /// <summary>
-        /// Sums the parameter values supplied as a double
+        /// Averages the parameter values supplied as a double
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -42,16 +41,8 @@
             Validate.IsNotNull(context);
 
             var numbers = ConvertToNumbers(parameterValues);
-            var total = numbers.Sum();
-
-            if (total.IsWholeNumber())
-            {
-                return Convert.ToInt64(total);
-            }
-            else
-            {
-                return total;
-            }
+            
+            return numbers.Average();
         }
     }
 }

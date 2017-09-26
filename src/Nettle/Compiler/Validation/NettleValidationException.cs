@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler.Parsing
+﻿namespace Nettle.Compiler.Validation
 {
     using System;
     using System.Text;

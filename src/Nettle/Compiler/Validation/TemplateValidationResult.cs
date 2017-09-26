@@ -1,7 +1,5 @@
-﻿namespace Nettle.Compiler
+﻿namespace Nettle.Compiler.Validation
 {
-    using Nettle.Compiler.Parsing.Blocks;
-
     /// <summary>
     /// Represents a template validation result
     /// </summary>

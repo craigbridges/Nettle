@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler
+﻿namespace Nettle.Compiler.Validation
 {
     /// <summary>
     /// Defines a contract for a template validator

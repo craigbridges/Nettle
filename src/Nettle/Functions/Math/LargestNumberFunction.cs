@@ -5,14 +5,14 @@
     using System.Linq;
 
     /// <summary>
-    /// Represent a sum numbers function implementation
+    /// Represents a largest number function implementation
     /// </summary>
-    public sealed class SumFunction : FunctionBase
+    public sealed class LargestNumberFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public SumFunction() 
+        public LargestNumberFunction() 
             : base()
         { }
 
@@ -23,12 +23,12 @@
         {
             get
             {
-                return "Computes the sum of a sequence of numeric values.";
+                return "Gets the largest number of a sequence.";
             }
         }
 
         /// <summary>
-        /// Sums the parameter values supplied as a double
+        /// LargestNumbers the parameter values supplied as a double
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -42,15 +42,17 @@
             Validate.IsNotNull(context);
 
             var numbers = ConvertToNumbers(parameterValues);
-            var total = numbers.Sum();
 
-            if (total.IsWholeNumber())
+            if (numbers.Length == 0)
             {
-                return Convert.ToInt64(total);
+                throw new ArgumentException
+                (
+                    "The sequence does not contain any numbers."
+                );
             }
             else
             {
-                return total;
+                return numbers.OrderByDescending(a => a).First();
             }
         }
     }

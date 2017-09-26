@@ -3,6 +3,7 @@
     using Nettle.Compiler;
     using Nettle.Compiler.Parsing;
     using Nettle.Compiler.Rendering;
+    using Nettle.Compiler.Validation;
     using Nettle.Functions;
     using System.Collections.Generic;
     using System.Linq;

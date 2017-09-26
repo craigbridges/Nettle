@@ -1,4 +1,4 @@
-﻿namespace Nettle.Compiler
+﻿namespace Nettle.Compiler.Validation
 {
     using Nettle.Compiler.Parsing.Blocks;
 

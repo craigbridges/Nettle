@@ -3,21 +3,6 @@ Bugs:
 
 TODO:
 -----
-Functions.Average
-- gets the average value in a sequenceof numbers
-
-Functions.Largest
-- gets the largest number in a collection of numbers
-
-Functions.Smallest
-- gets the smallest number in a collection of numbers
-
-Functions.RandomInteger
-- generates a random integer between 2 ranges
-
-Functions.RandomDecimal
-- generates a random decimal between 2 ranges
-
 
 Extensions:
 -----------
@@ -46,7 +31,7 @@ Extensions:
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
 
-- Create Nettle.Math
+- Create Nettle.NCalc
 	Functions.Evaluate
 	- evaluates a maths formula using NCalc with support for model bindings
 
@@ -54,15 +39,13 @@ Extensions:
 Code Cleanup:
 -------------
 
-- Split validator like with parser and render code
-
-
 Low Priority:
 -------------
 
+- Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
+- Some sort of "safe mode" or ignore errors flag that can be set when compiling a template or overridden in the template itself. E.g. something like {{#SafeModeOn}} or {{#SafeModeOff}}
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
-- Functions that can take any number of parameters (will effect validation) in the same way C# allows params
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 - Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
 - TemplateContext: lazy load properties on demand (i.e. only when first model binding is rendered, if there are any) to improve performance?
@@ -73,7 +56,6 @@ Function Ideas:
 ---------------
 
 - Read file as string (in Nettle.Data)
-- Maths operations such as add, take away, divide and multiply
 - Math formula evaluator (use 3rd party tool)
 - Call Web API and get JSON result (that can then be used as model data)
 	- Async methods so we can handle things like API call function?
