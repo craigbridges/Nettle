@@ -16,18 +16,22 @@ Extensions:
 	Http post and delete? Anything else?
 
 - Create Nettle.Data project
-	Functions.Csv
+	Functions.ReadCsv
 	- read csv into grid with functions to get arrays of column headers, all rows, top x rows, all cell values in a row. Perhaps if we create a generic grid, can have functions to perform some sort of search and sort?
 
-	Functions.Xml
+	Functions.ReadXml
 	- read xml into generic xml container with functions to find all tags of a name and then within that to find sub tags etc. Each tag group would be represented as a mini model and each tag value would be treated as a property.
 
-	Functions.Json
+	Functions.ReadJson
 	- as above for xml but for json format
 
 	Functions.ReadTextFile
 	- read a plain text file from the file system into a string.
 
+	- ToCsv, ToXml and ToJson functions that take any object or a DataGrid - use 3rd party tools to serialize 
+	
+	- DataGrid table structure object (modeled on IDataGrid) to hold query results data.
+	
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
 
