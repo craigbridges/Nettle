@@ -52,6 +52,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\Nettle.Data\Nettle.Data.csproj">
+      <Project>{424aa266-e3aa-48b3-95cd-400e36266fcb}</Project>
+      <Name>Nettle.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nettle\Nettle.csproj">
       <Project>{6d2a6a46-fee4-4dc4-89dc-314808a89050}</Project>
       <Name>Nettle</Name>

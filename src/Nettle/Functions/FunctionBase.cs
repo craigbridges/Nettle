@@ -8,7 +8,7 @@
     using System.Text;
 
     /// <summary>
-    /// Represents a base class for a function
+    /// Represents a base class for a Nettle function
     /// </summary>
     public abstract class FunctionBase : IFunction
     {
@@ -39,6 +39,49 @@
         /// Gets a description for the function (for documentation purposes)
         /// </summary>
         public abstract string Description { get; }
+
+        /// <summary>
+        /// Gets a flag indicating if the function is disabled
+        /// </summary>
+        public bool Disabled { get; private set; }
+
+        /// <summary>
+        /// Enables the function
+        /// </summary>
+        public void Enable()
+        {
+            if (false == this.Disabled)
+            {
+                throw new InvalidOperationException
+                (
+                    "The function {0} has already been enabled.".With
+                    (
+                        this.Name
+                    )
+                );
+            }
+
+            this.Disabled = false;
+        }
+
+        /// <summary>
+        /// Disables the function
+        /// </summary>
+        public void Disable()
+        {
+            if (this.Disabled)
+            {
+                throw new InvalidOperationException
+                (
+                    "The function {0} has already been disabled.".With
+                    (
+                        this.Name
+                    )
+                );
+            }
+
+            this.Disabled = true;
+        }
 
         /// <summary>
         /// Gets a list of function parameters
@@ -352,6 +395,17 @@
             )
         {
             Validate.IsNotNull(context);
+
+            if (this.Disabled)
+            {
+                throw new InvalidOperationException
+                (
+                    "The function '{0}' cannot be executed because it's disabled.".With
+                    (
+                        this.Name
+                    )
+                );
+            }
 
             var expectedCount = GetRequiredParameters().Count();
             var parameterCount = 0;

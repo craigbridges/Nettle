@@ -216,5 +216,43 @@
                 function
             );
         }
+
+        /// <summary>
+        /// Disables the function specified
+        /// </summary>
+        /// <param name="functionName">The function name</param>
+        public void DisableFunction
+            (
+                string functionName
+            )
+        {
+            Validate.IsNotEmpty(functionName);
+
+            var function = _functionRepository.GetFunction
+            (
+                functionName
+            );
+
+            function.Disable();
+        }
+
+        /// <summary>
+        /// Enables the function specified
+        /// </summary>
+        /// <param name="functionName">The function name</param>
+        public void EnableFunction
+            (
+                string functionName
+            )
+        {
+            Validate.IsNotEmpty(functionName);
+
+            var function = _functionRepository.GetFunction
+            (
+                functionName
+            );
+
+            function.Enable();
+        }
     }
 }

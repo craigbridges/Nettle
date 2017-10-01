@@ -50,6 +50,10 @@
     <Compile Include="Common\Extensions\TypeExtensions.cs" />
     <Compile Include="Common\IO\NettleView.cs" />
     <Compile Include="Common\IO\ViewReader.cs" />
+    <Compile Include="Common\Serialization\Grid\DataGrid.cs" />
+    <Compile Include="Common\Serialization\Grid\DataGridRow.cs" />
+    <Compile Include="Common\Serialization\Grid\IDataGrid.cs" />
+    <Compile Include="Common\Serialization\Grid\IDataGridRow.cs" />
     <Compile Include="Common\Validation\TypeConverterChecker.cs" />
     <Compile Include="Common\Validation\Validate.cs" />
     <Compile Include="Compiler\DefaultNettleResolver.cs" />

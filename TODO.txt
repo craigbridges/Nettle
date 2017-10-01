@@ -7,8 +7,6 @@ TODO:
 Extensions:
 -----------
 - Create Nettle.Web project
-	HttpGet
-	- gets a string result of a http get call
 
 	Functions.CallWebApi
 	- call a web api and get json result, this will depend on Nettle.Data extension
@@ -16,8 +14,6 @@ Extensions:
 	Http post and delete? Anything else?
 
 - Create Nettle.Data project
-	Functions.ReadCsv
-	- read csv into grid with functions to get arrays of column headers, all rows, top x rows, all cell values in a row. Perhaps if we create a generic grid, can have functions to perform some sort of search and sort?
 
 	Functions.ReadXml
 	- read xml into generic xml container with functions to find all tags of a name and then within that to find sub tags etc. Each tag group would be represented as a mini model and each tag value would be treated as a property.
@@ -30,25 +26,16 @@ Extensions:
 
 	- ToCsv, ToXml and ToJson functions that take any object or a DataGrid - use 3rd party tools to serialize 
 	
-	- DataGrid table structure object (modeled on IDataGrid) to hold query results data.
-	
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
 
-- Create Nettle.NCalc
-	Functions.Evaluate
-	- evaluates a maths formula using NCalc with support for model bindings
-
-
-Code Cleanup:
--------------
 
 Low Priority:
 -------------
 
 - Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
-- Some sort of "safe mode" or ignore errors flag that can be set when compiling a template or overridden in the template itself. E.g. something like {{#SafeModeOn}} or {{#SafeModeOff}}
+- Some sort of "safe mode" or ignore errors flag that can be set when compiling a template or overridden in the template itself. E.g. something like {{#SafeModeOn}} or {{#SafeModeOff}} - also {{#DebugMode}}
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 - Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
@@ -59,8 +46,6 @@ Low Priority:
 Function Ideas:
 ---------------
 
-- Read file as string (in Nettle.Data)
-- Math formula evaluator (use 3rd party tool)
 - Call Web API and get JSON result (that can then be used as model data)
 	- Async methods so we can handle things like API call function?
 	- How do we handle headers? (e.g. security like we use)

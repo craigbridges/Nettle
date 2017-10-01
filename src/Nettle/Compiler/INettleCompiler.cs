@@ -66,5 +66,23 @@
         (
             IFunction function
         );
+
+        /// <summary>
+        /// Disables the function specified
+        /// </summary>
+        /// <param name="functionName">The function name</param>
+        void DisableFunction
+        (
+            string functionName
+        );
+
+        /// <summary>
+        /// Enables the function specified
+        /// </summary>
+        /// <param name="functionName">The function name</param>
+        void EnableFunction
+        (
+            string functionName
+        );
     }
 }

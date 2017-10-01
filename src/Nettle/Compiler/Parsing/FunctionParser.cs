@@ -57,8 +57,17 @@
 
             var name = body.LeftOf("(");
             var parameters = new List<FunctionCallParameter>();
-            var parameterSegment = body.RightOf("(").LeftOf(")");
-            
+
+            var parameterStart = body.IndexOf('(');
+            var parameterEnd = body.LastIndexOf(')');
+            var parameterLength = (parameterEnd - parameterStart) - 1;
+
+            var parameterSegment = body.Substring
+            (
+                parameterStart + 1,
+                parameterLength
+            );
+
             if (false == String.IsNullOrEmpty(parameterSegment))
             {
                 var parameterValues = parameterSegment.Split(',').Select

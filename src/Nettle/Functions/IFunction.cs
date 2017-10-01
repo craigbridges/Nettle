@@ -19,6 +19,21 @@
         string Description { get; }
 
         /// <summary>
+        /// Gets a flag indicating if the function is disabled
+        /// </summary>
+        bool Disabled { get; }
+
+        /// <summary>
+        /// Enables the function
+        /// </summary>
+        void Enable();
+
+        /// <summary>
+        /// Disables the function
+        /// </summary>
+        void Disable();
+
+        /// <summary>
         /// Gets a collection of all parameters for the function
         /// </summary>
         IEnumerable<FunctionParameter> GetAllParameters();

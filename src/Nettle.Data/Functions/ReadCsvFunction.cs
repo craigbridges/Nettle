@@ -1,23 +1,24 @@
 ﻿namespace Nettle.Data.Functions
 {
     using Nettle.Compiler;
+    using Nettle.Data.Common.Serialization.Csv;
     using Nettle.Functions;
-    using System.Net;
+    using System;
 
     /// <summary>
-    /// Represents function for getting a single HTTP resource
+    /// Represents function for reading a CSV file into a data grid
     /// </summary>
-    public class HttpGetFunction : FunctionBase
+    public class ReadCsvFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HttpGetFunction()
+        public ReadCsvFunction()
         {
-            DefineRequiredParameter
+            DefineOptionalParameter
             (
-                "URL",
-                "The URL to get",
+                "FilePath",
+                "The CSV file path",
                 typeof(string)
             );
         }
@@ -29,16 +30,16 @@
         {
             get
             {
-                return "Gets a single HTTP resource as a string.";
+                return "Reads a CSV file into a data grid.";
             }
         }
 
         /// <summary>
-        /// Generates an array of random integers
+        /// Reads the CSV file into a data grid
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The truncated text</returns>
+        /// <returns>The data grid</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -47,16 +48,16 @@
         {
             Validate.IsNotNull(context);
 
-            var url = GetParameterValue<string>
+            var filePath = GetParameterValue<string>
             (
-                "URL",
+                "FilePath",
                 parameterValues
             );
 
-            using (var client = new WebClient())
-            {
-                return client.DownloadString(url);
-            }
+            var serializer = new CsvToGridSerializer();
+            var grid = serializer.ReadCsvFile(filePath);
+
+            return grid;
         }
     }
 }

@@ -1,23 +1,24 @@
-﻿namespace Nettle.Data.Functions
+﻿namespace Nettle.NCalc.Functions
 {
+    using global::NCalc;
     using Nettle.Compiler;
     using Nettle.Functions;
     using System.Net;
 
     /// <summary>
-    /// Represents function for getting a single HTTP resource
+    /// Represents function for evaluating a mathematical expression
     /// </summary>
-    public class HttpGetFunction : FunctionBase
+    public class EvaluateFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HttpGetFunction()
+        public EvaluateFunction()
         {
             DefineRequiredParameter
             (
-                "URL",
-                "The URL to get",
+                "Expression",
+                "The mathematical expression to evaluate",
                 typeof(string)
             );
         }
@@ -29,7 +30,7 @@
         {
             get
             {
-                return "Gets a single HTTP resource as a string.";
+                return "Evaluates a single mathematical expression.";
             }
         }
 
@@ -47,16 +48,13 @@
         {
             Validate.IsNotNull(context);
 
-            var url = GetParameterValue<string>
+            var expression = GetParameterValue<string>
             (
-                "URL",
+                "Expression",
                 parameterValues
             );
 
-            using (var client = new WebClient())
-            {
-                return client.DownloadString(url);
-            }
+            return new Expression(expression).Evaluate();
         }
     }
 }

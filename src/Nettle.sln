@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Data", "Nettle.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Web", "Nettle.Web\Nettle.Web.csproj", "{0CE3E0E8-8375-4471-AAFC-65B62441D0A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.NCalc", "Nettle.NCalc\Nettle.NCalc.csproj", "{DCD45240-13C3-4698-9894-347553AD8B81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0CE3E0E8-8375-4471-AAFC-65B62441D0A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CE3E0E8-8375-4471-AAFC-65B62441D0A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CE3E0E8-8375-4471-AAFC-65B62441D0A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCD45240-13C3-4698-9894-347553AD8B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCD45240-13C3-4698-9894-347553AD8B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

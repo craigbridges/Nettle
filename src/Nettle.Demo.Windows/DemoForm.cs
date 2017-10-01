@@ -2,6 +2,7 @@
 {
     using Nettle.Compiler;
     using Nettle.Data;
+    using Nettle.NCalc;
     using Nettle.Web;
     using System;
     using System.Drawing;
@@ -19,11 +20,12 @@
             (
                 new DefaultNettleResolver(),
                 new NettleDataResolver(),
-                new NettleWebResolver()
+                new NettleWebResolver(),
+                new NettleNCalcResolver()
             );
 
             _compiler = NettleEngine.GetCompiler();
-
+            
             _compiler.AutoRegisterViews
             (
                 "../../Templates"

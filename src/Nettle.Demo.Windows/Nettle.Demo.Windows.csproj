@@ -87,6 +87,10 @@
       <Project>{424aa266-e3aa-48b3-95cd-400e36266fcb}</Project>
       <Name>Nettle.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nettle.NCalc\Nettle.NCalc.csproj">
+      <Project>{dcd45240-13c3-4698-9894-347553ad8b81}</Project>
+      <Name>Nettle.NCalc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nettle.Web\Nettle.Web.csproj">
       <Project>{0ce3e0e8-8375-4471-aafc-65b62441d0a7}</Project>
       <Name>Nettle.Web</Name>
