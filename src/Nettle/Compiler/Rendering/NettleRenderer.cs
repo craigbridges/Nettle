@@ -5,9 +5,10 @@
     using Nettle.Functions;
     using System;
     using System.Collections.Generic;
+    using System.Xml;
 
     /// <summary>
-    /// Represents a base class for all Nettle renderers
+    /// Represents a base class for all Nettle renderer's
     /// </summary>
     internal abstract class NettleRenderer
     {
@@ -256,25 +257,9 @@
                 {
                     return (string)value;
                 }
-                else if (valueType == typeof(decimal))
+                else if (valueType == typeof(XmlDocument))
                 {
-                    var roundedValue = Math.Round
-                    (
-                        (decimal)value,
-                        2
-                    );
-
-                    return roundedValue.ToString();
-                }
-                else if (valueType == typeof(double))
-                {
-                    var roundedValue = Math.Round
-                    (
-                        (double)value,
-                        2
-                    );
-
-                    return roundedValue.ToString();
+                    return ((XmlDocument)value).Stringify();
                 }
                 else
                 {

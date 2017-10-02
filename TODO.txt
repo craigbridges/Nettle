@@ -1,9 +1,23 @@
 TODO:
 -----
 
+- Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
+- Create ToJson DataGrid extension method
+
 Extensions:
 -----------
-- Create Nettle.Web project
+
+- Nettle.Data
+
+	Functions.ReadJson
+	- as above for xml but for json format
+
+	- ToCsv, ToXml and ToJson functions that take any object or a DataGrid - use 3rd party tools to serialize 
+	
+	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
+	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
+
+- Nettle.Web
 
 	Functions.CallWebApi
 	- call a web api and get json result, this will depend on Nettle.Data extension
@@ -11,23 +25,6 @@ Extensions:
 	- How do we handle headers? (e.g. security like we use)
 
 	Http post and delete? Anything else?
-
-- Create Nettle.Data project
-
-	Functions.ReadXml
-	- read xml into generic xml container with functions to find all tags of a name and then within that to find sub tags etc. Each tag group would be represented as a mini model and each tag value would be treated as a property.
-
-	Functions.ReadJson
-	- as above for xml but for json format
-
-	Functions.ReadTextFile
-	- read a plain text file from the file system into a string.
-
-	- ToCsv, ToXml and ToJson functions that take any object or a DataGrid - use 3rd party tools to serialize 
-	
-	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
-	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
-
 
 Low Priority:
 -------------

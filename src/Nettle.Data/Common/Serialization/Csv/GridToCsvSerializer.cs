@@ -1,15 +1,14 @@
 ﻿namespace Nettle.Data.Common.Serialization.Csv
 {
+    using CsvHelper;
+    using CsvHelper.Configuration;
     using Nettle.Common.Serialization.Grid;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using CsvHelper;
     using System.IO;
-    using CsvHelper.Configuration;
+    using System.Linq;
 
     /// <summary>
-    /// Represents a class responsible for reading a CSV file into a data grid
+    /// Represents a class for serializing a data grid into a CSV file
     /// </summary>
     public sealed class GridToCsvSerializer
     {
@@ -18,7 +17,7 @@
         /// </summary>
         /// <param name="grid">The data grid binder to convert</param>
         /// <returns>A string that represents the data grid in CSV format</returns>
-        public string ConvertToCsv
+        public string Serialize
             (
                 IDataGrid grid
             )

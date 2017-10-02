@@ -49,6 +49,9 @@
     <Compile Include="Common\Extensions\DataGridExtensions.cs" />
     <Compile Include="Common\Serialization\Csv\CsvToGridSerializer.cs" />
     <Compile Include="Common\Serialization\Csv\GridToCsvSerializer.cs" />
+    <Compile Include="Common\Serialization\Xml\GridToXmlSerializer.cs" />
+    <Compile Include="Functions\ReadTextFileFunction.cs" />
+    <Compile Include="Functions\ReadXmlFunction.cs" />
     <Compile Include="Functions\ReadCsvFunction.cs" />
     <Compile Include="Functions\GenerateRandomNumbersFunction.cs" />
     <Compile Include="NettleDataResolver.cs" />
@@ -66,7 +69,6 @@
   <ItemGroup>
     <Folder Include="Common\IO\" />
     <Folder Include="Common\Serialization\Json\" />
-    <Folder Include="Common\Serialization\Xml\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

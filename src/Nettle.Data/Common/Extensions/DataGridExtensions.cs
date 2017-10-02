@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Common.Serialization.Grid
 {
     using Nettle.Data.Common.Serialization.Csv;
+    using Nettle.Data.Common.Serialization.Xml;
     using System.Xml;
 
     /// <summary>
@@ -18,27 +19,27 @@
                 this IDataGrid grid
             )
         {
-            return new GridToCsvSerializer().ConvertToCsv
+            return new GridToCsvSerializer().Serialize
             (
                 grid
             );
         }
-        
-        ///// <summary>
-        ///// Converts a data grid to an XML document representation
-        ///// </summary>
-        ///// <param name="grid">The data grid to serialize</param>
-        ///// <returns>The XML document generated</returns>
-        //public static XmlDocument ToXml
-        //    (
-        //        this IDataGrid grid
-        //    )
-        //{
-        //    return new DataGridToXmlConverter().Convert
-        //    (
-        //        grid
-        //    );
-        //}
+
+        /// <summary>
+        /// Converts a data grid to an XML document representation
+        /// </summary>
+        /// <param name="grid">The data grid to serialize</param>
+        /// <returns>The XML document generated</returns>
+        public static XmlDocument ToXml
+            (
+                this IDataGrid grid
+            )
+        {
+            return new GridToXmlSerializer().Serialize
+            (
+                grid
+            );
+        }
 
         ///// <summary>
         ///// Converts a data grid to a JSON string representation
@@ -50,7 +51,7 @@
         //        this IDataGrid grid
         //    )
         //{
-        //    return new DataGridToJsonConverter().Convert
+        //    return new GridToJsonSerializer().Serialize
         //    (
         //        grid
         //    );

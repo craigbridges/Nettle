@@ -48,6 +48,7 @@
     <Compile Include="Common\Extensions\DoubleExtensions.cs" />
     <Compile Include="Common\Extensions\StringExtensions.cs" />
     <Compile Include="Common\Extensions\TypeExtensions.cs" />
+    <Compile Include="Common\Extensions\XmlDocumentExtensions.cs" />
     <Compile Include="Common\IO\NettleView.cs" />
     <Compile Include="Common\IO\ViewReader.cs" />
     <Compile Include="Common\Serialization\Grid\DataGrid.cs" />
