@@ -38,7 +38,7 @@
         {
             get
             {
-                return "Generates a random doubles between a range.";
+                return "Generates a random double between a range.";
             }
         }
 

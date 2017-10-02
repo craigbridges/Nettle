@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Multiplys two numbers
+        /// Multiplies two numbers
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>

@@ -80,7 +80,9 @@ Simon
 
 ### Functions
 
-Functions can take zero or more parameters, which can be a string literal, number, boolean, property or variable. The syntax for using a function is:
+Functions can take zero or more parameters; a string literal, number, boolean, property or variable. The syntax for using a function is {{@_FunctionName_(_Param1_, _Param2_, ...)}}.
+
+For example:
 
 ```
 {{@Truncate("Hello World!", 5)}}
@@ -92,38 +94,7 @@ Which would generate:
 Hello
 ```
 
-There are various built in functions, these are:
-
-- @FormatDate(Date, Format)
-- @GetDate()
-- @HtmlEncode(Text)
-- @PadLeft(Text, TotalWidth, PaddingChar)
-- @PadRight(Text, TotalWidth, PaddingChar)
-- @Replace(OriginalText, FindText, ReplaceText)
-- @Round(Number, Decimals)
-- @ToInt64(Number)
-- @Truncate(Text, Length)
-
-Custom functions can be created by implementing the IFunction interface (there is also a base class _FunctionBase_ that contains most of the scaffolding code needed). To make new functions available to Nettle, they can either be injected when creating a new compiler instance or registered individually using the compilers _RegisterFunction_ method. For example:
-
-```c#
-var userFunction = new GetUserFunction();
-var addressFunction = new GetUserAddressesFunction();
-
-var compiler = NettleEngine.GetCompiler
-(
-	userFunction,
-	addressFunction
-);
-
-// OR
-
-var compiler = NettleEngine.GetCompiler();
-
-compiler.RegisterFunction(userFunction);
-compiler.RegisterFunction(addressFunction);
-
-```
+For more information, see the [functions documentation](https://github.com/craigbridges/Nettle/wiki/Functions).
 
 ### Variables
 

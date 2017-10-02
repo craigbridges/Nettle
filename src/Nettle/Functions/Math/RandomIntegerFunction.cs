@@ -38,7 +38,7 @@
         {
             get
             {
-                return "Generates a random integers between a range.";
+                return "Generates a random integer between a range.";
             }
         }
 

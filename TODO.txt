@@ -1,6 +1,3 @@
-Bugs:
------
-
 TODO:
 -----
 
@@ -10,6 +7,8 @@ Extensions:
 
 	Functions.CallWebApi
 	- call a web api and get json result, this will depend on Nettle.Data extension
+	- Get specific value from JSON object function
+	- How do we handle headers? (e.g. security like we use)
 
 	Http post and delete? Anything else?
 
@@ -41,13 +40,3 @@ Low Priority:
 - Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
 - TemplateContext: lazy load properties on demand (i.e. only when first model binding is rendered, if there are any) to improve performance?
 - Add support for caching
-
-
-Function Ideas:
----------------
-
-- Call Web API and get JSON result (that can then be used as model data)
-	- Async methods so we can handle things like API call function?
-	- How do we handle headers? (e.g. security like we use)
-	- Get specific value from JSON object function
-	- Generic template model to hold HTTP JSON result
