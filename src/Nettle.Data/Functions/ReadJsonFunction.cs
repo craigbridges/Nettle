@@ -2,22 +2,23 @@
 {
     using Nettle.Compiler;
     using Nettle.Functions;
+    using Newtonsoft.Json.Linq;
     using System.IO;
 
     /// <summary>
-    /// Represents function for reading a text file into a string
+    /// Represents function for reading an XML file into a dynamic object
     /// </summary>
-    public class ReadTextFunction : FunctionBase
+    public class ReadJsonFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ReadTextFunction()
+        public ReadJsonFunction()
         {
-            DefineOptionalParameter
+            DefineRequiredParameter
             (
                 "FilePath",
-                "The text file path",
+                "The JSON file path",
                 typeof(string)
             );
         }
@@ -29,16 +30,16 @@
         {
             get
             {
-                return "Reads a text file into a string.";
+                return "Reads a JSON file into a dynamic object.";
             }
         }
 
         /// <summary>
-        /// Reads the XML file into an XmlDocument
+        /// Reads the JSON file into a dynamic object
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The XML document</returns>
+        /// <returns>The object generated</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -53,12 +54,14 @@
                 parameterValues
             );
 
-            var content = File.ReadAllText
+            var fileContents = File.ReadAllText
             (
                 filePath
             );
 
-            return content;
+            var json = JObject.Parse(fileContents);
+
+            return json;
         }
     }
 }

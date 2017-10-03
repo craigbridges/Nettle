@@ -111,29 +111,32 @@
                         {
                             foreach (var value in values)
                             {
-                                var matchingParameter = parameters.ElementAt
-                                (
-                                    counter
-                                );
-
-                                var acceptsValue = matchingParameter.Accepts
-                                (
-                                    value
-                                );
-
-                                if (false == acceptsValue)
+                                if (counter < parameters.Count())
                                 {
-                                    errors.Add
+                                    var matchingParameter = parameters.ElementAt
                                     (
-                                        new TemplateValidationError
-                                        (
-                                            call,
-                                            "The parameter value '{0}' is not valid.".With
-                                            (
-                                                call.FunctionName
-                                            )
-                                        )
+                                        counter
                                     );
+
+                                    var acceptsValue = matchingParameter.Accepts
+                                    (
+                                        value
+                                    );
+
+                                    if (false == acceptsValue)
+                                    {
+                                        errors.Add
+                                        (
+                                            new TemplateValidationError
+                                            (
+                                                call,
+                                                "The parameter value '{0}' is not valid.".With
+                                                (
+                                                    call.FunctionName
+                                                )
+                                            )
+                                        );
+                                    }
                                 }
 
                                 counter++;

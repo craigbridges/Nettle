@@ -113,6 +113,7 @@
     <Compile Include="Functions\Math\AddFunction.cs" />
     <Compile Include="Functions\Math\AverageFunction.cs" />
     <Compile Include="Functions\Math\SumFunction.cs" />
+    <Compile Include="Functions\String\JoinFunction.cs" />
     <Compile Include="Functions\String\PadRightFunction.cs" />
     <Compile Include="Functions\Conversion\ToInt64Function.cs" />
     <Compile Include="Functions\Math\RoundFunction.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Functions\IFunctionRepository.cs" />
     <Compile Include="Functions\String\ReplaceFunction.cs" />
     <Compile Include="Functions\FunctionRepository.cs" />
+    <Compile Include="Functions\String\ConcatFunction.cs" />
     <Compile Include="Functions\String\TruncateFunction.cs" />
     <Compile Include="Compiler\INettleCompiler.cs" />
     <Compile Include="Compiler\Parsing\Blocks\CodeBlock.cs" />

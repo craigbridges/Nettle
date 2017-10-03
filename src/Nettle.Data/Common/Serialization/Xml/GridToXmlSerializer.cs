@@ -36,7 +36,7 @@
             
             var rootNode = document.CreateElement
             (
-                grid.Name
+                "DataGrid"
             );
 
             document.InsertBefore

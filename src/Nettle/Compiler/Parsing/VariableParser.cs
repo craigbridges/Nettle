@@ -36,12 +36,9 @@
             )
         {
             var body = UnwrapSignatureBody(signature);
+            var equalsIndex = body.IndexOf('=');
 
-            body = body.RightOf("var ");
-
-            var parts = body.Split('=');
-
-            if (parts.Length != 2)
+            if (equalsIndex == -1)
             {
                 throw new NettleParseException
                 (
@@ -53,18 +50,20 @@
                 );
             }
 
-            var name = parts[0].Trim();
-            var valueSignature = parts[1].Trim();
+            // Extract the variable name and value signature based on indexes
+            var variableName = body.Crop(3, equalsIndex - 1).Trim();
+            var valueSignature = body.Crop(equalsIndex + 1).Trim();
+
             var type = ResolveType(valueSignature);
             var value = type.ParseValue(valueSignature);
 
-            if (false == IsValidVariableName(name))
+            if (false == IsValidVariableName(variableName))
             {
                 throw new NettleParseException
                 (
                     "The variable name '{0}' is invalid.".With
                     (
-                        name
+                        variableName
                     ),
                     positionOffSet
                 );
@@ -85,7 +84,7 @@
                 Signature = signature,
                 StartPosition = startPosition,
                 EndPosition = endPosition,
-                VariableName = name,
+                VariableName = variableName,
                 AssignedValueSignature = valueSignature,
                 AssignedValue = value,
                 ValueType = type

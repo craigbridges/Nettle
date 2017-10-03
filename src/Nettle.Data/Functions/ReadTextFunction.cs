@@ -2,24 +2,23 @@
 {
     using Nettle.Compiler;
     using Nettle.Functions;
-    using System;
+    using System.IO;
 
     /// <summary>
-    /// Represents function for generating an array of random numbers
+    /// Represents function for reading a text file into a string
     /// </summary>
-    public class GenerateRandomNumbersFunction : FunctionBase
+    public class ReadTextFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public GenerateRandomNumbersFunction()
+        public ReadTextFunction()
         {
-            DefineOptionalParameter
+            DefineRequiredParameter
             (
-                "Size",
-                "The array size",
-                typeof(int),
-                10
+                "FilePath",
+                "The text file path",
+                typeof(string)
             );
         }
 
@@ -30,16 +29,16 @@
         {
             get
             {
-                return "Generates an array of random integers.";
+                return "Reads a text file into a string.";
             }
         }
 
         /// <summary>
-        /// Generates an array of random integers
+        /// Reads the XML file into an XmlDocument
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The truncated text</returns>
+        /// <returns>The XML document</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -48,21 +47,18 @@
         {
             Validate.IsNotNull(context);
 
-            var size = GetParameterValue<int>
+            var filePath = GetParameterValue<string>
             (
-                "Size",
+                "FilePath",
                 parameterValues
             );
 
-            var data = new int[size];
-            var rnd = new Random();
+            var content = File.ReadAllText
+            (
+                filePath
+            );
 
-            for (var i = 0; i < size; i++)
-            {
-                data[i] = rnd.Next();
-            }
-            
-            return data;
+            return content;
         }
     }
 }

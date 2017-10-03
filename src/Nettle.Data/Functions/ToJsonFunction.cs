@@ -1,24 +1,27 @@
 ﻿namespace Nettle.Data.Functions
 {
+    using Nettle.Common.Serialization.Grid;
     using Nettle.Compiler;
-    using Nettle.Data.Common.Serialization.Csv;
     using Nettle.Functions;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using System;
 
     /// <summary>
-    /// Represents function for reading a CSV file into a data grid
+    /// Represents function for converting an object to a JSON string
     /// </summary>
-    public class ReadCsvFunction : FunctionBase
+    public class ToJsonFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ReadCsvFunction()
+        public ToJsonFunction()
         {
             DefineRequiredParameter
             (
-                "FilePath",
-                "The CSV file path",
-                typeof(string)
+                "Object",
+                "The object to convert.",
+                typeof(object)
             );
         }
 
@@ -29,12 +32,12 @@
         {
             get
             {
-                return "Reads a CSV file into a data grid.";
+                return "Converts an object to a JSON string.";
             }
         }
 
         /// <summary>
-        /// Reads the CSV file into a data grid
+        /// Converts an object to a JSON string
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -47,16 +50,29 @@
         {
             Validate.IsNotNull(context);
 
-            var filePath = GetParameterValue<string>
+            var obj = GetParameterValue<object>
             (
-                "FilePath",
+                "Object",
                 parameterValues
             );
 
-            var serializer = new CsvToGridSerializer();
-            var grid = serializer.ReadCsvFile(filePath);
+            var csv = String.Empty;
+            var type = obj.GetType();
 
-            return grid;
+            if (type.IsDataGrid())
+            {
+                csv = ((IDataGrid)obj).ToJson();
+            }
+            else if (type == typeof(JObject))
+            {
+                csv = ((JObject)obj).ToString();
+            }
+            else
+            {
+                csv = JsonConvert.SerializeObject(obj);
+            }
+
+            return csv;
         }
     }
 }

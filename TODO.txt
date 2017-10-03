@@ -1,22 +1,25 @@
 TODO:
 -----
 
+- redefine or revar variable block
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
-- Create ToJson DataGrid extension method
 
 Extensions:
 -----------
 
 - Nettle.Data
 
-	Functions.ReadJson
-	- as above for xml but for json format
-
-	- ToCsv, ToXml and ToJson functions that take any object or a DataGrid - use 3rd party tools to serialize 
+	- ToCsv, ToXml functions that take any object or a DataGrid - use 3rd party tools to serialize 
 	
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
-	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's  XML/Soap?).
+	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's XML/Soap?).
 
+	- Data.SQL
+		- Registered connections (name, connection string, provider/db adapter)
+		- Execute stored procedure with connection name, procedure name and parameter values. Get result as data grid.
+		- Execute general SQL query with connection name and SQL query. Get results as data grid.
+		- N.b. how do we ensure read only stored procedure and SQL queries are executed? I.e. ensure no db writes are made - to keep Nettle as a read/render only engine.
+	
 - Nettle.Web
 
 	Functions.CallWebApi
@@ -34,6 +37,8 @@ Low Priority:
 - Some sort of "safe mode" or ignore errors flag that can be set when compiling a template or overridden in the template itself. E.g. something like {{#SafeModeOn}} or {{#SafeModeOff}} - also {{#DebugMode}}
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+	- negation (i.e. if not true)
+	- {{else}} and {{else if}} blocks
 - Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
 - TemplateContext: lazy load properties on demand (i.e. only when first model binding is rendered, if there are any) to improve performance?
 - Add support for caching

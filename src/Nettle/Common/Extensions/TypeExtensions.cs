@@ -1,5 +1,6 @@
 ﻿namespace Nettle
 {
+    using Nettle.Common.Serialization.Grid;
     using System;
     using System.Collections;
     using System.Linq;
@@ -206,6 +207,22 @@
                     typeof(IEnumerable)
                 );
             }
+        }
+
+        /// <summary>
+        /// Determines if the type specified if a data grid
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns>True, if the type is a data grid; otherwise false</returns>
+        public static bool IsDataGrid
+            (
+                this Type type
+            )
+        {
+            return type.GetInterfaces().Contains
+            (
+                typeof(IDataGrid)
+            );
         }
 
         /// <summary>

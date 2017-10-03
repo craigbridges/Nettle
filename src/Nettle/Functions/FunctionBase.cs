@@ -432,30 +432,25 @@
             
             if (parameterValues != null && this.Parameters.Any())
             {
-                if (parameterCount > this.Parameters.Count)
-                {
-                    throw new ArgumentException
-                    (
-                        "Too many parameter values were supplied."
-                    );
-                }
-
                 var counter = 0;
 
                 foreach (var value in parameterValues)
                 {
-                    var parameter = this.Parameters[counter];
-
-                    if (false == parameter.IsValidParameterValue(value))
+                    if (counter < this.Parameters.Count)
                     {
-                        throw new ArgumentException
-                        (
-                            "The value '{0}' is not valid for the parameter {1}.".With
+                        var parameter = this.Parameters[counter];
+
+                        if (false == parameter.IsValidParameterValue(value))
+                        {
+                            throw new ArgumentException
                             (
-                                value,
-                                parameter.Name
-                            )
-                        );
+                                "The value '{0}' is not valid for the parameter {1}.".With
+                                (
+                                    value,
+                                    parameter.Name
+                                )
+                            );
+                        }
                     }
 
                     counter++;
