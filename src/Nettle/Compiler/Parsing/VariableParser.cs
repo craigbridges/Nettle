@@ -6,19 +6,33 @@
     /// <summary>
     /// Represents a variable declaration code block parser
     /// </summary>
-    internal sealed class VariableParser : NettleParser, IBlockParser
+    internal class VariableParser : NettleParser, IBlockParser
     {
+        /// <summary>
+        /// Gets the signature bodies prefix value
+        /// </summary>
+        protected virtual string Prefix
+        {
+            get
+            {
+                return "var ";
+            }
+        }
+
         /// <summary>
         /// Determines if a signature matches the block type of the parser
         /// </summary>
         /// <param name="signatureBody">The signature body</param>
         /// <returns>True, if it matches; otherwise false</returns>
-        public bool Matches
+        public virtual bool Matches
             (
                 string signatureBody
             )
         {
-            return signatureBody.StartsWith("var ");
+            return signatureBody.StartsWith
+            (
+                this.Prefix
+            );
         }
 
         /// <summary>
@@ -28,7 +42,7 @@
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public CodeBlock Parse
+        public virtual CodeBlock Parse
             (
                 ref string templateContent,
                 ref int positionOffSet,
@@ -36,6 +50,7 @@
             )
         {
             var body = UnwrapSignatureBody(signature);
+            var nameIndex = this.Prefix.Length;
             var equalsIndex = body.IndexOf('=');
 
             if (equalsIndex == -1)
@@ -51,7 +66,7 @@
             }
 
             // Extract the variable name and value signature based on indexes
-            var variableName = body.Crop(3, equalsIndex - 1).Trim();
+            var variableName = body.Crop(nameIndex, equalsIndex - 1).Trim();
             var valueSignature = body.Crop(equalsIndex + 1).Trim();
 
             var type = ResolveType(valueSignature);
@@ -98,7 +113,7 @@
         /// </summary>
         /// <param name="name">The variable name</param>
         /// <returns>True, if the variable name is valid; otherwise false</returns>
-        private bool IsValidVariableName
+        protected bool IsValidVariableName
             (
                 string name
             )

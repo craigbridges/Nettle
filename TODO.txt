@@ -1,16 +1,25 @@
 TODO:
 -----
 
-- redefine or revar variable block
+- Link variables when creating "sub scopes" or "sub context" clones, so if we reassign a variable in a nested block, it updates the master.
+	- For example:
+	
+	{{var counter = 1}}
+
+	{{each $Names}}
+		{{counter}}
+		{{reassign counter = @Add($counter, 1)}}
+		{{counter}}
+	{{/each}}
+	
+	This always prints 1 then 2 then 1 then 2 etc because the counter variable is copied to the child context and the original is untouched
+	
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 
 Extensions:
 -----------
 
 - Nettle.Data
-
-	- ToCsv, ToXml functions that take any object or a DataGrid - use 3rd party tools to serialize 
-	
 	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
 	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's XML/Soap?).
 
@@ -21,7 +30,6 @@ Extensions:
 		- N.b. how do we ensure read only stored procedure and SQL queries are executed? I.e. ensure no db writes are made - to keep Nettle as a read/render only engine.
 	
 - Nettle.Web
-
 	Functions.CallWebApi
 	- call a web api and get json result, this will depend on Nettle.Data extension
 	- Get specific value from JSON object function

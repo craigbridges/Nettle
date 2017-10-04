@@ -367,6 +367,33 @@
         }
 
         /// <summary>
+        /// Reassigns the value of a variable for the template context
+        /// </summary>
+        /// <param name="name">The variable name</param>
+        /// <param name="value">The variables value</param>
+        internal void ReassignVariable
+            (
+                string name,
+                object value
+            )
+        {
+            Validate.IsNotEmpty(name);
+
+            if (false == this.Variables.ContainsKey(name))
+            {
+                throw new InvalidOperationException
+                (
+                    "No variable was defined with the name '{0}'.".With
+                    (
+                        name
+                    )
+                );
+            }
+
+            this.Variables[name] = value;
+        }
+
+        /// <summary>
         /// Resolves a variable value from the variable path specified
         /// </summary>
         /// <param name="variablePath">The variable path</param>
@@ -438,6 +465,9 @@
                 object model
             )
         {
+            // TODO: add current context to nested context, so we can chain up and manage linked variables etc
+
+
             var context = new TemplateContext
             (
                 model

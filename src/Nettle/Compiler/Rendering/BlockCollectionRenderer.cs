@@ -8,7 +8,7 @@
     /// <summary>
     /// Represents the default implementation of a template renderer
     /// </summary>
-    internal class BlockCollectionRenderer
+    internal sealed class BlockCollectionRenderer
     {
         private List<IBlockRenderer> _renderers;
 
@@ -46,6 +46,11 @@
                 functionRepository
             );
 
+            var variableReassignmentRenderer = new VariableReassignmentRenderer
+            (
+                functionRepository
+            );
+
             var functionRenderer = new FunctionRenderer
             (
                 functionRepository
@@ -76,6 +81,7 @@
                 contentRenderer,
                 bindingRenderer,
                 variableRenderer,
+                variableReassignmentRenderer,
                 functionRenderer,
                 loopRenderer,
                 ifStatementRenderer,

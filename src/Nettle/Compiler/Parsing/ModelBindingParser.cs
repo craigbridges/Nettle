@@ -24,6 +24,7 @@
                 "@",
                 ">",
                 "var ",
+                "reassign ",
                 "each ",
                 "if ",
             };

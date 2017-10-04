@@ -72,11 +72,20 @@
                     {
                         if (type.IsEnumerable())
                         {
-                            csvWriter.WriteRecords((IEnumerable)obj);
+                            csvWriter.WriteRecords
+                            (
+                                (IEnumerable)obj
+                            );
                         }
                         else
                         {
-                            csvWriter.WriteRecord(type, obj);
+                            csvWriter.WriteRecords
+                            (
+                                new object[]
+                                {
+                                    obj
+                                }
+                            );
                         }
                     }
 

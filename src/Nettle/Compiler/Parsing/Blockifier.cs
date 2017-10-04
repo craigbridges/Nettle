@@ -20,6 +20,7 @@
             var bindingParser = new ModelBindingParser();
             var functionParser = new FunctionParser();
             var variableParser = new VariableParser();
+            var variableReassignmentParser = new VariableReassignmentParser();
             var loopParser = new ForEachLoopParser(this);
             var ifParser = new IfStatementParser(this);
             var partialParser = new RenderPartialParser();
@@ -30,6 +31,7 @@
                 bindingParser,
                 functionParser,
                 variableParser,
+                variableReassignmentParser,
                 loopParser,
                 ifParser,
                 partialParser
