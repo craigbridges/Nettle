@@ -1,19 +1,6 @@
 TODO:
 -----
 
-- Link variables when creating "sub scopes" or "sub context" clones, so if we reassign a variable in a nested block, it updates the master.
-	- For example:
-	
-	{{var counter = 1}}
-
-	{{each $Names}}
-		{{counter}}
-		{{reassign counter = @Add($counter, 1)}}
-		{{counter}}
-	{{/each}}
-	
-	This always prints 1 then 2 then 1 then 2 etc because the counter variable is copied to the child context and the original is untouched
-	
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 
 Extensions:
@@ -31,7 +18,7 @@ Extensions:
 	
 - Nettle.Web
 	Functions.CallWebApi
-	- call a web api and get json result, this will depend on Nettle.Data extension
+	- Call a web api and get json result as JObject
 	- Get specific value from JSON object function
 	- How do we handle headers? (e.g. security like we use)
 

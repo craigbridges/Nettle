@@ -13,6 +13,7 @@
         /// <summary>
         /// Constructs the template context with a model
         /// </summary>
+        /// <param name="model">The model</param>
         internal TemplateContext
             (
                 object model
@@ -25,6 +26,27 @@
 
             PopulatePropertyValues(model);
         }
+
+        /// <summary>
+        /// Constructs the template context with a model
+        /// </summary>
+        /// <param name="parent">The parent template context</param>
+        /// <param name="model">The model</param>
+        private TemplateContext
+            (
+                TemplateContext parent,
+                object model
+            )
+
+            : this(model)
+        {
+            this.Parent = parent;
+        }
+
+        /// <summary>
+        /// Gets the parent template context
+        /// </summary>
+        private TemplateContext Parent { get; set; }
 
         /// <summary>
         /// Gets the templates model
@@ -338,7 +360,7 @@
             get;
             private set;
         }
-
+        
         /// <summary>
         /// Defines a variable for the template context
         /// </summary>
@@ -391,6 +413,22 @@
             }
 
             this.Variables[name] = value;
+
+            var parent = this.Parent;
+
+            if (parent != null)
+            {
+                var isInherited = parent.Variables.ContainsKey
+                (
+                    name
+                );
+
+                parent.ReassignVariable
+                (
+                    name,
+                    value
+                );
+            }
         }
 
         /// <summary>
@@ -465,11 +503,9 @@
                 object model
             )
         {
-            // TODO: add current context to nested context, so we can chain up and manage linked variables etc
-
-
             var context = new TemplateContext
             (
+                this,
                 model
             );
 
