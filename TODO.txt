@@ -2,6 +2,12 @@ TODO:
 -----
 
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
+- Flags:
+	- E.g. {{#IgnoreErrors}} or {{#DebugModeOn}}
+	- Rules:
+		- Name must follow variable name syntax
+		- No duplicates
+		- Must be declared at top of template, before any other code
 
 Extensions:
 -----------
