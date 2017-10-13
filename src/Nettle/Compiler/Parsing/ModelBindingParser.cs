@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using System;
     using System.Linq;
 
     /// <summary>
@@ -13,29 +14,58 @@
         /// </summary>
         /// <param name="signatureBody">The signature body</param>
         /// <returns>True, if it matches; otherwise false</returns>
+        /// <remarks>
+        /// The rules for matching a model binding are as follows:
+        /// 
+        /// - The trimmed signature body must not contain spaces
+        /// - The first character must be either a letter, underscore or dollar sign
+        /// - Subsequent characters may be letters, underscore, dots, or numbers
+        /// </remarks>
         public bool Matches
             (
                 string signatureBody
             )
         {
-            var excludedValues = new string[]
-            {
-                "!",
-                "@",
-                ">",
-                "var ",
-                "reassign ",
-                "each ",
-                "if ",
-            };
+            signatureBody = signatureBody.Trim();
 
-            return false == excludedValues.Any
+            // Rule: must not contain spaces
+            if (signatureBody.Contains(" "))
+            {
+                return false;
+            }
+
+            var firstChar = signatureBody.First();
+
+            var isValidChar = 
             (
-                value => signatureBody.StartsWith
-                (
-                    value
-                )
+                Char.IsLetter(firstChar) 
+                    || firstChar == '_'
+                    || firstChar == '$'
             );
+
+            // Rule: must start with letter, underscore or dollar sign
+            if (false == isValidChar)
+            {
+                return false;
+            }
+
+            var remainingBody = signatureBody.Substring(1);
+
+            // Rule: remaining characters must be letter, underscore, dots or numbers
+            var containsValidChars = remainingBody.All
+            (
+                c => Char.IsLetter(c) 
+                    || Char.IsNumber(c) 
+                    || c == '_' 
+                    || c == '.'
+            );
+
+            if (false == containsValidChars)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

@@ -51,6 +51,11 @@
                 functionRepository
             );
 
+            var flagRenderer = new FlagRenderer
+            (
+                functionRepository
+            );
+
             var functionRenderer = new FunctionRenderer
             (
                 functionRepository
@@ -82,6 +87,7 @@
                 bindingRenderer,
                 variableRenderer,
                 variableReassignmentRenderer,
+                flagRenderer,
                 functionRenderer,
                 loopRenderer,
                 ifStatementRenderer,

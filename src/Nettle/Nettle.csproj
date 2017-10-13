@@ -60,8 +60,10 @@
     <Compile Include="Compiler\DefaultNettleResolver.cs" />
     <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
+    <Compile Include="Compiler\Parsing\Blocks\FlagDeclaration.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableReassignment.cs" />
     <Compile Include="Compiler\Parsing\RenderPartialParser.cs" />
+    <Compile Include="Compiler\Parsing\FlagParser.cs" />
     <Compile Include="Compiler\Parsing\VariableReassignmentParser.cs" />
     <Compile Include="Compiler\Rendering\BlockCollectionRenderer.cs" />
     <Compile Include="Compiler\Rendering\CommentRenderer.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="Compiler\Rendering\ForEachLoopRenderer.cs" />
     <Compile Include="Compiler\Rendering\IfStatementRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableReassignmentRenderer.cs" />
+    <Compile Include="Compiler\Rendering\FlagRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableRenderer.cs" />
     <Compile Include="Compiler\Rendering\FunctionRenderer.cs" />
     <Compile Include="Compiler\Rendering\ModelBindingRenderer.cs" />

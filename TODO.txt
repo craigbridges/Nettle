@@ -1,13 +1,15 @@
 TODO:
 -----
 
-- Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 - Flags:
 	- E.g. {{#IgnoreErrors}} or {{#DebugModeOn}}
 	- Rules:
-		- Name must follow variable name syntax
 		- No duplicates
 		- Must be declared at top of template, before any other code
+	- Write code to handle flags globally (e.g. ignore errors should have high level try catch option)
+	- Add flags to template context (and write code to inherit the flags when cloning)
+
+- Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 
 Extensions:
 -----------
@@ -35,7 +37,6 @@ Low Priority:
 
 - Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
-- Some sort of "safe mode" or ignore errors flag that can be set when compiling a template or overridden in the template itself. E.g. something like {{#SafeModeOn}} or {{#SafeModeOff}} - also {{#DebugMode}}
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 	- negation (i.e. if not true)

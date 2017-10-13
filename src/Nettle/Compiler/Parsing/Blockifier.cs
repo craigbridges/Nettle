@@ -21,6 +21,7 @@
             var functionParser = new FunctionParser();
             var variableParser = new VariableParser();
             var variableReassignmentParser = new VariableReassignmentParser();
+            var flagParser = new FlagParser();
             var loopParser = new ForEachLoopParser(this);
             var ifParser = new IfStatementParser(this);
             var partialParser = new RenderPartialParser();
@@ -32,6 +33,7 @@
                 functionParser,
                 variableParser,
                 variableReassignmentParser,
+                flagParser,
                 loopParser,
                 ifParser,
                 partialParser
