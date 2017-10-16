@@ -38,10 +38,8 @@ Low Priority:
 -------------
 
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
-- Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 	- negation (i.e. if not true)
 	- {{else}} and {{else if}} blocks
 - Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
-- TemplateContext: lazy load properties on demand (i.e. only when first model binding is rendered, if there are any) to improve performance?
 - Add support for caching
