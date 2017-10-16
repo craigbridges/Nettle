@@ -4,6 +4,7 @@
     using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Xml;
 
@@ -168,6 +169,83 @@
                     bindingPath
                 );
             }
+        }
+
+        /// <summary>
+        /// Resolves a model binding value from the context and binding path
+        /// </summary>
+        /// <param name="context">The template context</param>
+        /// <param name="bindingPath">The bindings path</param>
+        /// <param name="index">The index pointer</param>
+        /// <returns>The model bindings value</returns>
+        protected object ResolveBindingValue
+            (
+                ref TemplateContext context,
+                string bindingPath,
+                int index
+            )
+        {
+            Validate.IsNotEmpty(bindingPath);
+
+            var collection = ResolveBindingValue
+            (
+                ref context,
+                bindingPath
+            );
+
+            if (collection == null)
+            {
+                throw new InvalidOperationException
+                (
+                    "The value for '{0}' is null.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            if (false == collection.GetType().IsEnumerable())
+            {
+                throw new InvalidOperationException
+                (
+                    "'{0}' is not a valid collection.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException
+                (
+                    "The index for '{0}' must be zero or greater.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            var counter = default(int);
+
+            foreach (var item in collection as IEnumerable)
+            {
+                if (counter == index)
+                {
+                    return item;
+                }
+
+                counter++;
+            }
+
+            throw new IndexOutOfRangeException
+            (
+                "The index {0} for '{1}' is out of range.".With
+                (
+                    index,
+                    bindingPath
+                )
+            );
         }
 
         /// <summary>

@@ -70,6 +70,7 @@
     <Compile Include="Compiler\Rendering\PartialRenderer.cs" />
     <Compile Include="Compiler\Rendering\ForEachLoopRenderer.cs" />
     <Compile Include="Compiler\Rendering\IfStatementRenderer.cs" />
+    <Compile Include="Compiler\TemplateFlag.cs" />
     <Compile Include="Compiler\Rendering\VariableReassignmentRenderer.cs" />
     <Compile Include="Compiler\Rendering\FlagRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableRenderer.cs" />

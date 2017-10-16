@@ -55,11 +55,13 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="block">The code block to render</param>
+        /// <param name="flags">The template flags</param>
         /// <returns>The rendered block</returns>
         public string Render
             (
                 ref TemplateContext context,
-                CodeBlock block
+                CodeBlock block,
+                params TemplateFlag[] flags
             )
         {
             Validate.IsNotNull(block);

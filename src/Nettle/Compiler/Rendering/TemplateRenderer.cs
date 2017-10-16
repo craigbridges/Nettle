@@ -51,7 +51,8 @@
             return _collectionRenderer.Render
             (
                 ref context,
-                blocks
+                blocks,
+                template.Flags
             );
         }
     }

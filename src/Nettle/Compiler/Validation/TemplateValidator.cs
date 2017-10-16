@@ -45,48 +45,64 @@
         {
             Validate.IsNotNull(template);
 
-            var isValid = true;
-            var allErrors = new List<TemplateValidationError>();
-
-            var variableErrors = _variableValidator.ValidateTemplate
+            var ignoreErrors = template.IsFlagSet
             (
-                template
+                TemplateFlag.IgnoreErrors
             );
 
-            var functionErrors = _functionValidator.ValidateTemplate
-            (
-                template
-            );
-
-            var loopErrors = _forLoopValidator.ValidateTemplate
-            (
-                template
-            );
-
-            if (variableErrors.Any())
+            if (ignoreErrors)
             {
-                allErrors.AddRange(variableErrors);
-                isValid = false;
+                return new TemplateValidationResult
+                (
+                    template,
+                    true
+                );
             }
-
-            if (functionErrors.Any())
+            else
             {
-                allErrors.AddRange(functionErrors);
-                isValid = false;
-            }
+                var isValid = true;
+                var allErrors = new List<TemplateValidationError>();
 
-            if (loopErrors.Any())
-            {
-                allErrors.AddRange(loopErrors);
-                isValid = false;
+                var variableErrors = _variableValidator.ValidateTemplate
+                (
+                    template
+                );
+
+                var functionErrors = _functionValidator.ValidateTemplate
+                (
+                    template
+                );
+
+                var loopErrors = _forLoopValidator.ValidateTemplate
+                (
+                    template
+                );
+
+                if (variableErrors.Any())
+                {
+                    allErrors.AddRange(variableErrors);
+                    isValid = false;
+                }
+
+                if (functionErrors.Any())
+                {
+                    allErrors.AddRange(functionErrors);
+                    isValid = false;
+                }
+
+                if (loopErrors.Any())
+                {
+                    allErrors.AddRange(loopErrors);
+                    isValid = false;
+                }
+
+                return new TemplateValidationResult
+                (
+                    template,
+                    isValid,
+                    allErrors.ToArray()
+                );
             }
-            
-            return new TemplateValidationResult
-            (
-                template,
-                isValid,
-                allErrors.ToArray()
-            );
         }
     }
 }

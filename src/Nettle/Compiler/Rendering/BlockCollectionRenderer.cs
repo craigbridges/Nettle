@@ -2,7 +2,9 @@
 {
     using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -100,24 +102,52 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="blocks">An array of blocks to render</param>
+        /// <param name="flags">The template flags</param>
         /// <returns>The rendered code blocks</returns>
         public string Render
             (
                 ref TemplateContext context,
-                CodeBlock[] blocks
+                CodeBlock[] blocks,
+                params TemplateFlag[] flags
             )
         {
             var builder = new StringBuilder();
 
+            var ignoreErrors = flags.Contains
+            (
+                TemplateFlag.IgnoreErrors
+            );
+
             foreach (var block in blocks)
             {
                 var renderer = FindRenderer(block);
+                var blockOutput = String.Empty;
 
-                var blockOutput = renderer.Render
-                (
-                    ref context,
-                    block
-                );
+                if (ignoreErrors)
+                {
+                    try
+                    {
+                        blockOutput = renderer.Render
+                        (
+                            ref context,
+                            block,
+                            flags
+                        );
+                    }
+                    catch
+                    {
+                        // Ignore all errors
+                    }
+                }
+                else
+                {
+                    blockOutput = renderer.Render
+                    (
+                        ref context,
+                        block,
+                        flags
+                    );
+                }
 
                 builder.Append(blockOutput);
             }

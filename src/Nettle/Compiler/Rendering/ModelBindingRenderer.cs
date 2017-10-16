@@ -45,23 +45,38 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="block">The code block to render</param>
+        /// <param name="flags">The template flags</param>
         /// <returns>The rendered block</returns>
         public string Render
             (
                 ref TemplateContext context,
-                CodeBlock block
+                CodeBlock block,
+                params TemplateFlag[] flags
             )
         {
             Validate.IsNotNull(block);
 
             var binding = (ModelBinding)block;
+            var value = default(object);
 
-            var value = ResolveBindingValue
-            (
-                ref context,
-                binding.BindingPath
-            );
-
+            if (binding.HasIndexer)
+            {
+                value = ResolveBindingValue
+                (
+                    ref context,
+                    binding.BindingPath,
+                    binding.Index
+                );
+            }
+            else
+            {
+                value = ResolveBindingValue
+                (
+                    ref context,
+                    binding.BindingPath
+                );
+            }
+            
             return ToString(value);
         }
     }

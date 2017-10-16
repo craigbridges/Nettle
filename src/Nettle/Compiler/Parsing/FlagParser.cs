@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using System;
 
     /// <summary>
     /// Represents a flag declaration code block parser
@@ -51,6 +52,15 @@
             var body = UnwrapSignatureBody(signature);
             var nameIndex = this.Prefix.Length;
             var flagName = body.Crop(nameIndex).Trim();
+
+            if (String.IsNullOrEmpty(flagName))
+            {
+                throw new NettleParseException
+                (
+                    "The flag name must be specified.",
+                    positionOffSet
+                );
+            }
 
             var startPosition = positionOffSet;
             var endPosition = signature.Length - 1;

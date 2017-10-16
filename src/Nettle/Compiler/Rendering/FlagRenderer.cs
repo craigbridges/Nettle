@@ -46,40 +46,18 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="block">The code block to render</param>
+        /// <param name="flags">The template flags</param>
         /// <returns>The rendered block</returns>
         public string Render
             (
                 ref TemplateContext context,
-                CodeBlock block
+                CodeBlock block,
+                params TemplateFlag[] flags
             )
         {
             Validate.IsNotNull(block);
-
-            var flag = (FlagDeclaration)block;
-
-            SetFlag
-            (
-                ref context,
-                flag
-            );
-
+            
             return String.Empty;
-        }
-
-        /// <summary>
-        /// Sets a flag in the template context by initialising it
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="flag">The flag code block</param>
-        private void SetFlag
-            (
-                ref TemplateContext context,
-                FlagDeclaration flag
-            )
-        {
-            Validate.IsNotNull(flag);
-
-            // TODO: set the flag in the template context
         }
     }
 }

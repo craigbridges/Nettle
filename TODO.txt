@@ -1,13 +1,15 @@
 TODO:
 -----
 
+- Indexers:
+	- Refactor NettleRenderer.ResolveValue to handle index pointers
+	- Handle {{@Truncate($Names[0], 3)}} by refactoring parameter parsing code to look for indexers
+		- Currently get exception: "No property could be found with the name 'Names[0]'."
+
+- Complete Wiki
+
 - Flags:
-	- E.g. {{#IgnoreErrors}} or {{#DebugModeOn}}
-	- Rules:
-		- No duplicates
-		- Must be declared at top of template, before any other code
-	- Write code to handle flags globally (e.g. ignore errors should have high level try catch option)
-	- Add flags to template context (and write code to inherit the flags when cloning)
+	- Implement {{#DebugMode}}
 
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 
@@ -35,12 +37,11 @@ Extensions:
 Low Priority:
 -------------
 
-- Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
 - Array indexer binding (e.g. Names[0] which would get the first item in the array Names)
 - Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 	- negation (i.e. if not true)
 	- {{else}} and {{else if}} blocks
-- Consider support for changing a variable after it has been declared (e.g. {{var counter = 1}} then {{counter++}} etc)
+- Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
 - TemplateContext: lazy load properties on demand (i.e. only when first model binding is rendered, if there are any) to improve performance?
 - Add support for caching
