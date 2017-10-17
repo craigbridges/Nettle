@@ -2,6 +2,7 @@
 {
     using Nettle.Compiler.Parsing.Blocks;
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Represents a variable declaration code block parser
@@ -65,14 +66,19 @@
                 );
             }
 
-            // Extract the variable name and value signature based on indexes
+            // Extract the variable name and value signature
             var variableName = body.Crop(nameIndex, equalsIndex - 1).Trim();
             var valueSignature = body.Crop(equalsIndex + 1).Trim();
 
             var type = ResolveType(valueSignature);
             var value = type.ParseValue(valueSignature);
 
-            if (false == IsValidVariableName(variableName))
+            var isValidName = VariableParser.IsValidVariableName
+            (
+                variableName
+            );
+
+            if (false == isValidName)
             {
                 throw new NettleParseException
                 (
@@ -113,30 +119,38 @@
         /// </summary>
         /// <param name="name">The variable name</param>
         /// <returns>True, if the variable name is valid; otherwise false</returns>
-        protected bool IsValidVariableName
+        /// <remarks>
+        /// The rules for validating a variable name are:
+        /// 
+        /// - The name must not contain spaces
+        /// - The name must start with a letter
+        /// - Only letters and numbers are allowed
+        /// </remarks>
+        public static bool IsValidVariableName
             (
                 string name
             )
         {
-            if (String.IsNullOrWhiteSpace(name) || name.Contains(" "))
-            {
-                return false;
-            }
-            else if (name.ContainsNonAscii())
-            {
-                return false;
-            }
-            else if (name.IsNumeric())
-            {
-                return false;
-            }
-            else if (false == name.IsAlphaNumeric())
+            if (String.IsNullOrEmpty(name) || name.Contains(" "))
             {
                 return false;
             }
             else
             {
-                return true;
+                var firstChar = name.First();
+
+                if (false == Char.IsLetter(firstChar))
+                {
+                    return false;
+                }
+                else if (false == name.IsAlphaNumeric())
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
     }

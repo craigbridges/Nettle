@@ -57,26 +57,13 @@
             Validate.IsNotNull(block);
 
             var binding = (ModelBinding)block;
-            var value = default(object);
 
-            if (binding.HasIndexer)
-            {
-                value = ResolveBindingValue
-                (
-                    ref context,
-                    binding.BindingPath,
-                    binding.Index
-                );
-            }
-            else
-            {
-                value = ResolveBindingValue
-                (
-                    ref context,
-                    binding.BindingPath
-                );
-            }
-            
+            var value = ResolveBindingValue
+            (
+                ref context,
+                binding.BindingPath
+            );
+
             return ToString(value);
         }
     }

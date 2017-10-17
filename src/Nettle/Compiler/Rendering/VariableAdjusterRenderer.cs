@@ -5,15 +5,17 @@
     using System;
 
     /// <summary>
-    /// Represents a variable reassignment renderer
+    /// Represents a variable adjuster renderer
     /// </summary>
-    internal class VariableReassignmentRenderer : NettleRenderer, IBlockRenderer
+    /// <typeparam name="T">The variable adjuster type</typeparam>
+    internal abstract class VariableAdjusterRenderer<T> : NettleRenderer, IBlockRenderer
+        where T : VariableAdjuster
     {
         /// <summary>
         /// Constructs the renderer with required dependencies
         /// </summary>
         /// <param name="functionRepository">The function repository</param>
-        public VariableReassignmentRenderer
+        public VariableAdjusterRenderer
             (
                 IFunctionRepository functionRepository
             )
@@ -22,11 +24,16 @@
         { }
 
         /// <summary>
+        /// Gets the adjustment amount
+        /// </summary>
+        protected abstract int Adjustment { get; }
+
+        /// <summary>
         /// Determines if the renderer can render the code block specified
         /// </summary>
         /// <param name="block">The code block</param>
         /// <returns>True, if it can be rendered; otherwise false</returns>
-        public bool CanRender
+        public virtual bool CanRender
             (
                 CodeBlock block
             )
@@ -37,7 +44,7 @@
 
             return
             (
-                blockType == typeof(VariableReassignment)
+                blockType == typeof(T)
             );
         }
 
@@ -48,7 +55,7 @@
         /// <param name="block">The code block to render</param>
         /// <param name="flags">The template flags</param>
         /// <returns>The rendered block</returns>
-        public string Render
+        public virtual string Render
             (
                 ref TemplateContext context,
                 CodeBlock block,
@@ -57,39 +64,55 @@
         {
             Validate.IsNotNull(block);
 
-            var variable = (VariableReassignment)block;
+            var adjuster = (T)block;
 
-            ReassignVariable
+            AdjustVariable
             (
                 ref context,
-                variable
+                adjuster
             );
 
             return String.Empty;
         }
 
         /// <summary>
-        /// Defines a variable in the template context by initialising it
+        /// Defines a adjuster in the template context by initialising it
         /// </summary>
         /// <param name="context">The template context</param>
-        /// <param name="variable">The variable code block</param>
-        private void ReassignVariable
+        /// <param name="adjuster">The adjuster code block</param>
+        protected virtual void AdjustVariable
             (
                 ref TemplateContext context,
-                VariableDeclaration variable
+                T adjuster
             )
         {
-            Validate.IsNotNull(variable);
+            Validate.IsNotNull(adjuster);
 
-            var variableName = variable.VariableName;
+            var variableName = adjuster.VariableName;
 
-            var value = ResolveValue
+            var value = context.ResolveVariableValue
             (
-                ref context,
-                variable.AssignedValue,
-                variable.ValueType
+                variableName
             );
 
+            if (value == null)
+            {
+                throw new NettleRenderException
+                (
+                    "The value for '{0}' cannot be adjusted because it is null."
+                );
+            }
+
+            if (false == value.GetType().IsNumeric())
+            {
+                throw new NettleRenderException
+                (
+                    "The value for '{0}' is not a numeric type."
+                );
+            }
+
+            value = (double)value + this.Adjustment;
+            
             context.ReassignVariable
             (
                 variableName,

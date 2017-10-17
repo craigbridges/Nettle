@@ -1,17 +1,28 @@
 TODO:
 -----
 
-- Indexers:
-	- Refactor NettleRenderer.ResolveValue to handle index pointers
-	- Handle {{@Truncate($Names[0], 3)}} by refactoring parameter parsing code to look for indexers
-		- Currently get exception: "No property could be found with the name 'Names[0]'."
-
 - Complete Wiki
 
 - Flags:
 	- Implement {{#DebugMode}}
+	- Allow undefined or duplicate variables (option explicit)
+	- Require same type redefine (option strict)
+	- Disable model inherit for render partial
+	- AutoFormat (remove extra tabs and line breaks from code)
+	- Minify (remove all line breaks and tabs)
+	- Use UTC date
+	
+- If statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
+	"if" statement expressions:
+		- Negation (i.e. if not true)
+		- Must have a left and right side value
+		- Can be any type but must be comparable
+		- Checks for equality, not equals, greater than, less than (numbers only), and, or
+		- Create boolean expression evaluator
 
-- Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
+		E.g. {{if false == value}} or {{if number1 > number2 & boolValue}}
+		
+	- {{else}} and {{else if}} blocks
 
 Extensions:
 -----------
@@ -37,9 +48,15 @@ Extensions:
 Low Priority:
 -------------
 
+- Indexers:
+	- Handle path binding index pointers (e.g. Names[counter])
+	- Handle nested indexers (e.g. Rows[0].Values[1])
+	- Add support for variable adjusters
+
 - Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
-- Consider support for if statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
-	- negation (i.e. if not true)
-	- {{else}} and {{else if}} blocks
+
+- Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
+
 - Upgrade to .NET 4.7 and check how I can create back-wards compatible NuGet packages
+
 - Add support for caching

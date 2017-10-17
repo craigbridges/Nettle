@@ -13,18 +13,5 @@
         /// these are donated by using a dot "." separator.
         /// </remarks>
         public string BindingPath { get; set; }
-
-        /// <summary>
-        /// Gets or sets a flag indicating if the binding has an indexer
-        /// </summary>
-        /// <remarks>
-        /// The indexer works in the same as the C# indexer
-        /// </remarks>
-        public bool HasIndexer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the index number
-        /// </summary>
-        public int Index { get; set; }
     }
 }

@@ -21,6 +21,8 @@
             var functionParser = new FunctionParser();
             var variableParser = new VariableParser();
             var variableReassignmentParser = new VariableReassignmentParser();
+            var variableIncrementerParser = new VariableIncrementerParser();
+            var variableDecrementerParser = new VariableDecrementerParser();
             var flagParser = new FlagParser();
             var loopParser = new ForEachLoopParser(this);
             var ifParser = new IfStatementParser(this);
@@ -33,6 +35,8 @@
                 functionParser,
                 variableParser,
                 variableReassignmentParser,
+                variableIncrementerParser,
+                variableDecrementerParser,
                 flagParser,
                 loopParser,
                 ifParser,
@@ -155,7 +159,7 @@
 
                     if (openTagCount > 0 && openTagCount == closeTagCount)
                     {
-                        //The final closing tag was found
+                        // The final closing tag was found
                         endFound = true;
                         break;
                     }

@@ -1,6 +1,8 @@
 ﻿namespace Nettle.Compiler
 {
+    using Nettle.Compiler.Parsing;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -154,6 +156,16 @@
             }
             else
             {
+                var indexerInfo = new IndexerInfo
+                (
+                    propertyPath
+                );
+
+                if (indexerInfo.HasIndexer)
+                {
+                    propertyPath = indexerInfo.PathWithoutIndexer;
+                }
+
                 var nameFound = this.PropertyValues.ContainsKey
                 (
                     propertyPath
@@ -170,10 +182,27 @@
                     );
                 }
 
-                return this.PropertyValues
-                [
-                    propertyPath
-                ];
+                if (indexerInfo.HasIndexer)
+                {
+                    var collection = this.PropertyValues
+                    [
+                        propertyPath
+                    ];
+
+                    return ResolveIndexedBinding
+                    (
+                        propertyPath,
+                        collection,
+                        indexerInfo.Index
+                    );
+                }
+                else
+                {
+                    return this.PropertyValues
+                    [
+                        propertyPath
+                    ];
+                }
             }
         }
 
@@ -201,7 +230,17 @@
                     )
                 );
             }
-            
+
+            var indexerInfo = new IndexerInfo
+            (
+                propertyPath
+            );
+
+            if (indexerInfo.HasIndexer)
+            {
+                propertyPath = indexerInfo.PathWithoutIndexer;
+            }
+
             var segments = propertyPath.Split('.');
             var nextName = segments[0];
             var currentValue = model;
@@ -265,8 +304,20 @@
                     currentValue
                 );
             }
-
-            return currentValue;
+            
+            if (indexerInfo.HasIndexer)
+            {
+                return ResolveIndexedBinding
+                (
+                    propertyPath,
+                    currentValue,
+                    indexerInfo.Index
+                );
+            }
+            else
+            {
+                return currentValue;
+            }
         }
 
         /// <summary>
@@ -351,7 +402,7 @@
 
             return nextSegment;
         }
-
+        
         /// <summary>
         /// Gets the contexts variables
         /// </summary>
@@ -470,6 +521,16 @@
             }
             else
             {
+                var indexerInfo = new IndexerInfo
+                (
+                    variablePath
+                );
+
+                if (indexerInfo.HasIndexer)
+                {
+                    variablePath = indexerInfo.PathWithoutIndexer;
+                }
+
                 var variableFound = this.Variables.ContainsKey
                 (
                     variablePath
@@ -486,11 +547,97 @@
                     );
                 }
 
-                return this.Variables
-                [
-                    variablePath
-                ];
+                if (indexerInfo.HasIndexer)
+                {
+                    var collection = this.Variables
+                    [
+                        variablePath
+                    ];
+
+                    return ResolveIndexedBinding
+                    (
+                        variablePath,
+                        collection,
+                        indexerInfo.Index
+                    );
+                }
+                else
+                {
+                    return this.Variables
+                    [
+                        variablePath
+                    ];
+                }
             }
+        }
+
+        /// <summary>
+        /// Resolves an indexed binding value
+        /// </summary>
+        /// <param name="bindingPath">The binding path</param>
+        /// <param name="collection">The collection</param>
+        /// <param name="index">The index pointer</param>
+        /// <returns>The value found at the specified index</returns>
+        private object ResolveIndexedBinding
+            (
+                string bindingPath,
+                object collection,
+                int index
+            )
+        {
+            if (collection == null)
+            {
+                throw new InvalidOperationException
+                (
+                    "The value for '{0}' is null.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            if (false == collection.GetType().IsEnumerable())
+            {
+                throw new InvalidOperationException
+                (
+                    "'{0}' is not a valid collection.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException
+                (
+                    "The index for '{0}' must be zero or greater.".With
+                    (
+                        bindingPath
+                    )
+                );
+            }
+
+            var counter = default(int);
+
+            foreach (var item in collection as IEnumerable)
+            {
+                if (counter == index)
+                {
+                    return item;
+                }
+
+                counter++;
+            }
+
+            throw new IndexOutOfRangeException
+            (
+                "The index {0} for '{1}' is out of range.".With
+                (
+                    index,
+                    bindingPath
+                )
+            );
         }
 
         /// <summary>

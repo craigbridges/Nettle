@@ -1,79 +1,65 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
-    using System;
-    using System.Linq;
 
     /// <summary>
-    /// Represents a model binding code block parser
+    /// Represents a variable adjuster block parser
     /// </summary>
-    internal sealed class ModelBindingParser : NettleParser, IBlockParser
+    internal abstract class VariableAdjusterParser : NettleParser, IBlockParser
     {
+        /// <summary>
+        /// Gets the adjuster operand signature
+        /// </summary>
+        protected abstract string AdjusterSignature { get; }
+
         /// <summary>
         /// Determines if a signature matches the block type of the parser
         /// </summary>
         /// <param name="signatureBody">The signature body</param>
         /// <returns>True, if it matches; otherwise false</returns>
         /// <remarks>
-        /// The rules for matching a model binding are as follows:
+        /// The rules for matching a variable adjuster are as follows:
         /// 
         /// - The trimmed signature body must not contain spaces
-        /// - The first character must be either a letter or dollar sign
-        /// - The signature can end with [*] indexers
-        /// - Subsequent characters may be letters, dots, or numbers
+        /// - The variable name must be valid
+        /// - Must end with the adjuster operand signature
         /// </remarks>
-        public bool Matches
+        public virtual bool Matches
             (
                 string signatureBody
             )
         {
-            signatureBody = signatureBody.Trim();
-
             // Rule: must not contain spaces
             if (signatureBody.Contains(" "))
             {
                 return false;
             }
 
-            // Rule: must start with letter or dollar sign
-            var firstChar = signatureBody.First();
-
-            var isValidChar = 
+            // Rule: the variable name must be valid
+            var variableName = ExtractVariableName
             (
-                Char.IsLetter(firstChar) 
-                    || firstChar == '$'
+                signatureBody
             );
 
-            if (false == isValidChar)
-            {
-                return false;
-            }
-
-            // Rule: the signature can end with an indexer
-            var remainingBody = signatureBody.Substring(1);
-            var indexerInfo = new IndexerInfo(signatureBody);
+            var isValidName = VariableParser.IsValidVariableName
+            (
+                variableName
+            );
             
-            if (indexerInfo.HasIndexer)
-            {
-                remainingBody = indexerInfo.PathWithoutIndexer;
-            }
-
-            // Rule: remaining characters must be letters, dots or numbers
-            var containsValidChars = remainingBody.All
+            // Rule: must end with the adjuster signature
+            var hasAdjuster = signatureBody.EndsWith
             (
-                c => Char.IsLetter(c) 
-                    || Char.IsNumber(c) 
-                    || c == '.'
+                this.AdjusterSignature
             );
 
-            if (false == containsValidChars)
+            if (false == hasAdjuster)
             {
                 return false;
             }
-
+            
             return true;
         }
-        
+
         /// <summary>
         /// Parses the code block signature into a code block object
         /// </summary>
@@ -81,22 +67,22 @@
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public CodeBlock Parse
+        public virtual CodeBlock Parse
             (
                 ref string templateContent,
                 ref int positionOffSet,
                 string signature
             )
         {
-            var bindingValue = NettleValueType.ModelBinding.ParseValue
-            (
-                signature
-            );
-
-            var bindingPath = bindingValue.ToString();
+            var signatureBody = UnwrapSignatureBody(signature);
             var startPosition = positionOffSet;
             var endPosition = startPosition + (signature.Length - 1);
 
+            var variableName = ExtractVariableName
+            (
+                signatureBody
+            );
+                        
             TrimTemplate
             (
                 ref templateContent,
@@ -104,13 +90,29 @@
                 signature
             );
 
-            return new ModelBinding()
+            return new VariableAdjuster()
             {
                 Signature = signature,
                 StartPosition = startPosition,
                 EndPosition = endPosition,
-                BindingPath = bindingPath
+                VariableName = variableName
             };
+        }
+
+        /// <summary>
+        /// Extracts the variable name from the signatures body
+        /// </summary>
+        /// <param name="signatureBody">The signature body</param>
+        /// <returns>The variable name</returns>
+        protected string ExtractVariableName
+            (
+                string signatureBody
+            )
+        {
+            return signatureBody.LeftOf
+            (
+                this.AdjusterSignature
+            );
         }
     }
 }

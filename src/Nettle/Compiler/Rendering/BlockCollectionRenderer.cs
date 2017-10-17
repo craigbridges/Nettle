@@ -53,6 +53,16 @@
                 functionRepository
             );
 
+            var variableIncrementerRenderer = new VariableIncrementerRenderer
+            (
+                functionRepository
+            );
+
+            var variableDecrementerRenderer = new VariableDecrementerRenderer
+            (
+                functionRepository
+            );
+
             var flagRenderer = new FlagRenderer
             (
                 functionRepository
@@ -89,6 +99,8 @@
                 bindingRenderer,
                 variableRenderer,
                 variableReassignmentRenderer,
+                variableIncrementerRenderer,
+                variableDecrementerRenderer,
                 flagRenderer,
                 functionRenderer,
                 loopRenderer,
