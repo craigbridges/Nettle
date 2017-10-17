@@ -35,3 +35,4 @@ Welcome John Smith
 ```
 
 ## Nettle Language
+See the [documentation section](https://github.com/craigbridges/Nettle/wiki) for more information.
