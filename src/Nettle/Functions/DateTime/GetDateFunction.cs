@@ -22,7 +22,7 @@
         {
             get
             {
-                return "Gets the current local date and time.";
+                return "Gets the current date and time.";
             }
         }
 
@@ -40,7 +40,19 @@
         {
             Validate.IsNotNull(context);
 
-            return DateTime.Now;
+            var useUtc = context.IsFlagSet
+            (
+                TemplateFlag.UseUtc
+            );
+
+            if (useUtc)
+            {
+                return DateTime.UtcNow;
+            }
+            else
+            {
+                return DateTime.Now;
+            }
         }
     }
 }

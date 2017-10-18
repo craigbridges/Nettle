@@ -456,6 +456,120 @@
         }
 
         /// <summary>
+        /// Determines if a string value is a new line
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True, if the string is a new line; otherwise false</returns>
+        public static bool IsNewLine
+            (
+                this string value
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else if (value == "\n" || value == "\r" || value == "\r\n")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines if a string matches any values in an array
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="matchValues">An array of match values</param>
+        /// <returns>True, if a match was found; otherwise false</returns>
+        public static bool MatchesAny
+            (
+                this string value,
+                params string[] matchValues
+            )
+        {
+            foreach (var matchValue in matchValues)
+            {
+                var matches = String.Equals
+                (
+                    value,
+                    matchValue,
+                    StringComparison.InvariantCulture
+                );
+
+                if (matches)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a string starts with any values in an array
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="matchValues">An array of match values</param>
+        /// <returns>True, if a match was found; otherwise false</returns>
+        public static bool StartsWithAny
+            (
+                this string value,
+                params string[] matchValues
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var matchValue in matchValues)
+                {
+                    if (value.StartsWith(matchValue))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a string ends with any values in an array
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="matchValues">An array of match values</param>
+        /// <returns>True, if a match was found; otherwise false</returns>
+        public static bool EndsWithAny
+            (
+                this string value,
+                params string[] matchValues
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var matchValue in matchValues)
+                {
+                    if (value.EndsWith(matchValue))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets the line number from the position specified in a string
         /// </summary>
         /// <param name="value">The string value to get the line number from</param>
@@ -593,6 +707,94 @@
 
                 return input.Substring(startIndex);
             }
+        }
+
+        /// <summary>
+        /// Replaces the first occurrence of a string within another string
+        /// </summary>
+        /// <param name="text">The text to search</param>
+        /// <param name="search">The search value</param>
+        /// <param name="replace">The replace value</param>
+        /// <returns>The updated string</returns>
+        public static string ReplaceFirst
+            (
+                this string text,
+                string search,
+                string replace
+            )
+        {
+            var position = text.IndexOf(search);
+
+            if (position < 0)
+            {
+                return text;
+            }
+            else
+            {
+                var leftValue = text.Substring(0, position);
+                var rightValue = text.Substring(position + search.Length);
+
+                return leftValue + replace + rightValue;
+            }
+        }
+
+        /// <summary>
+        /// Replaces the last occurrence of a string within another string
+        /// </summary>
+        /// <param name="text">The text to search</param>
+        /// <param name="search">The search value</param>
+        /// <param name="replace">The replace value</param>
+        /// <returns>The updated string</returns>
+        public static string ReplaceLast
+            (
+                this string text,
+                string search,
+                string replace
+            )
+        {
+            var position = text.LastIndexOf(search);
+
+            if (position < 0)
+            {
+                return text;
+            }
+            else
+            {
+                var leftValue = text.Substring(0, position);
+                var rightValue = text.Substring(position + search.Length);
+
+                return leftValue + replace + rightValue;
+            }
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a string within another string
+        /// </summary>
+        /// <param name="text">The text to search</param>
+        /// <param name="search">The search value</param>
+        /// <returns>The updated string</returns>
+        public static string RemoveFirst
+            (
+                this string text,
+                string search
+            )
+        {
+            return ReplaceFirst(text, search, String.Empty);
+        }
+
+        /// <summary>
+        /// Removes the last occurrence of a string within another string
+        /// </summary>
+        /// <param name="text">The text to search</param>
+        /// <param name="search">The search value</param>
+        /// <returns>The updated string</returns>
+        public static string RemoveLast
+            (
+                this string text,
+                string search
+            )
+        {
+            return ReplaceLast(text, search, String.Empty);
         }
     }
 }

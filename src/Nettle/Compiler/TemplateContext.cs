@@ -16,9 +16,11 @@
         /// Constructs the template context with a model
         /// </summary>
         /// <param name="model">The model</param>
+        /// <param name="flags">The template flags</param>
         internal TemplateContext
             (
-                object model
+                object model,
+                params TemplateFlag[] flags
             )
         {
             this.Model = model;
@@ -26,21 +28,32 @@
             this.PropertyValues = new Dictionary<string, object>();
             this.Variables = new Dictionary<string, object>();
 
+            if (flags == null)
+            {
+                this.Flags = new TemplateFlag[] { };
+            }
+            else
+            {
+                this.Flags = flags;
+            }
+
             PopulatePropertyValues(model);
         }
 
         /// <summary>
-        /// Constructs the template context with a model
+        /// Constructs the template context with a model and parent
         /// </summary>
         /// <param name="parent">The parent template context</param>
         /// <param name="model">The model</param>
+        /// <param name="flags">The template flags</param>
         private TemplateContext
             (
                 TemplateContext parent,
-                object model
+                object model,
+                params TemplateFlag[] flags
             )
 
-            : this(model)
+            : this(model, flags)
         {
             this.Parent = parent;
         }
@@ -54,6 +67,27 @@
         /// Gets the templates model
         /// </summary>
         public object Model { get; private set; }
+
+        /// <summary>
+        /// Gets an array of template flags
+        /// </summary>
+        public TemplateFlag[] Flags { get; private set; }
+
+        /// <summary>
+        /// Determines if a specific template flag has been set
+        /// </summary>
+        /// <param name="flag">The flag</param>
+        /// <returns>True, if it has been set; otherwise false</returns>
+        public bool IsFlagSet
+            (
+                TemplateFlag flag
+            )
+        {
+            return this.Flags.Contains
+            (
+                flag
+            );
+        }
 
         /// <summary>
         /// Gets a call stack of partials that have been rendered
@@ -173,13 +207,25 @@
 
                 if (false == nameFound)
                 {
-                    throw new NettleRenderException
+                    var allowImplicit = IsFlagSet
                     (
-                        "No property could be found with the name '{0}'.".With
-                        (
-                            propertyPath
-                        )
+                        TemplateFlag.AllowImplicitBindings
                     );
+
+                    if (allowImplicit)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw new NettleRenderException
+                        (
+                            "No property could be found with the name '{0}'.".With
+                            (
+                                propertyPath
+                            )
+                        );
+                    }
                 }
 
                 if (indexerInfo.HasIndexer)
@@ -224,7 +270,7 @@
             {
                 throw new NettleRenderException
                 (
-                    "{0} cannot be resolved because the model is null.".With
+                    "Property {0} cannot be resolved because the model is null.".With
                     (
                         propertyPath
                     )
@@ -284,14 +330,26 @@
 
                 if (false == propertyFound)
                 {
-                    throw new NettleRenderException
+                    var allowImplicit = IsFlagSet
                     (
-                        "The path '{0}' does not contain a property named '{1}'.".With
-                        (
-                            propertyPath,
-                            nextName
-                        )
+                        TemplateFlag.AllowImplicitBindings
                     );
+
+                    if (allowImplicit)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw new NettleRenderException
+                        (
+                            "The path '{0}' does not contain a property named '{1}'.".With
+                            (
+                                propertyPath,
+                                nextName
+                            )
+                        );
+                    }
                 }
 
                 var nextProperty = currentType.GetProperty
@@ -463,6 +521,39 @@
                 );
             }
 
+            var strictReassign = IsFlagSet
+            (
+                TemplateFlag.EnforceStrictReassign
+            );
+
+            if (strictReassign && value != null)
+            {
+                var currentValue = this.Variables[name];
+
+                if (currentValue != null)
+                {
+                    var oldValueType = currentValue.GetType();
+                    var newValueType = value.GetType();
+
+                    var isAssignable = oldValueType.IsAssignableFrom
+                    (
+                        newValueType
+                    );
+
+                    if (false == isAssignable)
+                    {
+                        throw new InvalidOperationException
+                        (
+                            "The type {0} cannot be assigned to type {1}.".With
+                            (
+                                newValueType.Name,
+                                oldValueType.Name
+                            )
+                        );
+                    }
+                }
+            }
+
             this.Variables[name] = value;
 
             var parent = this.Parent;
@@ -538,13 +629,25 @@
 
                 if (false == variableFound)
                 {
-                    throw new NettleRenderException
+                    var allowImplicit = IsFlagSet
                     (
-                        "No variable has been defined with the name '{0}'.".With
-                        (
-                            variablePath
-                        )
+                        TemplateFlag.AllowImplicitBindings
                     );
+
+                    if (allowImplicit)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        throw new NettleRenderException
+                        (
+                            "No variable has been defined with the name '{0}'.".With
+                            (
+                                variablePath
+                            )
+                        );
+                    }
                 }
 
                 if (indexerInfo.HasIndexer)
@@ -653,7 +756,8 @@
             var context = new TemplateContext
             (
                 this,
-                model
+                model,
+                this.Flags
             );
 
             // Copy the partial call stack across
@@ -665,32 +769,40 @@
                 );
             }
 
-            // Migrate any properties that do not conflict with the new model
-            foreach (var item in this.PropertyValues)
-            {
-                var propertyFound = context.PropertyValues.ContainsKey
-                (
-                    item.Key
-                );
+            var disableInheritance = IsFlagSet
+            (
+                TemplateFlag.DisableModelInheritance
+            );
 
-                if (false == propertyFound)
+            if (false == disableInheritance)
+            {
+                // Migrate any properties that do not conflict with the new model
+                foreach (var item in this.PropertyValues)
                 {
-                    context.PropertyValues.Add
+                    var propertyFound = context.PropertyValues.ContainsKey
                     (
-                        item.Key,
-                        item.Value
+                        item.Key
+                    );
+
+                    if (false == propertyFound)
+                    {
+                        context.PropertyValues.Add
+                        (
+                            item.Key,
+                            item.Value
+                        );
+                    }
+                }
+
+                // Migrate the variables across
+                foreach (var variable in this.Variables)
+                {
+                    context.Variables.Add
+                    (
+                        variable.Key,
+                        variable.Value
                     );
                 }
-            }
-
-            // Migrate the variables across
-            foreach (var variable in this.Variables)
-            {
-                context.Variables.Add
-                (
-                    variable.Key,
-                    variable.Value
-                );
             }
 
             return context;

@@ -108,7 +108,8 @@
                 var renderedContent = _collectionRenderer.Render
                 (
                     ref nestedContext,
-                    loop.Blocks
+                    loop.Blocks,
+                    flags
                 );
 
                 builder.Append(renderedContent);

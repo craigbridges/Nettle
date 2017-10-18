@@ -45,7 +45,12 @@
         {
             Validate.IsNotNull(template);
 
-            var context = new TemplateContext(model);
+            var context = new TemplateContext
+            (
+                model,
+                template.Flags
+            );
+
             var blocks = template.Blocks;
 
             return _collectionRenderer.Render

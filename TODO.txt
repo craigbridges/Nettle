@@ -5,12 +5,6 @@ TODO:
 
 - Flags:
 	- Implement {{#DebugMode}}
-	- Allow undefined or duplicate variables (option explicit)
-	- Require same type redefine (option strict)
-	- Disable model inherit for render partial
-	- AutoFormat (remove extra tabs and line breaks from code)
-	- Minify (remove all line breaks and tabs)
-	- Use UTC date
 	
 - If statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
 	"if" statement expressions:

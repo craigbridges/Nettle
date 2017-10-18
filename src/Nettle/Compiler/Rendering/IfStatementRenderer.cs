@@ -85,7 +85,8 @@
                 var renderedBody = _collectionRenderer.Render
                 (
                     ref context,
-                    statement.Blocks
+                    statement.Blocks,
+                    flags
                 );
 
                 return renderedBody;

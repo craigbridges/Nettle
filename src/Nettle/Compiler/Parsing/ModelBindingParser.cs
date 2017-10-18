@@ -51,7 +51,7 @@
 
             // Rule: the signature can end with an indexer
             var remainingBody = signatureBody.Substring(1);
-            var indexerInfo = new IndexerInfo(signatureBody);
+            var indexerInfo = new IndexerInfo(remainingBody);
             
             if (indexerInfo.HasIndexer)
             {
