@@ -64,6 +64,15 @@
         private TemplateContext Parent { get; set; }
 
         /// <summary>
+        /// Determines if this is the root template context
+        /// </summary>
+        /// <returns>True, if it's the root context; otherwise false</returns>
+        public bool IsRoot()
+        {
+            return this.Parent == null;
+        }
+
+        /// <summary>
         /// Gets the templates model
         /// </summary>
         public object Model { get; private set; }

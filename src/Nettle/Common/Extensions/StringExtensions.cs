@@ -510,6 +510,61 @@
         }
 
         /// <summary>
+        /// Determines if a string contains any values in an array
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="matchValues">An array of match values</param>
+        /// <returns>True, if a match was found; otherwise false</returns>
+        public static bool ContainsAny
+            (
+                this string value,
+                params string[] matchValues
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var matchValue in matchValues)
+                {
+                    if (value.Contains(matchValue))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a string is made up of any of the characters in an array
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <param name="matchValues">An array of match values</param>
+        /// <returns>True, if a match was found; otherwise false</returns>
+        public static bool IsMadeUpOf
+            (
+                this string value,
+                params char[] matchValues
+            )
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else
+            {
+                return value.All
+                (
+                    c => matchValues.Any(mv => mv == c)
+                );
+            }
+        }
+
+        /// <summary>
         /// Determines if a string starts with any values in an array
         /// </summary>
         /// <param name="value">The value to check</param>
@@ -795,6 +850,49 @@
             )
         {
             return ReplaceLast(text, search, String.Empty);
+        }
+
+        /// <summary>
+        /// Removes all leading and trailing phrases specified in an array from a string
+        /// </summary>
+        /// <param name="text">The text</param>
+        /// <param name="phases">The search phases</param>
+        /// <returns>The updated text</returns>
+        public static string Trim
+            (
+                this string text,
+                params string[] phases
+            )
+        {
+            if (String.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            var phrasesFound = false;
+
+            do
+            {
+                phrasesFound = false;
+
+                foreach (var phrase in phases)
+                {
+                    if (text.StartsWith(phrase))
+                    {
+                        phrasesFound = true;
+                        text = text.RemoveFirst(phrase);
+                    }
+
+                    if (text.EndsWith(phrase))
+                    {
+                        phrasesFound = true;
+                        text = text.RemoveLast(phrase);
+                    }
+                }
+            }
+            while (phrasesFound);
+
+            return text;
         }
     }
 }

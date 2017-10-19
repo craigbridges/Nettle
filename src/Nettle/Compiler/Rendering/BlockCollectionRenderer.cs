@@ -131,8 +131,7 @@
             );
 
             var previousBlockType = default(Type);
-            var previousOutput = String.Empty;
-            var removeNextLineBreak = false;
+            var previousRawOutput = String.Empty;
 
             foreach (var block in blocks)
             {
@@ -143,63 +142,72 @@
                     flags
                 );
 
+                var formattedOutput = blockOutput;
+                var blockType = block.GetType();
+
                 if (autoFormat)
                 {
-                    if (removeNextLineBreak)
-                    {
-                        var startsWithLineBreak = blockOutput.StartsWithAny
-                        (
-                            "\n",
-                            "\r",
-                            "\r\n"
-                        );
+                    var previousHadLineBreak = previousRawOutput.EndsWithAny
+                    (
+                        "\n",
+                        "\r",
+                        "\r\n",
+                        "\n\t",
+                        "\r\t",
+                        "\r\n\t"
+                    );
 
-                        if (startsWithLineBreak)
-                        {
-                            if (blockOutput.StartsWith("\n"))
-                            {
-                                blockOutput = blockOutput.RemoveFirst("\n");
-                            }
-                            else if (blockOutput.StartsWith("\r"))
-                            {
-                                blockOutput = blockOutput.RemoveFirst("\r");
-                            }
-                            else if (blockOutput.StartsWith("\r\n"))
-                            {
-                                blockOutput = blockOutput.RemoveFirst("\r\n");
-                            }
-
-                            removeNextLineBreak = false;
-                        }
-                    }
-
-                    if (block.GetType() == typeof(ContentBlock))
+                    if (blockType == typeof(ContentBlock))
                     {
                         if (previousBlockType == null || previousBlockType != typeof(ContentBlock))
                         {
-                            blockOutput = RemoveExtraPadding(blockOutput);
+                            var startsWithLineBreak = formattedOutput.StartsWithAny
+                            (
+                                "\n",
+                                "\r",
+                                "\r\n"
+                            );
+
+                            // Determine if content is only tabs or line breaks
+                            var isWhitespace = formattedOutput.IsMadeUpOf
+                            (
+                                '\n',
+                                '\r',
+                                '\t'
+                            );
+
+                            formattedOutput = RemoveExtraPadding
+                            (
+                                formattedOutput
+                            );
+
+                            if (startsWithLineBreak && false == isWhitespace && false == previousHadLineBreak)
+                            {
+                                formattedOutput = "\r\n" + formattedOutput;
+                            }
                         }
                     }
-                    else if (previousBlockType == typeof(ContentBlock))
+                    else
                     {
-                        var endedWithLineBreak = previousOutput.EndsWithAny
+                        // Determine if previous output was only tabs or line breaks
+                        var wasWhitespace = previousRawOutput.IsMadeUpOf
                         (
-                            "\n",
-                            "\r",
-                            "\r\n"
+                            '\n',
+                            '\r',
+                            '\t'
                         );
 
-                        if (endedWithLineBreak)
+                        if (previousHadLineBreak && false == wasWhitespace)
                         {
-                            removeNextLineBreak = true;
+                            formattedOutput = "\r\n" + formattedOutput;
                         }
                     }
                 }
-
-                builder.Append(blockOutput);
+                
+                builder.Append(formattedOutput);
 
                 previousBlockType = block.GetType();
-                previousOutput = blockOutput;
+                previousRawOutput = blockOutput;
             }
 
             // Check if we should minify the output (this overrides auto format)
@@ -212,7 +220,33 @@
                 builder.Replace("\r", String.Empty);
             }
 
-            return builder.ToString();
+            var output = builder.ToString();
+
+            if (autoFormat)
+            {
+                if (context.IsRoot())
+                {
+                    // Remove leading and trailing padding from template output
+                    output = RemoveExtraPadding(output);
+                }
+                else
+                {
+                    var endsWithLineBreak = output.EndsWithAny
+                    (
+                        "\n",
+                        "\r",
+                        "\r\n"
+                    );
+
+                    // Ensure nested blocks end with line breaks
+                    if (false == endsWithLineBreak)
+                    {
+                        output = output + "\r\n";
+                    }
+                }
+            }
+
+            return output;
         }
 
         /// <summary>
@@ -232,59 +266,20 @@
             {
                 return text;
             }
-            else if (text.StartsWith("\r\n\r\n"))
-            {
-                text = text.ReplaceFirst
-                (
-                    "\r\n\r\n",
-                    "\r\n"
-                );
-            }
             else
             {
-                text = RemoveFirstAndLastOccurances
+                text = text.Trim
                 (
-                    text,
                     "\t",
                     "\n\t",
                     "\r\t",
-                    "\r\n\t"
+                    "\r\n\t",
+                    "\n",
+                    "\r",
+                    "\r\n"
                 );
             }
             
-            return text;
-        }
-
-        /// <summary>
-        /// Removes the first and last occurrences of a value within a string
-        /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="phases">The search phases</param>
-        /// <returns>The updated text</returns>
-        private string RemoveFirstAndLastOccurances
-            (
-                string text,
-                params string[] phases
-            )
-        {
-            if (String.IsNullOrEmpty(text))
-            {
-                return text;
-            }
-
-            foreach (var phrase in phases)
-            {
-                if (text.StartsWith(phrase))
-                {
-                    text = text.RemoveFirst(phrase);
-                }
-
-                if (text.EndsWith(phrase))
-                {
-                    text = text.RemoveLast(phrase);
-                }
-            }
-
             return text;
         }
 
