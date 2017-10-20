@@ -1,8 +1,6 @@
 TODO:
 -----
 
-- Complete Wiki
-
 - Flags:
 	- Implement {{#DebugMode}}
 	
@@ -17,6 +15,8 @@ TODO:
 		E.g. {{if false == value}} or {{if number1 > number2 & boolValue}}
 		
 	- {{else}} and {{else if}} blocks
+
+- Publish NuGet v1.1 package
 
 Extensions:
 -----------

@@ -65,6 +65,10 @@
     <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
     <Compile Include="Compiler\Parsing\Blocks\FlagDeclaration.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableReassignment.cs" />
+    <Compile Include="Compiler\Parsing\Conditions\Condition.cs" />
+    <Compile Include="Compiler\Parsing\Conditions\ConditionValue.cs" />
+    <Compile Include="Compiler\Parsing\Conditions\BooleanExpression.cs" />
+    <Compile Include="Compiler\Parsing\Conditions\ConditionValueComparer.cs" />
     <Compile Include="Compiler\Parsing\VariableAdjusterParser.cs" />
     <Compile Include="Compiler\Parsing\IndexerInfo.cs" />
     <Compile Include="Compiler\Parsing\RenderPartialParser.cs" />
