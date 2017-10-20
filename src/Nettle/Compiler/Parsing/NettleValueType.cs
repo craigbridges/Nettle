@@ -23,6 +23,9 @@
         Variable = 8,
 
         [Description("Function Call")]
-        Function = 16
+        Function = 16,
+
+        [Description("Boolean Expression")]
+        BooleanExpression = 32
     }
 }

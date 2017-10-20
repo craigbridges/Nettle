@@ -1,5 +1,6 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
+    using Nettle.Compiler.Parsing.Conditions;
     using System;
 
     /// <summary>
@@ -100,6 +101,17 @@
                     (
                         ref templateContent,
                         ref positionOffset,
+                        signature
+                    );
+
+                    break;
+
+                case NettleValueType.BooleanExpression:
+
+                    var expressionParser = new BooleanExpressionParser();
+
+                    convertedValue = expressionParser.Parse
+                    (
                         signature
                     );
 

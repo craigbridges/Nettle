@@ -95,6 +95,10 @@
             {
                 type = NettleValueType.Function;
             }
+            else if (value.StartsWith("(") && value.EndsWith(")"))
+            {
+                type = NettleValueType.BooleanExpression;
+            }
             else
             {
                 // Decide if the value looks like a number or variable

@@ -10,6 +10,14 @@
     {
         internal NettleParseException
             (
+                string message
+            )
+
+            : base(message)
+        { }
+
+        internal NettleParseException
+            (
                 string message,
                 int position
             )
@@ -34,6 +42,6 @@
         /// <summary>
         /// Gets the character position where the error was found
         /// </summary>
-        public int Position { get; private set; }
+        public int? Position { get; private set; }
     }
 }

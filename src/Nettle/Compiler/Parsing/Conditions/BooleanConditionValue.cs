@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a boolean condition value
     /// </summary>
-    internal class ConditionValue
+    internal class BooleanConditionValue
     {
         /// <summary>
         /// Constructs the condition with the details
@@ -11,7 +11,7 @@
         /// <param name="signature">The conditions signature</param>
         /// <param name="valueType">The value type</param>
         /// <param name="value">The parsed value</param>
-        public ConditionValue
+        public BooleanConditionValue
             (
                 string signature,
                 NettleValueType valueType,
@@ -19,7 +19,7 @@
             )
         {
             Validate.IsNotEmpty(signature);
-
+            
             this.Signature = signature;
             this.ValueType = valueType;
             this.Value = value;

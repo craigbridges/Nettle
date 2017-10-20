@@ -3,9 +3,9 @@
     using System.ComponentModel;
 
     /// <summary>
-    /// Defines condition value comparison operators
+    /// Defines condition operators
     /// </summary>
-    public enum ConditionValueComparer
+    public enum BooleanConditionOperator
     {
         [Description("Equal To")]
         Equal = 0,
@@ -24,5 +24,11 @@
 
         [Description("Less Than Or Equal To")]
         LessThanOrEqual = 8,
+
+        [Description("And")]
+        And = 16,
+
+        [Description("Or")]
+        Or = 32
     }
 }

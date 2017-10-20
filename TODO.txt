@@ -3,17 +3,14 @@ TODO:
 
 - Flags:
 	- Implement {{#DebugMode}}
+
+- Variables:
+	- Accept boolean expression as assignment and reassignment value (must be wrapped in brackets to identify it)
 	
 - If statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
-	"if" statement expressions:
-		- Negation (i.e. if not true)
-		- Must have a left and right side value
-		- Can be any type but must be comparable
-		- Checks for equality, not equals, greater than, less than (numbers only), and, or
-		- Create boolean expression evaluator
-
-		E.g. {{if false == value}} or {{if number1 > number2 & boolValue}}
-		
+	- Add condition parser to the if statement parser
+	- Create boolean expression resolver that uses the template context and function repository
+	- Integrate expression resolver with if statement renderer
 	- {{else}} and {{else if}} blocks
 
 - Publish NuGet v1.1 package
