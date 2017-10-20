@@ -1,5 +1,7 @@
 ﻿namespace Nettle.Compiler.Parsing.Blocks
 {
+    using Nettle.Compiler.Parsing.Conditions;
+
     /// <summary>
     /// Represents an 'if' statement code block
     /// </summary>
@@ -19,5 +21,10 @@
         /// Gets or sets the statements conditions value
         /// </summary>
         public object ConditionValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the conditions expression
+        /// </summary>
+        public BooleanExpression ConditionExpression { get; set; }
     }
 }

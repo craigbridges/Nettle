@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using Nettle.Compiler.Parsing.Conditions;
     using System;
 
     /// <summary>
@@ -8,6 +9,8 @@
     /// </summary>
     internal sealed class IfStatementParser : NestedBlockParser
     {
+        private BooleanExpressionParser _expressionParser;
+
         /// <summary>
         /// Constructs the parser with a blockifier
         /// </summary>
@@ -18,7 +21,9 @@
             )
 
             : base(blockifier)
-        { }
+        {
+            _expressionParser = new BooleanExpressionParser();
+        }
         
         /// <summary>
         /// Gets the tag name
@@ -67,6 +72,11 @@
                 );
             }
 
+            var expression = _expressionParser.Parse
+            (
+                conditionSignature
+            );
+
             var conditionType = ResolveType
             (
                 conditionSignature
@@ -92,6 +102,7 @@
                 ConditionSignature = conditionSignature,
                 ConditionType = conditionType,
                 ConditionValue = conditionValue,
+                ConditionExpression = expression,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks
             };

@@ -267,7 +267,15 @@
                     }
                 }
             }
-            
+
+            if (tokenBuilder.Length > 0)
+            {
+                tokens.Add
+                (
+                    tokenBuilder.ToString().Trim()
+                );
+            }
+
             return tokens.ToArray();
         }
 
