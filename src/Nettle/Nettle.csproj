@@ -78,6 +78,7 @@
     <Compile Include="Compiler\Parsing\VariableIncrementerParser.cs" />
     <Compile Include="Compiler\Parsing\VariableReassignmentParser.cs" />
     <Compile Include="Compiler\Rendering\BlockCollectionRenderer.cs" />
+    <Compile Include="Compiler\Rendering\BooleanExpressionEvaluator.cs" />
     <Compile Include="Compiler\Rendering\CommentRenderer.cs" />
     <Compile Include="Compiler\Rendering\PartialRenderer.cs" />
     <Compile Include="Compiler\Rendering\ForEachLoopRenderer.cs" />

@@ -109,10 +109,20 @@
                 case NettleValueType.BooleanExpression:
 
                     var expressionParser = new BooleanExpressionParser();
+                    var expression = signature;
+
+                    if (expression.StartsWith(@"(") && expression.EndsWith(@")"))
+                    {
+                        expression = expression.Crop
+                        (
+                            1,
+                            expression.Length - 2
+                        );
+                    }
 
                     convertedValue = expressionParser.Parse
                     (
-                        signature
+                        expression
                     );
 
                     break;

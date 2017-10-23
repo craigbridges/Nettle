@@ -169,18 +169,36 @@
                 else if (blockType == typeof(IfStatement))
                 {
                     var statement = (IfStatement)block;
+                    var expression = statement.ConditionExpression;
 
-                    if (statement.ConditionType == NettleValueType.Variable)
+                    foreach (var condition in expression.Conditions)
                     {
-                        RunVariableCheck
-                        (
-                            ref errors,
-                            declaredVariables,
-                            statement,
-                            statement.ConditionSignature
-                        );
-                    }
+                        if (condition.LeftValue.ValueType == NettleValueType.Variable)
+                        {
+                            RunVariableCheck
+                            (
+                                ref errors,
+                                declaredVariables,
+                                statement,
+                                condition.LeftValue.Signature
+                            );
+                        }
 
+                        if (condition.RightValue != null)
+                        {
+                            if (condition.RightValue.ValueType == NettleValueType.Variable)
+                            {
+                                RunVariableCheck
+                                (
+                                    ref errors,
+                                    declaredVariables,
+                                    statement,
+                                    condition.RightValue.Signature
+                                );
+                            }
+                        }
+                    }
+                    
                     if (statement.Blocks != null)
                     {
                         ValidateVariables

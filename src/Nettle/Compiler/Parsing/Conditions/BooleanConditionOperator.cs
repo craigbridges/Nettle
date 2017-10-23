@@ -23,12 +23,12 @@
         GreaterThanOrEqual = 8,
 
         [Description("Less Than Or Equal To")]
-        LessThanOrEqual = 8,
+        LessThanOrEqual = 16,
 
         [Description("And")]
-        And = 16,
+        And = 32,
 
         [Description("Or")]
-        Or = 32
+        Or = 64
     }
 }

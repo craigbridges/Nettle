@@ -4,15 +4,6 @@ TODO:
 - Flags:
 	- Implement {{#DebugMode}}
 
-- Variables:
-	- Accept boolean expression as assignment and reassignment value (must be wrapped in brackets to identify it)
-	
-- If statement conditions that let you do things like number > 10 or number == 1 etc (that would be contained in brackets? like {{if (number > 10)}})
-	- Add condition parser to the if statement parser
-	- Create boolean expression resolver that uses the template context and function repository
-	- Integrate expression resolver with if statement renderer
-	- {{else}} and {{else if}} blocks
-
 - Publish NuGet v1.1 package
 
 Extensions:
@@ -39,12 +30,13 @@ Extensions:
 Low Priority:
 -------------
 
+- If statement conditions
+	- {{else}} and {{else if}} blocks
+
 - Indexers:
 	- Handle path binding index pointers (e.g. Names[counter])
 	- Handle nested indexers (e.g. Rows[0].Values[1])
 	- Add support for variable adjusters
-
-- Some sort of "List all..." tag that can list all functions or variables or model fields etc (something like {{?@}} for all functions, {{?.}} for variables and {{?$}} for all model bindings
 
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 

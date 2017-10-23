@@ -76,17 +76,7 @@
             (
                 conditionSignature
             );
-
-            var conditionType = ResolveType
-            (
-                conditionSignature
-            );
-
-            var conditionValue = conditionType.ParseValue
-            (
-                conditionSignature
-            );
-
+            
             var nestedBody = ExtractNestedBody
             (
                 ref templateContent,
@@ -99,9 +89,6 @@
                 Signature = nestedBody.Signature,
                 StartPosition = nestedBody.StartPosition,
                 EndPosition = nestedBody.EndPosition,
-                ConditionSignature = conditionSignature,
-                ConditionType = conditionType,
-                ConditionValue = conditionValue,
                 ConditionExpression = expression,
                 Body = nestedBody.Body,
                 Blocks = nestedBody.Blocks

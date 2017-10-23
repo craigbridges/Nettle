@@ -28,6 +28,11 @@
             Validate.IsNotNull(functionRepository);
             Validate.IsNotNull(templateRepository);
 
+            var expressionEvaluator = new BooleanExpressionEvaluator
+            (
+                functionRepository
+            );
+
             var commentRenderer = new CommentRenderer
             (
                 functionRepository
@@ -82,6 +87,7 @@
             var ifStatementRenderer = new IfStatementRenderer
             (
                 functionRepository,
+                expressionEvaluator,
                 this
             );
 

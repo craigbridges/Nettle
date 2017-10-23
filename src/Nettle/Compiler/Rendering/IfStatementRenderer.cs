@@ -9,23 +9,28 @@
     /// </summary>
     internal class IfStatementRenderer : NettleRenderer, IBlockRenderer
     {
+        private BooleanExpressionEvaluator _expressionEvaluator;
         private BlockCollectionRenderer _collectionRenderer;
 
         /// <summary>
         /// Constructs the renderer with required dependencies
         /// </summary>
         /// <param name="functionRepository">The function repository</param>
+        /// <param name="expressionEvaluator">The expression evaluator</param>
         /// <param name="collectionRenderer">The block collection renderer</param>
         public IfStatementRenderer
             (
                 IFunctionRepository functionRepository,
+                BooleanExpressionEvaluator expressionEvaluator,
                 BlockCollectionRenderer collectionRenderer
             )
 
             : base(functionRepository)
         {
+            Validate.IsNotNull(expressionEvaluator);
             Validate.IsNotNull(collectionRenderer);
 
+            _expressionEvaluator = expressionEvaluator;
             _collectionRenderer = collectionRenderer;
         }
 
@@ -66,15 +71,12 @@
             Validate.IsNotNull(block);
 
             var statement = (IfStatement)block;
-
-            var condition = ResolveValue
+            
+            var result = _expressionEvaluator.Evaluate
             (
                 ref context,
-                statement.ConditionValue,
-                statement.ConditionType
+                statement.ConditionExpression
             );
-
-            var result = ToBool(condition);
 
             if (false == result)
             {
@@ -91,37 +93,6 @@
 
                 return renderedBody;
             }
-        }
-
-        /// <summary>
-        /// Converts an object into a boolean representation
-        /// </summary>
-        /// <param name="value">The value to convert</param>
-        /// <returns>The boolean representation</returns>
-        private bool ToBool
-            (
-                object value
-            )
-        {
-            var result = default(bool);
-
-            if (value != null)
-            {
-                if (value is bool)
-                {
-                    result = (bool)value;
-                }
-                else if (value.GetType().IsNumeric())
-                {
-                    result = (double)value > 0;
-                }
-                else
-                {
-                    result = value.ToString().Length > 0;
-                }
-            }
-
-            return result;
         }
     }
 }

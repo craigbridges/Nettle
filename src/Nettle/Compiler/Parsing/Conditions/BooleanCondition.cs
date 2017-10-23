@@ -41,6 +41,22 @@
         }
 
         /// <summary>
+        /// Constructs the condition with left value
+        /// </summary>
+        /// <param name="joinOperator">The join operator</param>
+        /// <param name="leftValue">The left value</param>
+        public BooleanCondition
+            (
+                BooleanConditionOperator joinOperator,
+                BooleanConditionValue leftValue
+            )
+
+            : this(leftValue)
+        {
+            this.JoinOperator = joinOperator;
+        }
+
+        /// <summary>
         /// Constructs the condition with left and right values
         /// </summary>
         /// <param name="joinOperator">The join operator</param>

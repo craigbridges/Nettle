@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a boolean expression parser
     /// </summary>
-    internal class BooleanExpressionParser : NettleParser
+    internal sealed class BooleanExpressionParser : NettleParser
     {
         private Dictionary<string, BooleanConditionOperator> _operatorLookup;
 
@@ -95,10 +95,12 @@
 
                         if (false == isOperator)
                         {
+                            var message = "The expression '{0}' is invalid. " +
+                                          "An operator was expected, but not found.";
+
                             throw new NettleParseException
                             (
-                                "The expression '{0}' is invalid. " +
-                                "An operator was expected, but not found.".With
+                                message.With
                                 (
                                     expression
                                 )
@@ -109,6 +111,26 @@
 
                         if (conditions.Any() && currentJoinOperator == null)
                         {
+                            switch (@operator)
+                            {
+                                case BooleanConditionOperator.And:
+                                case BooleanConditionOperator.Or:
+                                    break;
+
+                                default:
+                                    var message = "The expression '{0}' is invalid. " +
+                                                  "The operator {1} is not allowed here.";
+
+                                    throw new NettleParseException
+                                    (
+                                        message.With
+                                        (
+                                            expression,
+                                            @operator
+                                        )
+                                    );
+                            }
+
                             currentJoinOperator = @operator;
                         }
                         else
@@ -173,8 +195,35 @@
                     
                     operatorExpected = !operatorExpected;
                 }
+
+                // Add the condition if no right side was found
+                // This will happen when an odd number of conditions are found
+                if (currentLeftValue != null)
+                {
+                    if (currentJoinOperator.HasValue)
+                    {
+                        conditions.Add
+                        (
+                            new BooleanCondition
+                            (
+                                currentJoinOperator.Value,
+                                currentLeftValue
+                            )
+                        );
+                    }
+                    else
+                    {
+                        conditions.Add
+                        (
+                            new BooleanCondition
+                            (
+                                currentLeftValue
+                            )
+                        );
+                    }
+                }
             }
-            
+
             return new BooleanExpression
             (
                 expression,
@@ -201,15 +250,13 @@
 
             var tokens = new List<string>();
             var tokenBuilder = new StringBuilder();
-            var separatorQueue = new Queue<char>();
+            var separatorQueue = new Stack<char>();
 
             // Define the token separates
             var separators = new Dictionary<char, char>()
             {
-                { ' ', ' ' },
                 { '"', '"' },
-                { '(', ')' },
-                { '@', ')' }
+                { '(', ')' }
             };
 
             foreach (var c in expression)
@@ -221,14 +268,14 @@
 
                     if (separators.ContainsKey(c))
                     {
-                        separatorQueue.Enqueue
+                        separatorQueue.Push
                         (
                             separators[c]
                         );
                     }
                     else
                     {
-                        separatorQueue.Enqueue(' ');
+                        separatorQueue.Push(' ');
                     }
                 }
                 else
@@ -238,7 +285,7 @@
                     // Check if this character is a separator
                     if (separatorQueue.Peek() == c)
                     {
-                        separatorQueue.Dequeue();
+                        separatorQueue.Pop();
 
                         if (separatorQueue.Count == 0)
                         {
@@ -247,7 +294,7 @@
                     }
                     else if (separators.ContainsKey(c))
                     {
-                        separatorQueue.Enqueue
+                        separatorQueue.Push
                         (
                             separators[c]
                         );
