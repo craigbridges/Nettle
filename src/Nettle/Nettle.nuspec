@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Nettle</id>
-    <version>$version$</version>
+    <version>1.1</version>
     <title>Nettle</title>
     <authors>Craig Bridges</authors>
     <owners>Craig Bridges</owners>
@@ -11,8 +11,20 @@
     <iconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight .NET templating engine</description>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>
+- Fixed various rendering bugs
+- Added more functions
+- Added support for model binding indexers
+- Added support for variable adjusters
+- Added support for boolean expressions
+- Added template flags
+	</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Nettle Templating Language Engine</tags>
   </metadata>
+  <files>
+    <file src="bin\Release\Nettle.dll" target="lib\net45" />
+	<file src="bin\Release\Nettle.dll" target="lib\net46" />
+	<file src="bin\Release\Nettle.dll" target="lib\net461" />
+  </files>
 </package>

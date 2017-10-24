@@ -4,8 +4,6 @@ TODO:
 - Flags:
 	- Implement {{#DebugMode}}
 
-- Publish NuGet v1.1 package
-
 Extensions:
 -----------
 

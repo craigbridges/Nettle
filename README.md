@@ -7,7 +7,7 @@ Nettle is a .**NET** **T**emplating **L**anguage **E**ngine inspired by Handleba
 - Generating administrable XML or CSV exports
 - Generating administrable reports or documents
 
-The main difference between Nettle and Handlebars is that Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell), only the template needs to be edited.
+The main difference between Nettle and Handlebars is that Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.
 
 ## Usage
 Install the NuGet package:
