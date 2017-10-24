@@ -1,0 +1,18 @@
+{{#AutoFormat}}
+
+{{var bool1 = true}}
+{{var bool2 = false}}
+{{var num1 = 5}}
+{{var num2 = 10}}
+{{var text1 = "5"}}
+{{var text2 = "10"}}
+{{var expr1 = (num1 <= num2)}}
+{{var expr2 = (false != true)}}
+
+{{if num1 >= text1 & bool1 | bool2 & (num1 > num2 | text2 == "10") & expr1 & expr2}}
+	Condition Passed
+{{/if}}
+
+{{each $.Names}}
+	{{$}}
+{{/each}}

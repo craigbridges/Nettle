@@ -23,8 +23,7 @@
     <tags>Nettle Templating Language Engine</tags>
   </metadata>
   <files>
-    <file src="bin\Release\Nettle.dll" target="lib\net45" />
-	<file src="bin\Release\Nettle.dll" target="lib\net46" />
 	<file src="bin\Release\Nettle.dll" target="lib\net461" />
+	<file src="bin\Release\Nettle.xml" target="lib\net461" />
   </files>
 </package>

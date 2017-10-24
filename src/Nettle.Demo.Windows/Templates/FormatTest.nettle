@@ -1,0 +1,28 @@
+{{#AutoFormat}}
+
+{{var names = $.Names}}
+{{var counter = 1}}
+
+{{each names}}
+	Test
+	{{counter}}. {{$}}
+	{{counter++}}
+{{/each}}
+
+{{each names}}
+	Test
+	{{var t = ""}}
+	{{var y = ""}}
+ABC
+{{/each}}
+
+{{each names}}
+
+	Test 1
+Test 2
+Test 3
+{{$}}
+Test 4
+{{/each}}
+
+{{> RenderPartialDemo}}
