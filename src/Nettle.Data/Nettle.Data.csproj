@@ -56,6 +56,14 @@
     <Compile Include="Common\Serialization\Csv\GridToCsvSerializer.cs" />
     <Compile Include="Common\Serialization\Json\GridToJsonSerializer.cs" />
     <Compile Include="Common\Serialization\Xml\GridToXmlSerializer.cs" />
+    <Compile Include="Database\DbConnectionRepository.cs" />
+    <Compile Include="Database\IDbAdapter.cs" />
+    <Compile Include="Database\IDbConnection.cs" />
+    <Compile Include="Database\IDbConnectionRepository.cs" />
+    <Compile Include="Database\SqlClientAdapter.cs" />
+    <Compile Include="Database\SqlClientConnection.cs" />
+    <Compile Include="Functions\ExecuteStoredProcedureFunction.cs" />
+    <Compile Include="Functions\ExecuteQueryFunction.cs" />
     <Compile Include="Functions\ToXmlFunction.cs" />
     <Compile Include="Functions\ToJsonFunction.cs" />
     <Compile Include="Functions\ToCsvFunction.cs" />
@@ -75,9 +83,7 @@
       <Name>Nettle</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

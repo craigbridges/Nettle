@@ -8,6 +8,7 @@
 {{var text2 = "10"}}
 {{var expr1 = (num1 <= num2)}}
 {{var expr2 = (false != true)}}
+{{var pair1 = <"Message", $.Message>}}
 
 {{if num1 >= text1 & bool1 | bool2 & (num1 > num2 | text2 == "10") & expr1 & expr2}}
 	Condition Passed

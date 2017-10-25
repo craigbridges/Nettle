@@ -60,7 +60,7 @@
             switch (type)
             {
                 case NettleValueType.ModelBinding:
-
+                {
                     var bindingName = rawValue.ToString();
 
                     resolvedValue = ResolveBindingValue
@@ -70,9 +70,9 @@
                     );
 
                     break;
-
+                }
                 case NettleValueType.Function:
-
+                {
                     if (rawValue != null && rawValue is FunctionCall)
                     {
                         var parsedFunction = (FunctionCall)rawValue;
@@ -93,20 +93,47 @@
                             "The function call is invalid."
                         );
                     }
-
+                }
                 case NettleValueType.Variable:
-
+                {
                     resolvedValue = context.ResolveVariableValue
                     (
                         rawValue.ToString()
                     );
 
                     break;
+                }
+                case NettleValueType.KeyValuePair:
+                    {
+                        var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
 
+                        var key = ResolveValue
+                        (
+                            ref context,
+                            unresolvedPair.ParsedKey,
+                            unresolvedPair.KeyType
+                        );
+
+                        var value = ResolveValue
+                        (
+                            ref context,
+                            unresolvedPair.ParsedValue,
+                            unresolvedPair.ValueType
+                        );
+
+                        resolvedValue = new KeyValuePair<object, object>
+                        (
+                            key,
+                            value
+                        );
+
+                        break;
+                    }
                 default:
-
+                {
                     resolvedValue = rawValue;
                     break;
+                }   
             }
 
             return resolvedValue;

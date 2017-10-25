@@ -3,6 +3,7 @@
     using Nettle.Functions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -34,23 +35,25 @@
                     Type.EmptyTypes
                 );
 
-                if (constructor == null)
+                if (constructor != null)
                 {
-                    throw new InvalidOperationException
+                    var functionInstance = (IFunction)Activator.CreateInstance
                     (
-                        "Could not resolve type {0}. An empty constructor is required.".With
+                        type
+                    );
+
+                    functions.Add(functionInstance);
+                }
+                else
+                {
+                    Debug.WriteLine
+                    (
+                        "Warning: The type {0} could not be resolved.".With
                         (
                             type.Name
                         )
                     );
                 }
-
-                var functionInstance = (IFunction)Activator.CreateInstance
-                (
-                    type
-                );
-
-                functions.Add(functionInstance);
             }
 
             return functions;

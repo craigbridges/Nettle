@@ -1,32 +1,25 @@
 TODO:
 -----
 
-- Flags:
-	- Implement {{#DebugMode}}
+- Create tokeniser and parser for "parameter" signatures that will tolerate commas in strings etc and can be used for function parameters and key value pair parsing
 
 Extensions:
 -----------
 
 - Nettle.Data
-	- Eventually things like Nettle.Data.Sql that could connect to MS SQL Server etc
-	- N.b. with Nettle.Web provide functions to read through imported JSON data too (what if it's XML/Soap?).
-
-	- Data.SQL
-		- Registered connections (name, connection string, provider/db adapter)
-		- Execute stored procedure with connection name, procedure name and parameter values. Get result as data grid.
-		- Execute general SQL query with connection name and SQL query. Get results as data grid.
-		- N.b. how do we ensure read only stored procedure and SQL queries are executed? I.e. ensure no db writes are made - to keep Nettle as a read/render only engine.
+	- Create database connection in Windows demo project and test queries and stored procedures
 	
 - Nettle.Web
-	Functions.CallWebApi
-	- Call a web api and get json result as JObject
+	- Call a Web API and get JSON result as JObject
 	- Get specific value from JSON object function
 	- How do we handle headers? (e.g. security like we use)
-
-	Http post and delete? Anything else?
+	- How do we handle things like XML/Soap?
 
 Low Priority:
 -------------
+
+- Flags:
+	- Implement {{#DebugMode}}
 
 - If statement conditions
 	- {{else}} and {{else if}} blocks

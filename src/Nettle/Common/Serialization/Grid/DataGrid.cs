@@ -215,6 +215,40 @@
         }
 
         /// <summary>
+        /// Adds a new row of data to the data grids collection of rows
+        /// </summary>
+        /// <param name="data">The row data</param>
+        public void AddRow
+            (
+                Dictionary<string, object> data
+            )
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException("data");
+            }
+
+            var pairs = new List<KeyValuePair<string, object>>();
+
+            foreach (var item in data)
+            {
+                pairs.Add
+                (
+                    new KeyValuePair<string, object>
+                    (
+                        item.Key,
+                        item.Value
+                    )
+                );
+            }
+
+            AddRow
+            (
+                pairs.ToArray()
+            );
+        }
+
+        /// <summary>
         /// Removes an item from the row collection at the index specified
         /// </summary>
         /// <param name="index">The row index (zero based)</param>

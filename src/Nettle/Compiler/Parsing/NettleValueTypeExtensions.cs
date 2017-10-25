@@ -30,7 +30,7 @@
             switch (type)
             {
                 case NettleValueType.String:
-
+                {
                     if (signature.Equals("\"\""))
                     {
                         convertedValue = String.Empty;
@@ -49,19 +49,19 @@
                     }
 
                     break;
-
+                }
                 case NettleValueType.Number:
-
+                {
                     convertedValue = Double.Parse(signature);
                     break;
-
+                }
                 case NettleValueType.Boolean:
-
+                {
                     convertedValue = Boolean.Parse(signature);
                     break;
-
+                }
                 case NettleValueType.ModelBinding:
-
+                {
                     var bindingPath = signature;
 
                     if (bindingPath.StartsWith(@"{{") && bindingPath.EndsWith(@"}}"))
@@ -84,15 +84,15 @@
 
                     convertedValue = bindingPath;
                     break;
-
+                }
                 case NettleValueType.Variable:
-
+                {
                     // NOTE: this isn't resolvable until runtime
                     convertedValue = signature;
                     break;
-
+                }
                 case NettleValueType.Function:
-
+                {
                     var functionParser = new FunctionParser();
                     var templateContent = String.Copy(signature);
                     var positionOffset = default(int);
@@ -105,9 +105,9 @@
                     );
 
                     break;
-
+                }
                 case NettleValueType.BooleanExpression:
-
+                {
                     var expressionParser = new BooleanExpressionParser();
                     var expression = signature;
 
@@ -126,6 +126,18 @@
                     );
 
                     break;
+                }
+                case NettleValueType.KeyValuePair:
+                {
+                    var pairParser = new KeyValuePairParser();
+
+                    convertedValue = pairParser.Parse
+                    (
+                        signature
+                    );
+
+                    break;
+                }
             }
 
             return convertedValue;

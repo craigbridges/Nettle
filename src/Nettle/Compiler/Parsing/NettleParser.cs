@@ -99,6 +99,10 @@
             {
                 type = NettleValueType.BooleanExpression;
             }
+            else if (value.StartsWith("<") && value.EndsWith(">"))
+            {
+                type = NettleValueType.KeyValuePair;
+            }
             else
             {
                 // Decide if the value looks like a number or variable
