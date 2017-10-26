@@ -82,7 +82,7 @@
             
             if (parameterValues.Length > 2)
             {
-                for (var i = 1; i < parameterValues.Length; i++)
+                for (var i = 2; i < parameterValues.Length; i++)
                 {
                     var nextValue = parameterValues[i];
 

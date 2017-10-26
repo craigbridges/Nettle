@@ -2,9 +2,11 @@
 {
     using Nettle.Compiler;
     using Nettle.Data;
+    using Nettle.Data.Database;
     using Nettle.NCalc;
     using Nettle.Web;
     using System;
+    using System.Configuration;
     using System.Drawing;
     using System.Windows.Forms;
 
@@ -16,12 +18,31 @@
         {
             InitializeComponent();
 
+            var dataResolver = new NettleDataResolver();
+
+            var connectionString = ConfigurationManager.AppSettings
+            [
+                "DatabaseConnectionString"
+            ];
+
+            if (false == String.IsNullOrEmpty(connectionString))
+            {
+                dataResolver.ConnectionRepository.AddConnection
+                (
+                    new SqlClientConnection
+                    (
+                        "Demo",
+                        connectionString
+                    )
+                );
+            }
+
             NettleEngine.RegisterResolvers
             (
                 new DefaultNettleResolver(),
-                new NettleDataResolver(),
                 new NettleWebResolver(),
-                new NettleNCalcResolver()
+                new NettleNCalcResolver(),
+                dataResolver
             );
 
             _compiler = NettleEngine.GetCompiler();

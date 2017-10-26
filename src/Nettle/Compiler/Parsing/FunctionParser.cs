@@ -3,7 +3,6 @@
     using Nettle.Compiler.Parsing.Blocks;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Represents a function code block parser
@@ -39,7 +38,8 @@
         {
             var body = UnwrapSignatureBody(signature);
 
-            body = body.RightOf("@");
+            // Remove the leading '@' character
+            body = body.Substring(1);
 
             if (false == body.EndsWith(")"))
             {
@@ -54,10 +54,15 @@
                     errorPosition
                 );
             }
+            
+            // Extract functions name (before the parameters)
+            var name = body.Crop
+            (
+                0,
+                body.IndexOf('(') - 1
+            );
 
-            var name = body.LeftOf("(");
             var parameters = new List<FunctionCallParameter>();
-
             var parameterStart = body.IndexOf('(');
             var parameterEnd = body.LastIndexOf(')');
             var parameterLength = (parameterEnd - parameterStart) - 1;
@@ -68,17 +73,20 @@
                 parameterLength
             );
 
+            // Tokenize the functions parameters so we can parse them
             if (false == String.IsNullOrEmpty(parameterSegment))
             {
-                var parameterValues = parameterSegment.Split(',').Select
+                var tokenizer = new Tokenizer(',');
+
+                var parameterValues = tokenizer.Tokenize
                 (
-                    s => s.Trim()
+                    parameterSegment
                 );
 
                 // Parse each parameter signature and check what type it is
-                foreach (var valueSignature in parameterValues)
+                foreach (var token in parameterValues)
                 {
-                    if (String.IsNullOrWhiteSpace(valueSignature))
+                    if (String.IsNullOrWhiteSpace(token))
                     {
                         throw new NettleParseException
                         (
@@ -87,14 +95,14 @@
                         );
                     }
 
-                    var type = ResolveType(valueSignature);
-                    var value = type.ParseValue(valueSignature);
+                    var type = ResolveType(token);
+                    var value = type.ParseValue(token);
 
                     parameters.Add
                     (
                         new FunctionCallParameter()
                         {
-                            ValueSignature = valueSignature,
+                            ValueSignature = token,
                             Value = value,
                             Type = type
                         }

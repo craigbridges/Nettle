@@ -1,13 +1,14 @@
 TODO:
 -----
 
-- Create tokeniser and parser for "parameter" signatures that will tolerate commas in strings etc and can be used for function parameters and key value pair parsing
+- Add function documentation explaining how to create custom functions (with code sample)
+- Publish v1.1.1 to NuGet
 
 Extensions:
 -----------
 
 - Nettle.Data
-	- Create database connection in Windows demo project and test queries and stored procedures
+	- Publish on NuGet
 	
 - Nettle.Web
 	- Call a Web API and get JSON result as JObject

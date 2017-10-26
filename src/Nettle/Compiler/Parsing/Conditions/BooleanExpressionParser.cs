@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Represents a boolean expression parser
     /// </summary>
     internal sealed class BooleanExpressionParser : NettleParser
     {
+        private Tokenizer _tokenizer;
         private Dictionary<string, BooleanConditionOperator> _operatorLookup;
 
         /// <summary>
@@ -16,6 +16,8 @@
         /// </summary>
         public BooleanExpressionParser()
         {
+            _tokenizer = new Tokenizer();
+
             _operatorLookup = new Dictionary<string, BooleanConditionOperator>()
             {
                 { "==", BooleanConditionOperator.Equal },
@@ -56,7 +58,7 @@
         {
             Validate.IsNotEmpty(expression);
             
-            var tokens = Tokenize(expression);
+            var tokens = _tokenizer.Tokenize(expression);
             var conditions = new List<BooleanCondition>();
             var operatorExpected = false;
 
@@ -230,102 +232,7 @@
                 conditions.ToArray()
             );
         }
-
-        /// <summary>
-        /// Splits the expression into individual tokens
-        /// </summary>
-        /// <param name="expression">The expression</param>
-        /// <returns>An array of tokens</returns>
-        private string[] Tokenize
-            (
-                string expression
-            )
-        {
-            // Remove extra white space
-            expression = expression.Trim().Replace
-            (
-                "  ",
-                " "
-            );
-
-            var tokens = new List<string>();
-            var tokenBuilder = new StringBuilder();
-            var separatorQueue = new Stack<char>();
-
-            // Define the token separates
-            var separators = new Dictionary<char, char>()
-            {
-                { '"', '"' },
-                { '(', ')' }
-            };
-
-            foreach (var c in expression)
-            {
-                if (tokenBuilder.Length == 0)
-                {
-                    // Start a new token
-                    tokenBuilder.Append(c);
-
-                    if (separators.ContainsKey(c))
-                    {
-                        separatorQueue.Push
-                        (
-                            separators[c]
-                        );
-                    }
-                    else
-                    {
-                        separatorQueue.Push(' ');
-                    }
-                }
-                else
-                {
-                    var tokenComplete = false;
-                    
-                    // Check if this character is a separator
-                    if (separatorQueue.Peek() == c)
-                    {
-                        separatorQueue.Pop();
-
-                        if (separatorQueue.Count == 0)
-                        {
-                            tokenComplete = true;
-                        }
-                    }
-                    else if (separators.ContainsKey(c))
-                    {
-                        separatorQueue.Push
-                        (
-                            separators[c]
-                        );
-                    }
-
-                    tokenBuilder.Append(c);
-
-                    // Check if we should flush the current token
-                    if (tokenComplete)
-                    {
-                        tokens.Add
-                        (
-                            tokenBuilder.ToString().Trim()
-                        );
-
-                        tokenBuilder.Clear();
-                    }
-                }
-            }
-
-            if (tokenBuilder.Length > 0)
-            {
-                tokens.Add
-                (
-                    tokenBuilder.ToString().Trim()
-                );
-            }
-
-            return tokens.ToArray();
-        }
-
+        
         /// <summary>
         /// Determines if a token is a condition operator
         /// </summary>

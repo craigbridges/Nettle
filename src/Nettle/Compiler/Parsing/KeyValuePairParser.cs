@@ -42,9 +42,10 @@
                 signatureBody.Length - 2
             );
 
-            var parts = signatureBody.Split(',');
+            var tokenizer = new Tokenizer(',');
+            var tokens = tokenizer.Tokenize(signatureBody);
 
-            if (parts.Length != 2)
+            if (tokens.Length != 2)
             {
                 throw new NettleParseException
                 (
@@ -56,8 +57,8 @@
             }
 
             // Parse the key and value parts
-            var keySignature = parts[0].Trim();
-            var valueSignature = parts[1].Trim();
+            var keySignature = tokens[0].Trim();
+            var valueSignature = tokens[1].Trim();
 
             var keyType = ResolveType(keySignature);
             var valueType = ResolveType(valueSignature);

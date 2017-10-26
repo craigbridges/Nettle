@@ -73,6 +73,7 @@
     <Compile Include="Compiler\Parsing\Conditions\BooleanExpression.cs" />
     <Compile Include="Compiler\Parsing\Conditions\BooleanConditionOperator.cs" />
     <Compile Include="Compiler\Parsing\Conditions\BooleanExpressionParser.cs" />
+    <Compile Include="Compiler\Parsing\Tokenizer.cs" />
     <Compile Include="Compiler\Parsing\VariableAdjusterParser.cs" />
     <Compile Include="Compiler\Parsing\IndexerInfo.cs" />
     <Compile Include="Compiler\Parsing\RenderPartialParser.cs" />
