@@ -1,18 +1,6 @@
 TODO:
 -----
 
-Extensions:
------------
-
-- Nettle.Web
-	- Call a Web API and get JSON result as JObject
-	- Get specific value from JSON object function
-	- How do we handle headers? (e.g. security like we use)
-	- How do we handle things like XML/Soap?
-
-Low Priority:
--------------
-
 - Flags:
 	- Implement {{#DebugMode}}
 
@@ -22,7 +10,18 @@ Low Priority:
 - Indexers:
 	- Handle path binding index pointers (e.g. Names[counter])
 	- Handle nested indexers (e.g. Rows[0].Values[1])
-	- Add support for variable adjusters
+
+Extensions:
+-----------
+
+- Nettle.Web
+	- Call a Web API and get JSON result as JObject
+		- Get specific value(s) from JSON object function
+		- Include headers using key value pair parameters
+	- How do we handle things like XML/Soap?
+
+Low Priority:
+-------------
 
 - Create IStringifier interface and integrate into INettleResolver so we can get all formatters for different types (e.g. XmlDocument)
 
