@@ -56,12 +56,11 @@
 
             if (equalsIndex == -1)
             {
+                var message = "The variable declaration '{0}' has invalid syntax.";
+
                 throw new NettleParseException
                 (
-                    "The variable declaration '{0}' has invalid syntax.".With
-                    (
-                        signature
-                    ),
+                    message.With(signature),
                     positionOffSet
                 );
             }
@@ -80,12 +79,11 @@
 
             if (false == isValidName)
             {
+                var message = "The variable name '{0}' is invalid.";
+
                 throw new NettleParseException
                 (
-                    "The variable name '{0}' is invalid.".With
-                    (
-                        variableName
-                    ),
+                    message.With(variableName),
                     positionOffSet
                 );
             }

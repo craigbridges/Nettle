@@ -152,13 +152,13 @@
 
                     case BooleanConditionOperator.Equal:
                         {
-                            result = leftValue.Equals(rightValue);
+                            result = Compare(leftValue, rightValue);
                             break;
                         }
 
                     case BooleanConditionOperator.NotEqual:
                         {
-                            result = (false == leftValue.Equals(rightValue));
+                            result = (false == Compare(leftValue, rightValue));
                             break;
                         }
 
@@ -232,6 +232,39 @@
         }
 
         /// <summary>
+        /// Compares two values and determines if they are considered equal
+        /// </summary>
+        /// <param name="value1">The first value</param>
+        /// <param name="value2">The second value</param>
+        /// <returns>True, if both values are equal; otherwise false</returns>
+        private bool Compare
+            (
+                object value1,
+                object value2
+            )
+        {
+            if (value1 == null && value2 == null)
+            {
+                return true;
+            }
+            else if (value1 == null || value2 == null)
+            {
+                return false;
+            }
+            else if (value1.GetType().IsNumeric() && value2.GetType().IsNumeric())
+            {
+                var number1 = ToNumber(value1);
+                var number2 = ToNumber(value2);
+
+                return number1 == number2;
+            }
+            else
+            {
+                return value1.Equals(value2);
+            }
+        }
+
+        /// <summary>
         /// Converts an object into a double representation
         /// </summary>
         /// <param name="value">The value to convert</param>
@@ -247,7 +280,7 @@
             {
                 if (value is double || value.GetType().IsNumeric())
                 {
-                    result = (double)value;
+                    result = Convert.ToDouble(value);
                 }
                 else if (value.GetType() == typeof(string))
                 {

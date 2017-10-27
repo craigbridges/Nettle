@@ -48,6 +48,12 @@
                 functionRepository
             );
 
+            var condtionalBindingRenderer = new ConditionalBindingRenderer
+            (
+                functionRepository,
+                expressionEvaluator
+            );
+
             var variableRenderer = new VariableRenderer
             (
                 functionRepository
@@ -103,6 +109,7 @@
                 commentRenderer,
                 contentRenderer,
                 bindingRenderer,
+                condtionalBindingRenderer,
                 variableRenderer,
                 variableReassignmentRenderer,
                 variableIncrementerRenderer,

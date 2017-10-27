@@ -58,6 +58,16 @@
         {
             Validate.IsNotEmpty(expression);
             
+            // Strip any wrapping brackets that are found
+            if (expression.StartsWith("(") && expression.EndsWith(""))
+            {
+                expression = expression.Crop
+                (
+                    1,
+                    expression.Length - 2
+                );
+            }
+
             var tokens = _tokenizer.Tokenize(expression);
             var conditions = new List<BooleanCondition>();
             var operatorExpected = false;
@@ -97,8 +107,8 @@
 
                         if (false == isOperator)
                         {
-                            var message = "The expression '{0}' is invalid. " +
-                                          "An operator was expected, but not found.";
+                            var message = "The boolean expression '{0}' is invalid. " +
+                                          "A valid operator was expected, but not found.";
 
                             throw new NettleParseException
                             (
@@ -120,7 +130,7 @@
                                     break;
 
                                 default:
-                                    var message = "The expression '{0}' is invalid. " +
+                                    var message = "The boolean expression '{0}' is invalid. " +
                                                   "The operator {1} is not allowed here.";
 
                                     throw new NettleParseException

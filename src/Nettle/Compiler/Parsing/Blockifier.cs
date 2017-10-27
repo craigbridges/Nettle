@@ -18,6 +18,7 @@
         {
             var commentParser = new CommentParser();
             var bindingParser = new ModelBindingParser();
+            var conditionalBindingParser = new ConditionalBindingParser();
             var functionParser = new FunctionParser();
             var variableParser = new VariableParser();
             var variableReassignmentParser = new VariableReassignmentParser();
@@ -32,6 +33,7 @@
             {
                 commentParser,
                 bindingParser,
+                conditionalBindingParser,
                 functionParser,
                 variableParser,
                 variableReassignmentParser,

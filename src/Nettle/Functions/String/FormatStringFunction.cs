@@ -1,25 +1,24 @@
-﻿namespace Nettle.NCalc.Functions
+﻿namespace Nettle.Functions.String
 {
-    using global::NCalc;
     using Nettle.Compiler;
-    using Nettle.Functions;
     using System;
     using System.Linq;
 
     /// <summary>
-    /// Represents function for evaluating a mathematical expression
+    /// Represent a format string function implementation
     /// </summary>
-    public class EvaluateFunction : FunctionBase
+    public sealed class FormatStringFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public EvaluateFunction()
+        public FormatStringFunction() 
+            : base()
         {
             DefineRequiredParameter
             (
-                "Expression",
-                "The mathematical expression to evaluate",
+                "Format",
+                "The string to format.",
                 typeof(string)
             );
         }
@@ -31,16 +30,18 @@
         {
             get
             {
-                return "Evaluates a single mathematical expression.";
+                return "Converts the value of objects to" +
+                       "strings based on the formats specified " +
+                       "and inserts them into another string.";
             }
         }
 
         /// <summary>
-        /// Generates an array of random integers
+        /// Concatenates every parameter value into a single string
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The truncated text</returns>
+        /// <returns>The concatenated text</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -49,24 +50,21 @@
         {
             Validate.IsNotNull(context);
 
-            var expression = GetParameterValue<string>
+            var format = GetParameterValue<string>
             (
-                "Expression",
+                "Format",
                 parameterValues
             );
+            
+            var formatValues = parameterValues.Skip(1);
 
-            if (parameterValues.Length > 1)
-            {
-                var formatValues = parameterValues.Skip(1);
+            var output = String.Format
+            (
+                format,
+                formatValues.ToArray()
+            );
 
-                expression = String.Format
-                (
-                    expression,
-                    formatValues.ToArray()
-                );
-            }
-
-            return new Expression(expression).Evaluate();
+            return output;
         }
     }
 }
