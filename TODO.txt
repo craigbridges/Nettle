@@ -1,7 +1,6 @@
 TODO:
 -----
 
-- Add function documentation explaining how to create custom functions (with code sample)
 - Publish v1.1.1 to NuGet
 
 Extensions:

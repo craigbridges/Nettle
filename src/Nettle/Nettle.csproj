@@ -144,6 +144,10 @@
     <Compile Include="Functions\Math\AverageFunction.cs" />
     <Compile Include="Functions\Math\SumFunction.cs" />
     <Compile Include="Functions\String\FormatStringFunction.cs" />
+    <Compile Include="Functions\String\ToLowerFunction.cs" />
+    <Compile Include="Functions\String\ToTitleCaseFunction.cs" />
+    <Compile Include="Functions\String\ToUpperFunction.cs" />
+    <Compile Include="Functions\String\ReverseFunction.cs" />
     <Compile Include="Functions\String\JoinFunction.cs" />
     <Compile Include="Functions\String\PadRightFunction.cs" />
     <Compile Include="Functions\Conversion\ToInt64Function.cs" />

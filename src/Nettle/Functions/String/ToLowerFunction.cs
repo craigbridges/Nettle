@@ -1,23 +1,22 @@
 ﻿namespace Nettle.Functions.String
 {
     using Nettle.Compiler;
-    using System.Web;
 
     /// <summary>
-    /// Represents a HTML encode function implementation
+    /// Represents a 'to lower' string function implementation
     /// </summary>
-    public sealed class HtmlEncodeFunction : FunctionBase
+    public sealed class ToLowerFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HtmlEncodeFunction() 
+        public ToLowerFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Text",
-                "The text to encode.",
+                "The text to convert.",
                 typeof(string)
             );
         }
@@ -29,7 +28,7 @@
         {
             get
             {
-                return "HTML encodes text.";
+                return "Converts a string to lower case.";
             }
         }
 
@@ -53,10 +52,7 @@
                 parameterValues
             );
 
-            return HttpUtility.HtmlEncode
-            (
-                text
-            );
+            return text.ToLower();
         }
     }
 }

@@ -37,11 +37,11 @@
         }
 
         /// <summary>
-        /// Concatenates every parameter value into a single string
+        /// Formats the string using the values specified
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The concatenated text</returns>
+        /// <returns>The formatted string</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,

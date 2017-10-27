@@ -1,23 +1,23 @@
 ﻿namespace Nettle.Functions.String
 {
     using Nettle.Compiler;
-    using System.Web;
+    using System.Linq;
 
     /// <summary>
-    /// Represents a HTML encode function implementation
+    /// Represents a reverse string function implementation
     /// </summary>
-    public sealed class HtmlEncodeFunction : FunctionBase
+    public sealed class ReverseFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HtmlEncodeFunction() 
+        public ReverseFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Text",
-                "The text to encode.",
+                "The text to reverse.",
                 typeof(string)
             );
         }
@@ -29,7 +29,7 @@
         {
             get
             {
-                return "HTML encodes text.";
+                return "Reverses the order of a string.";
             }
         }
 
@@ -53,9 +53,9 @@
                 parameterValues
             );
 
-            return HttpUtility.HtmlEncode
+            return new string
             (
-                text
+                text.Reverse().ToArray()
             );
         }
     }

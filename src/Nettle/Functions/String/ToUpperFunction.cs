@@ -1,23 +1,22 @@
 ﻿namespace Nettle.Functions.String
 {
     using Nettle.Compiler;
-    using System.Web;
 
     /// <summary>
-    /// Represents a HTML encode function implementation
+    /// Represents a 'to upper' string function implementation
     /// </summary>
-    public sealed class HtmlEncodeFunction : FunctionBase
+    public sealed class ToUpperFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HtmlEncodeFunction() 
+        public ToUpperFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Text",
-                "The text to encode.",
+                "The text to convert.",
                 typeof(string)
             );
         }
@@ -29,7 +28,7 @@
         {
             get
             {
-                return "HTML encodes text.";
+                return "Converts a string to upper case.";
             }
         }
 
@@ -53,10 +52,7 @@
                 parameterValues
             );
 
-            return HttpUtility.HtmlEncode
-            (
-                text
-            );
+            return text.ToUpper();
         }
     }
 }
