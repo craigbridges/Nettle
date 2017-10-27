@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nettle.NCalc</id>
+    <version>1.0.0</version>
+    <title>Nettle NCalc Extension</title>
+    <authors>Craig Bridges</authors>
+    <owners>Craig Bridges</owners>
+    <licenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/craigbridges/Nettle</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An extension for the Nettle templating engine that provides direct integration with NCalc.</description>
+	<summary>An extension for the Nettle templating engine that provides direct integration with NCalc.</summary>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Nettle Templating Language Engine NCalc Extension</tags>
+    <dependencies>
+      <dependency id="Nettle" version="*" />
+	  <dependency id="Antlr" version="3.5.0.2" />
+	  <dependency id="NCalc-Edge" version="1.4.3" />
+    </dependencies>
+  </metadata>
+  <files>
+	<file src="bin\Release\Nettle.NCalc.dll" target="lib\net461" />
+	<file src="bin\Release\Nettle.NCalc.xml" target="lib\net461" />
+  </files>
+</package>

@@ -1,14 +1,9 @@
 TODO:
 -----
 
-- Publish v1.1.1 to NuGet
-
 Extensions:
 -----------
 
-- Nettle.Data
-	- Publish on NuGet
-	
 - Nettle.Web
 	- Call a Web API and get JSON result as JObject
 	- Get specific value from JSON object function
