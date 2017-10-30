@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Nettle</id>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <title>Nettle</title>
     <authors>Craig Bridges</authors>
     <owners>Craig Bridges</owners>
@@ -12,10 +12,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight .NET templating engine inspired by Handlebars, designed as an alternative solution to solving various content rendering problems faced in .NET applications.
 
-Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.
-	</description>
-	<summary>A lightweight .NET templating engine inspired by Handlebars, designed as an alternative solution to solving various content rendering problems faced in .NET applications. Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template.
-	</summary>
+Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.</description>
+	<summary>A lightweight .NET templating engine inspired by Handlebars, designed as an alternative solution to solving various content rendering problems faced in .NET applications. Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template.</summary>
     <releaseNotes>- Improved tokenizer
 - Fixed various rendering bugs
 - Added more functions
