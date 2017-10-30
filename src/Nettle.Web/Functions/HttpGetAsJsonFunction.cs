@@ -1,27 +1,19 @@
 ﻿namespace Nettle.Data.Functions
 {
     using Nettle.Compiler;
-    using Nettle.Functions;
     using Newtonsoft.Json.Linq;
-    using System.IO;
 
     /// <summary>
-    /// Represents function for reading an XML file into a dynamic object
+    /// Represents function for getting a single HTTP resource as JSON
     /// </summary>
-    public class ReadJsonFunction : FunctionBase
+    public class HttpGetAsJsonFunction : HttpGetFunction
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ReadJsonFunction()
-        {
-            DefineRequiredParameter
-            (
-                "FilePath",
-                "The JSON file path",
-                typeof(string)
-            );
-        }
+        public HttpGetAsJsonFunction()
+            : base()
+        { }
 
         /// <summary>
         /// Gets a description of the function
@@ -30,16 +22,16 @@
         {
             get
             {
-                return "Reads a JSON file into a dynamic object.";
+                return "Gets a single HTTP resource as a JSON object.";
             }
         }
 
         /// <summary>
-        /// Reads the JSON file into a dynamic object
+        /// Gets the response of a HTTP GET as JSON
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The object generated</returns>
+        /// <returns>The truncated text</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -48,24 +40,19 @@
         {
             Validate.IsNotNull(context);
 
-            var filePath = GetParameterValue<string>
+            var content = (string)base.GenerateOutput
             (
-                "FilePath",
+                context,
                 parameterValues
             );
 
-            var fileContents = File.ReadAllText
-            (
-                filePath
-            );
-
-            if (fileContents.StartsWith("[") && fileContents.EndsWith("]"))
+            if (content.StartsWith("[") && content.EndsWith("]"))
             {
-                return JArray.Parse(fileContents);
+                return JArray.Parse(content);
             }
             else
             {
-                return JObject.Parse(fileContents);
+                return JObject.Parse(content);
             }
         }
     }

@@ -3,8 +3,6 @@
     using Nettle.Compiler;
     using Nettle.Data.Database;
     using Nettle.Functions;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Represents function for executing a stored procedure
@@ -77,40 +75,12 @@
                 "ProcedureName",
                 parameterValues
             );
-            
-            var procedureParameters = new Dictionary<string, object>();
-            
-            if (parameterValues.Length > 2)
-            {
-                for (var i = 2; i < parameterValues.Length; i++)
-                {
-                    var nextValue = parameterValues[i];
 
-                    if (nextValue == null)
-                    {
-                        throw new ArgumentException
-                        (
-                            "The procedures parameter values cannot be null."
-                        );
-                    }
-
-                    if (nextValue.GetType() != typeof(KeyValuePair<object, object>))
-                    {
-                        throw new ArgumentException
-                        (
-                            "The procedures parameter values must be key value pair."
-                        );
-                    }
-
-                    var pair = (KeyValuePair<object, object>)nextValue;
-
-                    procedureParameters.Add
-                    (
-                        pair.Key.ToString(),
-                        pair.Value
-                    );
-                }
-            }
+            var procedureParameters = ExtractKeyValuePairs<string, object>
+            (
+                parameterValues,
+                2
+            );
             
             var connection = _connectionRepository.GetConnection
             (

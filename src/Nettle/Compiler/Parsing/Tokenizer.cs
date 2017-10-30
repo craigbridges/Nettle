@@ -12,7 +12,7 @@
         /// <summary>
         /// Constructs the tokenizer by initialising the enclosures
         /// </summary>
-        /// <param name="seperator">The token separator</param>
+        /// <param name="separator">The token separator</param>
         public Tokenizer
             (
                 char separator = ' '

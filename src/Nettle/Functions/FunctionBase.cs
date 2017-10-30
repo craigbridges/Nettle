@@ -383,6 +383,56 @@
         }
 
         /// <summary>
+        /// Extracts an array of key value pairs from the parameter values
+        /// </summary>
+        /// <param name="parameterValues">The parameter values</param>
+        /// <param name="startIndex">The start index (optional)</param>
+        /// <returns></returns>
+        protected virtual Dictionary<TKey, TValue> ExtractKeyValuePairs<TKey, TValue>
+            (
+                object[] parameterValues,
+                int startIndex = 0
+            )
+        {
+            var keyValuePairs = new Dictionary<TKey, TValue>();
+
+            if (parameterValues.Length >= (startIndex + 1))
+            {
+                for (var i = startIndex; i < parameterValues.Length; i++)
+                {
+                    var nextValue = parameterValues[i];
+                    var nextType = nextValue.GetType();
+
+                    if (nextValue == null)
+                    {
+                        throw new ArgumentException
+                        (
+                            "The parameter values cannot be null."
+                        );
+                    }
+
+                    if (nextType != typeof(KeyValuePair<object, object>))
+                    {
+                        throw new ArgumentException
+                        (
+                            "The parameter values must be key value pair."
+                        );
+                    }
+
+                    var pair = (KeyValuePair<object, object>)nextValue;
+
+                    keyValuePairs.Add
+                    (
+                        (TKey)pair.Key,
+                        (TValue)pair.Value
+                    );
+                }
+            }
+
+            return keyValuePairs;
+        }
+
+        /// <summary>
         /// Executes the function against a template context and parameter values
         /// </summary>
         /// <param name="context">The template context</param>

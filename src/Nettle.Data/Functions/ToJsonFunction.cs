@@ -56,23 +56,27 @@
                 parameterValues
             );
 
-            var csv = String.Empty;
+            var json = String.Empty;
             var type = obj.GetType();
 
             if (type.IsDataGrid())
             {
-                csv = ((IDataGrid)obj).ToJson();
+                json = ((IDataGrid)obj).ToJson();
             }
             else if (type == typeof(JObject))
             {
-                csv = ((JObject)obj).ToString();
+                json = ((JObject)obj).ToString();
+            }
+            else if (type == typeof(JArray))
+            {
+                json = ((JArray)obj).ToString();
             }
             else
             {
-                csv = JsonConvert.SerializeObject(obj);
+                json = JsonConvert.SerializeObject(obj);
             }
 
-            return csv;
+            return json;
         }
     }
 }

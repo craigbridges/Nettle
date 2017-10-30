@@ -6,19 +6,26 @@
     using System.Net;
 
     /// <summary>
-    /// Represents function for getting a single HTTP resource
+    /// Represents function for posting to a single HTTP resource
     /// </summary>
-    public class HttpGetFunction : FunctionBase
+    public class HttpPostFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public HttpGetFunction()
+        public HttpPostFunction()
         {
             DefineRequiredParameter
             (
                 "URL",
-                "The URL to get.",
+                "The URL to post to.",
+                typeof(string)
+            );
+
+            DefineOptionalParameter
+            (
+                "Body",
+                "The body content.",
                 typeof(string)
             );
         }
@@ -30,12 +37,12 @@
         {
             get
             {
-                return "Gets a single HTTP resource as a string.";
+                return "Posts to a single HTTP resource.";
             }
         }
 
         /// <summary>
-        /// Gets the response from a HTTP GET
+        /// Gets the response from a HTTP POST
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -54,10 +61,21 @@
                 parameterValues
             );
 
+            var body = GetParameterValue<string>
+            (
+                "Body",
+                parameterValues
+            );
+
+            if (body == null)
+            {
+                body = String.Empty;
+            }
+
             var headerValues = ExtractKeyValuePairs<string, object>
             (
                 parameterValues,
-                1
+                2
             );
 
             using (var client = new WebClient())
@@ -78,7 +96,11 @@
                     );
                 }
                 
-                return client.DownloadString(url);
+                return client.UploadString
+                (
+                    url,
+                    body
+                );
             }
         }
     }

@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\HttpPostForXmlFunction.cs" />
+    <Compile Include="Functions\HttpPostForJsonFunction.cs" />
+    <Compile Include="Functions\HttpGetAsXmlFunction.cs" />
+    <Compile Include="Functions\HttpGetAsJsonFunction.cs" />
+    <Compile Include="Functions\HttpPostFunction.cs" />
     <Compile Include="Functions\HttpGetFunction.cs" />
     <Compile Include="NettleWebResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

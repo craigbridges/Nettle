@@ -11,15 +11,6 @@ TODO:
 	- Handle path binding index pointers (e.g. Names[counter])
 	- Handle nested indexers (e.g. Rows[0].Values[1])
 
-Extensions:
------------
-
-- Nettle.Web
-	- Call a Web API and get JSON result as JObject
-		- Get specific value(s) from JSON object function
-		- Include headers using key value pair parameters
-	- How do we handle things like XML/Soap?
-
 Low Priority:
 -------------
 
