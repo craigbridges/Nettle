@@ -3,6 +3,9 @@ TODO:
 
 - Flags:
 	- Implement {{#DebugMode}}
+		- At the end of each block collection print:
+			- Time taken to render
+			- All property and variable values
 
 - If statement conditions
 	- {{else}} and {{else if}} blocks
