@@ -11,7 +11,7 @@
         /// <summary>
         /// Constructs the inspector with a path
         /// </summary>
-        /// <param name="path">The path</param>
+        /// <param name="path">The binding path</param>
         public IndexerInfo
             (
                 string path
@@ -41,14 +41,19 @@
         public string IndexerSignature { get; private set; }
 
         /// <summary>
-        /// Gets the indexers index pointer
+        /// Gets the indexer value type
         /// </summary>
-        public int Index { get; private set; }
+        public NettleValueType IndexerValueType { get; private set; }
 
         /// <summary>
-        /// Populates the indexer details
+        /// Gets the indexers resolved index pointer
         /// </summary>
-        /// <param name="path">The path</param>
+        public int ResolvedIndex { get; private set; }
+
+        /// <summary>
+        /// Populates the indexer details based on the binding path
+        /// </summary>
+        /// <param name="path">The binding path</param>
         private void PopulateIndexerDetails
             (
                 string path
@@ -62,44 +67,40 @@
             if (String.IsNullOrEmpty(signature))
             {
                 this.HasIndexer = false;
-                this.Index = -1;
+                this.ResolvedIndex = -1;
                 this.PathWithoutIndexer = path;
             }
             else
             {
-                var numberString = String.Empty;
-
                 if (signature.Length > 2)
                 {
-                    numberString = signature.Crop
+                    signature = signature.Crop
                     (
                         1,
                         signature.Length - 2
                     );
                 }
 
-                if (false == numberString.IsNumeric())
+                if (false == signature.IsNumeric())
                 {
-                    var message = "The indexer for '{0}' must contain a number.".With
-                    (
-                        path
-                    );
-
+                    var message = "The indexer for '{0}' must contain a number.";
                     var position = (path.Length - signature.Length);
 
                     throw new NettleParseException
                     (
-                        message,
+                        message.With(path),
                         position
                     );
                 }
 
                 this.HasIndexer = true;
-                this.Index = Int32.Parse(numberString);
+                this.ResolvedIndex = Int32.Parse(signature);
+
+                var wrappedSignature = "[{0}]".With(signature);
 
                 this.PathWithoutIndexer = path.TrimEnd
                 (
-                    signature.ToArray()
+                    wrappedSignature.ToArray()
                 );
             }
 

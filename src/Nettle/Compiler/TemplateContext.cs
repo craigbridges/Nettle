@@ -247,7 +247,7 @@
                     (
                         propertyPath,
                         collection,
-                        indexerInfo.Index
+                        indexerInfo.ResolvedIndex
                     );
                 }
                 else
@@ -377,7 +377,7 @@
                 (
                     propertyPath,
                     currentValue,
-                    indexerInfo.Index
+                    indexerInfo.ResolvedIndex
                 );
             }
             else
@@ -668,7 +668,7 @@
                     (
                         variablePath,
                         collection,
-                        indexerInfo.Index
+                        indexerInfo.ResolvedIndex
                     );
                 }
                 else
