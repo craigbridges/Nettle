@@ -227,12 +227,11 @@
                     }
                     else
                     {
+                        var message = "No property could be found with the name '{0}'.";
+
                         throw new NettleRenderException
                         (
-                            "No property could be found with the name '{0}'.".With
-                            (
-                                propertyPath
-                            )
+                            message.With(propertyPath)
                         );
                     }
                 }
@@ -649,12 +648,11 @@
                     }
                     else
                     {
+                        var message = "No variable has been defined with the name '{0}'.";
+
                         throw new NettleRenderException
                         (
-                            "No variable has been defined with the name '{0}'.".With
-                            (
-                                variablePath
-                            )
+                            message.With(variablePath)
                         );
                     }
                 }

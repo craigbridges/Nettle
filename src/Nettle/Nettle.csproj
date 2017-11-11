@@ -93,6 +93,7 @@
     <Compile Include="Compiler\Rendering\VariableAdjusterRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableDecrementerRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableIncrementerRenderer.cs" />
+    <Compile Include="Compiler\TemplateContextExtensions.cs" />
     <Compile Include="Compiler\TemplateFlag.cs" />
     <Compile Include="Compiler\Rendering\VariableReassignmentRenderer.cs" />
     <Compile Include="Compiler\Rendering\FlagRenderer.cs" />

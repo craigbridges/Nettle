@@ -67,6 +67,11 @@
         );
 
         /// <summary>
+        /// Disables all registered functions
+        /// </summary>
+        void DisableAllFunctions();
+
+        /// <summary>
         /// Enables the function specified
         /// </summary>
         /// <param name="functionName">The function name</param>

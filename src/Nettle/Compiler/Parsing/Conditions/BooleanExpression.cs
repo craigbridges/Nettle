@@ -32,5 +32,14 @@
         /// Gets an array of boolean conditions
         /// </summary>
         public BooleanCondition[] Conditions { get; private set; }
+
+        /// <summary>
+        /// Provides a custom string representation of the expression
+        /// </summary>
+        /// <returns>The raw expression</returns>
+        public override string ToString()
+        {
+            return this.Expression;
+        }
     }
 }
