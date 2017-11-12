@@ -5,7 +5,6 @@ TODO:
 	- {{else}} and {{else if}} blocks
 
 - Indexers:
-	- Handle path binding index pointers (e.g. Names[counter])
 	- Handle nested indexers (e.g. Rows[0].Values[1])
 
 Low Priority:

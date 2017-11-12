@@ -75,6 +75,7 @@
     <Compile Include="Compiler\Parsing\Conditions\BooleanConditionOperator.cs" />
     <Compile Include="Compiler\Parsing\Conditions\BooleanExpressionParser.cs" />
     <Compile Include="Compiler\Parsing\ConditionalBindingParser.cs" />
+    <Compile Include="Compiler\Parsing\NettleValueResolver.cs" />
     <Compile Include="Compiler\Parsing\Tokenizer.cs" />
     <Compile Include="Compiler\Parsing\VariableAdjusterParser.cs" />
     <Compile Include="Compiler\Parsing\IndexerInfo.cs" />

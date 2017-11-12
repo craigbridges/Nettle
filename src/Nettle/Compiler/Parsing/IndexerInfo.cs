@@ -59,6 +59,11 @@
                 string path
             )
         {
+            if (path.StartsWith(@".") && path.Length > 1)
+            {
+                path = path.Crop(1);
+            }
+
             var signature = ExtractIndexerSignature
             (
                 path
@@ -81,26 +86,50 @@
                     );
                 }
 
-                if (false == signature.IsNumeric())
-                {
-                    var message = "The indexer for '{0}' must contain a number.";
-                    var position = (path.Length - signature.Length);
+                var valueResolver = new NettleValueResolver();
 
-                    throw new NettleParseException
-                    (
-                        message.With(path),
-                        position
-                    );
+                var valueType = valueResolver.ResolveType
+                (
+                    signature
+                );
+
+                switch (valueType)
+                {
+                    case NettleValueType.Number:
+                    {
+                        this.ResolvedIndex = Int32.Parse(signature);
+                        break;
+                    }
+                    case NettleValueType.Variable:
+                    {
+                        this.ResolvedIndex = -1;
+                        break;
+                    }
+                    default:
+                    {
+                        var message = "The indexer '{0}' for '{1}' is invalid.";
+                        var position = (path.Length - signature.Length);
+
+                        throw new NettleParseException
+                        (
+                            message.With(signature, path),
+                            position
+                        );
+                    }
                 }
+                
+                var wrappedSignature = "[{0}]".With
+                (
+                    signature
+                );
 
                 this.HasIndexer = true;
-                this.ResolvedIndex = Int32.Parse(signature);
+                this.IndexerValueType = valueType;
 
-                var wrappedSignature = "[{0}]".With(signature);
-
-                this.PathWithoutIndexer = path.TrimEnd
+                this.PathWithoutIndexer = path.Substring
                 (
-                    wrappedSignature.ToArray()
+                    0,
+                    path.Length - wrappedSignature.Length
                 );
             }
 
