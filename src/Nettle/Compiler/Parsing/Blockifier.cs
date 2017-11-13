@@ -25,7 +25,8 @@
             var variableIncrementerParser = new VariableIncrementerParser();
             var variableDecrementerParser = new VariableDecrementerParser();
             var flagParser = new FlagParser();
-            var loopParser = new ForEachLoopParser(this);
+            var eachLoopParser = new ForEachLoopParser(this);
+            var whileLoopParser = new WhileLoopParser(this);
             var ifParser = new IfStatementParser(this);
             var partialParser = new RenderPartialParser();
 
@@ -40,7 +41,8 @@
                 variableIncrementerParser,
                 variableDecrementerParser,
                 flagParser,
-                loopParser,
+                eachLoopParser,
+                whileLoopParser,
                 ifParser,
                 partialParser
             };

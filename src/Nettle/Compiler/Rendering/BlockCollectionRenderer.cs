@@ -84,9 +84,16 @@
                 functionRepository
             );
 
-            var loopRenderer = new ForEachLoopRenderer
+            var eachLoopRenderer = new ForEachLoopRenderer
             (
                 functionRepository,
+                this
+            );
+
+            var whileLoopRenderer = new WhileLoopRenderer
+            (
+                functionRepository,
+                expressionEvaluator,
                 this
             );
 
@@ -116,7 +123,8 @@
                 variableDecrementerRenderer,
                 flagRenderer,
                 functionRenderer,
-                loopRenderer,
+                eachLoopRenderer,
+                whileLoopRenderer,
                 ifStatementRenderer,
                 partialRenderer
             };

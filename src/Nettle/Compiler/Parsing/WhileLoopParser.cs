@@ -5,9 +5,9 @@
     using System;
 
     /// <summary>
-    /// Represents an 'if' statement code block parser
+    /// Represents an 'while' loop code block parser
     /// </summary>
-    internal sealed class IfStatementParser : NestedBlockParser
+    internal sealed class WhileLoopParser : NestedBlockParser
     {
         private BooleanExpressionParser _expressionParser;
 
@@ -15,7 +15,7 @@
         /// Constructs the parser with a blockifier
         /// </summary>
         /// <param name="blockifier">The blockifier</param>
-        public IfStatementParser
+        public WhileLoopParser
             (
                 IBlockifier blockifier
             )
@@ -32,17 +32,17 @@
         {
             get
             {
-                return "if";
+                return "while";
             }
         }
 
         /// <summary>
-        /// Parses the 'if' statement signature into a code block object
+        /// Parses the 'while' loop signature into a code block object
         /// </summary>
         /// <param name="templateContent">The template content</param>
         /// <param name="positionOffSet">The position offset index</param>
-        /// <param name="signature">The 'if' signature</param>
-        /// <returns>The parsed if statement</returns>
+        /// <param name="signature">The loop signature</param>
+        /// <returns>The parsed while loop</returns>
         public override CodeBlock Parse
             (
                 ref string templateContent,
@@ -67,7 +67,7 @@
             {
                 throw new NettleParseException
                 (
-                    "The if statements condition must be specified.",
+                    "The while loops condition must be specified.",
                     positionOffSet
                 );
             }
@@ -84,7 +84,7 @@
                 signature
             );
 
-            return new IfStatement()
+            return new WhileLoop()
             {
                 Signature = nestedBody.Signature,
                 StartPosition = nestedBody.StartPosition,
