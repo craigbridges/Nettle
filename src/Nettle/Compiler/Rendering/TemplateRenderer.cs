@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering
 {
     using Nettle.Functions;
+    using System.Diagnostics;
 
     /// <summary>
     /// Represents the default implementation of a template renderer
@@ -45,6 +46,13 @@
         {
             Validate.IsNotNull(template);
 
+            var watch = Stopwatch.StartNew();
+            
+            var debugMode = template.IsFlagSet
+            (
+                TemplateFlag.DebugMode
+            );
+            
             var context = new TemplateContext
             (
                 model,
@@ -53,12 +61,26 @@
 
             var blocks = template.Blocks;
 
-            return _collectionRenderer.Render
+            var output = _collectionRenderer.Render
             (
                 ref context,
                 blocks,
                 template.Flags
             );
+
+            if (debugMode)
+            {
+                watch.Stop();
+
+                var debugInfo = context.GenerateDebugInfo
+                (
+                    watch.Elapsed
+                );
+
+                output += "\r\n\r\n" + debugInfo;
+            }
+
+            return output;
         }
     }
 }

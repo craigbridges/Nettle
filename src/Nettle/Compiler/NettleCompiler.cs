@@ -237,6 +237,22 @@
         }
 
         /// <summary>
+        /// Disables all registered functions
+        /// </summary>
+        public void DisableAllFunctions()
+        {
+            var functions = _functionRepository.GetAllFunctions();
+
+            foreach (var function in functions)
+            {
+                if (false == function.Disabled)
+                {
+                    function.Disable();
+                }
+            }
+        }
+
+        /// <summary>
         /// Enables the function specified
         /// </summary>
         /// <param name="functionName">The function name</param>

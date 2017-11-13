@@ -75,6 +75,7 @@
     <Compile Include="Compiler\Parsing\Conditions\BooleanConditionOperator.cs" />
     <Compile Include="Compiler\Parsing\Conditions\BooleanExpressionParser.cs" />
     <Compile Include="Compiler\Parsing\ConditionalBindingParser.cs" />
+    <Compile Include="Compiler\Parsing\NettleValueResolver.cs" />
     <Compile Include="Compiler\Parsing\Tokenizer.cs" />
     <Compile Include="Compiler\Parsing\VariableAdjusterParser.cs" />
     <Compile Include="Compiler\Parsing\IndexerInfo.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Compiler\Rendering\VariableAdjusterRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableDecrementerRenderer.cs" />
     <Compile Include="Compiler\Rendering\VariableIncrementerRenderer.cs" />
+    <Compile Include="Compiler\TemplateContextExtensions.cs" />
     <Compile Include="Compiler\TemplateFlag.cs" />
     <Compile Include="Compiler\Rendering\VariableReassignmentRenderer.cs" />
     <Compile Include="Compiler\Rendering\FlagRenderer.cs" />

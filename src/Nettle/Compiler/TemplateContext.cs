@@ -227,12 +227,11 @@
                     }
                     else
                     {
+                        var message = "No property could be found with the name '{0}'.";
+
                         throw new NettleRenderException
                         (
-                            "No property could be found with the name '{0}'.".With
-                            (
-                                propertyPath
-                            )
+                            message.With(propertyPath)
                         );
                     }
                 }
@@ -248,7 +247,7 @@
                     (
                         propertyPath,
                         collection,
-                        indexerInfo.Index
+                        indexerInfo
                     );
                 }
                 else
@@ -277,9 +276,11 @@
 
             if (model == null)
             {
+                var message = "Property {0} cannot be resolved because the model is null.";
+
                 throw new NettleRenderException
                 (
-                    "Property {0} cannot be resolved because the model is null.".With
+                    message.With
                     (
                         propertyPath
                     )
@@ -322,9 +323,11 @@
             {
                 if (currentValue == null)
                 {
+                    var message = "The path '{0}' contains a null reference at '{1}'.";
+
                     throw new NettleRenderException
                     (
-                        "The path '{0}' contains a null reference at '{1}'.".With
+                        message.With
                         (
                             propertyPath,
                             nextName
@@ -350,9 +353,11 @@
                     }
                     else
                     {
+                        var message = "The path '{0}' does not contain a property named '{1}'.";
+
                         throw new NettleRenderException
                         (
-                            "The path '{0}' does not contain a property named '{1}'.".With
+                            message.With
                             (
                                 propertyPath,
                                 nextName
@@ -378,7 +383,7 @@
                 (
                     propertyPath,
                     currentValue,
-                    indexerInfo.Index
+                    indexerInfo
                 );
             }
             else
@@ -494,12 +499,11 @@
             
             if (this.Variables.ContainsKey(name))
             {
+                var message = "A variable with the name '{0}' has already been defined.";
+
                 throw new InvalidOperationException
                 (
-                    "A variable with the name '{0}' has already been defined.".With
-                    (
-                        name
-                    )
+                    message.With(name)
                 );
             }
 
@@ -649,12 +653,11 @@
                     }
                     else
                     {
+                        var message = "No variable has been defined with the name '{0}'.";
+
                         throw new NettleRenderException
                         (
-                            "No variable has been defined with the name '{0}'.".With
-                            (
-                                variablePath
-                            )
+                            message.With(variablePath)
                         );
                     }
                 }
@@ -670,7 +673,7 @@
                     (
                         variablePath,
                         collection,
-                        indexerInfo.Index
+                        indexerInfo
                     );
                 }
                 else
@@ -688,13 +691,13 @@
         /// </summary>
         /// <param name="bindingPath">The binding path</param>
         /// <param name="collection">The collection</param>
-        /// <param name="index">The index pointer</param>
+        /// <param name="indexer">The indexer information</param>
         /// <returns>The value found at the specified index</returns>
         private object ResolveIndexedBinding
             (
                 string bindingPath,
                 object collection,
-                int index
+                IndexerInfo indexer
             )
         {
             if (collection == null)
@@ -718,6 +721,8 @@
                     )
                 );
             }
+
+            var index = ResolverIndexerValue(indexer);
 
             if (index < 0)
             {
@@ -750,6 +755,59 @@
                     bindingPath
                 )
             );
+        }
+
+        /// <summary>
+        /// Resolves an indexer to a numeric value
+        /// </summary>
+        /// <param name="indexer">The indexer</param>
+        /// <returns>The resolved value</returns>
+        private int ResolverIndexerValue
+            (
+                IndexerInfo indexer
+            )
+        {
+            switch (indexer.IndexerValueType)
+            {
+                case NettleValueType.Number:
+                {
+                    return indexer.ResolvedIndex;
+                }
+                case NettleValueType.Variable:
+                {
+                    var value = ResolveVariableValue
+                    (
+                        indexer.IndexerSignature
+                    );
+                    
+                    if (value == null)
+                    {
+                        throw new NullReferenceException
+                        (
+                            "The indexer must resolve to a numeric value."
+                        );
+                    }
+
+                    if (value.GetType().IsNumeric())
+                    {
+                        return Convert.ToInt32(value);
+                    }
+                    else
+                    {
+                        throw new InvalidCastException
+                        (
+                            "{0} is not a valid indexer type.".With
+                            (
+                                value.GetType().Name
+                            )
+                        );
+                    }
+                }
+                default:
+                {
+                    return -1;
+                }
+            }
         }
 
         /// <summary>
