@@ -2,6 +2,8 @@
 {
     using Nettle.Compiler.Parsing.Blocks;
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents a function code block parser
@@ -31,6 +33,17 @@
         /// Gets the open tag name
         /// </summary>
         protected abstract string TagName { get; }
+
+        /// <summary>
+        /// Gets an array of body partition tag names
+        /// </summary>
+        protected virtual string[] BodyPartitionTagNames
+        {
+            get
+            {
+                return new string[] { };
+            }
+        }
 
         /// <summary>
         /// Determines if a signature matches the block type of the parser
@@ -97,11 +110,25 @@
             var startIndex = signature.Length;
             var templateLength = templateContent.Length;
             var body = String.Empty;
+
             var openTagSyntax = GetOpenTagSyntax();
             var closeTagSyntax = GetCloseTagSyntax();
+            var partitionTags = new List<string>();
+
             var openTagCount = 1;
             var closeTagCount = 0;
+            var partitionTagCount = 0;
+            var endedOnPartition = false;
+            var partitionSignature = String.Empty;
             var endFound = false;
+
+            foreach (var tagName in this.BodyPartitionTagNames)
+            {
+                partitionTags.Add
+                (
+                    @"{{" + tagName
+                );
+            }
 
             for (int currentIndex = startIndex; currentIndex < templateLength; currentIndex++)
             {
@@ -117,12 +144,32 @@
                     {
                         closeTagCount++;
                     }
+                    else
+                    {
+                        var matchedTag = partitionTags.FirstOrDefault
+                        (
+                            tag => body.EndsWith(tag)
+                        );
+
+                        if (matchedTag != null)
+                        {
+                            partitionTagCount++;
+                            partitionSignature = matchedTag;
+                        }
+                    }
                 }
 
                 if (openTagCount == closeTagCount)
                 {
-                    //The final closing tag was found
+                    // The final closing tag was found
                     endFound = true;
+                    break;
+                }
+                else if (partitionTagCount > 0 && openTagCount == (closeTagCount + 1))
+                {
+                    // A partition tag was found
+                    endFound = true;
+                    endedOnPartition = true;
                     break;
                 }
             }
@@ -139,7 +186,18 @@
                 );
             }
 
-            signature += body;
+            if (endedOnPartition)
+            {
+                signature += body.Substring
+                (
+                    0,
+                    body.Length - partitionSignature.Length
+                );
+            }
+            else
+            {
+                signature += body;
+            }
 
             body = body.Substring
             (

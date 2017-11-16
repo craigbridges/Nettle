@@ -61,6 +61,7 @@
     <Compile Include="Compiler\DefaultNettleResolver.cs" />
     <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\Parsing\Blocks\ConditionalBinding.cs" />
+    <Compile Include="Compiler\Parsing\Blocks\ElseIfStatement.cs" />
     <Compile Include="Compiler\Parsing\Blocks\WhileLoop.cs" />
     <Compile Include="Compiler\Parsing\Blocks\UnresolvedKeyValuePair.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableDecrementer.cs" />

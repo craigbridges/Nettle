@@ -3,6 +3,7 @@
     using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Functions;
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Represents an if statement renderer
@@ -71,6 +72,7 @@
             Validate.IsNotNull(block);
 
             var statement = (IfStatement)block;
+            var renderedBody = String.Empty;
             
             var result = _expressionEvaluator.Evaluate
             (
@@ -78,21 +80,50 @@
                 statement.ConditionExpression
             );
 
-            if (false == result)
+            if (result)
             {
-                return String.Empty;
-            }
-            else
-            {
-                var renderedBody = _collectionRenderer.Render
+                renderedBody = _collectionRenderer.Render
                 (
                     ref context,
                     statement.Blocks,
                     flags
                 );
-
-                return renderedBody;
             }
+            else if (statement.ElseIfConditions.Any())
+            {
+                foreach (var elseCondition in statement.ElseIfConditions)
+                {
+                    result = _expressionEvaluator.Evaluate
+                    (
+                        ref context,
+                        elseCondition.ConditionExpression
+                    );
+
+                    if (result)
+                    {
+                        renderedBody = _collectionRenderer.Render
+                        (
+                            ref context,
+                            elseCondition.Blocks,
+                            flags
+                        );
+
+                        break;
+                    }
+                }
+            }
+
+            if (false == result && statement.ElseContent != null)
+            {
+                renderedBody = _collectionRenderer.Render
+                (
+                    ref context,
+                    statement.ElseContent.Blocks,
+                    flags
+                );
+            }
+
+            return renderedBody;
         }
     }
 }

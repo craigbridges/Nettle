@@ -2,7 +2,7 @@ TODO:
 -----
 
 - If statement conditions
-	- {{else}} and {{else if}} blocks
+	- Look into "No '{{/if}}' tag was found." bug with nested if-else statements (see emailed example)
 
 - Indexers:
 	- Handle nested indexers (e.g. Rows[0].Values[1])
