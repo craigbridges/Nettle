@@ -70,6 +70,8 @@
     <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
     <Compile Include="Compiler\Parsing\Blocks\FlagDeclaration.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableReassignment.cs" />
+    <Compile Include="Compiler\Parsing\PathInfo.cs" />
+    <Compile Include="Compiler\Parsing\PathSegmentInfo.cs" />
     <Compile Include="Compiler\Parsing\WhileLoopParser.cs" />
     <Compile Include="Compiler\Parsing\KeyValuePairParser.cs" />
     <Compile Include="Compiler\Parsing\Conditions\BooleanCondition.cs" />

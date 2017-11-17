@@ -230,12 +230,11 @@
                 }
             }
 
+            var message = "No parser could be found for the signature '{0}'.";
+
             throw new NettleParseException
             (
-                "No parser could be found for the signature '{0}'.".With
-                (
-                    signatureBody
-                ),
+                message.With(signatureBody),
                 positionOffSet
             );
         }

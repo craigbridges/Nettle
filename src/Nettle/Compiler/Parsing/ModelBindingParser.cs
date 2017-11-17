@@ -15,12 +15,8 @@
         /// <param name="signatureBody">The signature body</param>
         /// <returns>True, if it matches; otherwise false</returns>
         /// <remarks>
-        /// The rules for matching a model binding are as follows:
-        /// 
-        /// - The trimmed signature body must not contain spaces
-        /// - The first character must be either a letter or dollar sign
-        /// - The signature can end with [*] indexers
-        /// - Subsequent characters may be letters, dots, or numbers
+        /// The signature body will match the model binding rules 
+        /// if it is a valid binding path.
         /// </remarks>
         public bool Matches
             (
@@ -29,49 +25,10 @@
         {
             signatureBody = signatureBody.Trim();
 
-            // Rule: must not contain spaces
-            if (signatureBody.Contains(" "))
-            {
-                return false;
-            }
-
-            // Rule: must start with letter or dollar sign
-            var firstChar = signatureBody.First();
-
-            var isValidChar = 
+            return PathInfo.IsValidPath
             (
-                Char.IsLetter(firstChar) 
-                    || firstChar == '$'
+                signatureBody
             );
-
-            if (false == isValidChar)
-            {
-                return false;
-            }
-
-            // Rule: the signature can end with an indexer
-            var remainingBody = signatureBody.Substring(1);
-            var indexerInfo = new IndexerInfo(remainingBody);
-            
-            if (indexerInfo.HasIndexer)
-            {
-                remainingBody = indexerInfo.PathWithoutIndexer;
-            }
-
-            // Rule: remaining characters must be letters, dots or numbers
-            var containsValidChars = remainingBody.All
-            (
-                c => Char.IsLetter(c) 
-                    || Char.IsNumber(c) 
-                    || c == '.'
-            );
-
-            if (false == containsValidChars)
-            {
-                return false;
-            }
-
-            return true;
         }
         
         /// <summary>

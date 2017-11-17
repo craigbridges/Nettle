@@ -9,7 +9,7 @@
     internal sealed class IndexerInfo
     {
         /// <summary>
-        /// Constructs the inspector with a path
+        /// Constructs the indexer info with a path
         /// </summary>
         /// <param name="path">The binding path</param>
         public IndexerInfo
@@ -21,7 +21,7 @@
         }
 
         /// <summary>
-        /// Gets the full path set against the inspector
+        /// Gets the full path set against the indexer info
         /// </summary>
         public string FullPath { get; private set; }
 
