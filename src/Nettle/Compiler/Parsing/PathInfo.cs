@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents an aggregation of path information
@@ -50,6 +51,41 @@
             {
                 return this.Segments[index];
             }
+        }
+
+        /// <summary>
+        /// Removes a segment at the index specified
+        /// </summary>
+        /// <param name="index">The index</param>
+        public void RemoveSegment
+            (
+                int index
+            )
+        {
+            var segments = this.Segments.ToList();
+
+            segments.RemoveAt(index);
+
+            var pathBuilder = new StringBuilder();
+
+            // Rebuild the path from the new segments list
+            foreach (var segment in segments)
+            {
+                if (pathBuilder.Length > 0)
+                {
+                    pathBuilder.Append('.');
+                }
+
+                pathBuilder.Append
+                (
+                    segment.Signature
+                );
+            }
+
+            PopulatePathDetails
+            (
+                pathBuilder.ToString()
+            );
         }
 
         /// <summary>
@@ -189,6 +225,15 @@
             }
             
             return true;
+        }
+
+        /// <summary>
+        /// Provides a custom description of the path info
+        /// </summary>
+        /// <returns>The full path</returns>
+        public override string ToString()
+        {
+            return this.FullPath;
         }
     }
 }

@@ -171,38 +171,24 @@
                 return this.Model;
             }
 
-            var isNested = TemplateContext.IsNested
-            (
-                propertyPath
-            );
-
+            var pathInfo = new PathInfo(propertyPath);
+            
             // Try to resolve a nested property if it looks like one
-            if (isNested)
+            if (pathInfo.IsNested)
             {
-                var propertyName = ExtractNextSegment
-                (
-                    ref propertyPath
-                );
+                var firstValue = this.Model;
 
-                var firstValue = ResolvePropertyValue
-                (
-                    propertyName
-                );
-
-                var nestedValue = ResolveNestedPropertyValue
+                var nestedValue = ResolveNestedValue
                 (
                     firstValue,
-                    propertyPath
+                    pathInfo
                 );
 
                 return nestedValue;
             }
             else
             {
-                var indexerInfo = new IndexerInfo
-                (
-                    propertyPath
-                );
+                var indexerInfo = pathInfo[0].IndexerInfo;
 
                 if (indexerInfo.HasIndexer)
                 {
@@ -261,18 +247,18 @@
         }
 
         /// <summary>
-        /// Resolves a nested property value from the property path specified
+        /// Resolves a nested value from the path specified
         /// </summary>
         /// <param name="model">The model</param>
-        /// <param name="propertyPath">The property path</param>
+        /// <param name="path">The path info</param>
         /// <returns>The property value found</returns>
-        private object ResolveNestedPropertyValue
+        private object ResolveNestedValue
             (
                 object model,
-                string propertyPath
+                PathInfo path
             )
         {
-            Validate.IsNotEmpty(propertyPath);
+            Validate.IsNotNull(path);
 
             if (model == null)
             {
@@ -282,45 +268,24 @@
                 (
                     message.With
                     (
-                        propertyPath
+                        path
                     )
                 );
             }
-
-            var indexerInfo = new IndexerInfo
-            (
-                propertyPath
-            );
-
-            if (indexerInfo.HasIndexer)
-            {
-                propertyPath = indexerInfo.PathWithoutIndexer;
-            }
-
-            var segments = propertyPath.Split('.');
-            var nextName = segments[0];
+            
             var currentValue = model;
-
-            var containsEmptyParts = segments.Any
-            (
-                part => String.IsNullOrWhiteSpace(part)
-            );
-
-            // Quickly validate the nested name syntax
-            if (containsEmptyParts)
-            {
-                throw new NettleRenderException
-                (
-                    "The property path '{0}' is invalid.".With
-                    (
-                        propertyPath
-                    )
-                );
-            }
-
+            
             // Try to resolve each segment one at a time until the end is reached
-            for (var i = 0; i < segments.Length; i++)
+            foreach (var segment in path.Segments)
             {
+                if (segment.IsModelPointer)
+                {
+                    // Skip model pointer segments
+                    continue;
+                }
+
+                var segmentName = segment.Name;
+
                 if (currentValue == null)
                 {
                     var message = "The path '{0}' contains a null reference at '{1}'.";
@@ -329,16 +294,14 @@
                     (
                         message.With
                         (
-                            propertyPath,
-                            nextName
+                            path,
+                            segmentName
                         )
                     );
                 }
-
-                nextName = segments[i];
-
+                
                 var currentType = currentValue.GetType();
-                var propertyFound = currentType.HasProperty(nextName);
+                var propertyFound = currentType.HasProperty(segmentName);
 
                 if (false == propertyFound)
                 {
@@ -359,8 +322,8 @@
                         (
                             message.With
                             (
-                                propertyPath,
-                                nextName
+                                path,
+                                segmentName
                             )
                         );
                     }
@@ -368,28 +331,26 @@
 
                 var nextProperty = currentType.GetProperty
                 (
-                    nextName
+                    segmentName
                 );
 
                 currentValue = nextProperty.GetValue
                 (
                     currentValue
                 );
+
+                if (segment.IndexerInfo.HasIndexer)
+                {
+                    currentValue = ResolveIndexedBinding
+                    (
+                        path.FullPath,
+                        currentValue,
+                        segment.IndexerInfo
+                    );
+                }
             }
-            
-            if (indexerInfo.HasIndexer)
-            {
-                return ResolveIndexedBinding
-                (
-                    propertyPath,
-                    currentValue,
-                    indexerInfo
-                );
-            }
-            else
-            {
-                return currentValue;
-            }
+
+            return currentValue;
         }
 
         /// <summary>
@@ -414,65 +375,6 @@
             {
                 return path.Trim().Equals(@"$");
             }
-        }
-
-        /// <summary>
-        /// Determines if a property or variable path represents a nested property
-        /// </summary>
-        /// <param name="path">The property or variable path</param>
-        /// <returns>True, if the path is nested; otherwise false</returns>
-        /// <remarks>
-        /// A nested path is one that is separated into segments by dots (".")
-        /// </remarks>
-        public static bool IsNested
-            (
-                string path
-            )
-        {
-            if (String.IsNullOrEmpty(path))
-            {
-                return false;
-            }
-            else
-            {
-                var segments = path.Split('.').Where
-                (
-                    part => false == String.IsNullOrEmpty(part)
-                );
-
-                return
-                (
-                    segments.Count() > 1
-                );
-            }
-        }
-
-        /// <summary>
-        /// Extracts the next segment from a property or variable path
-        /// </summary>
-        /// <param name="path">The path</param>
-        /// <returns>The matching segment</returns>
-        internal static string ExtractNextSegment
-            (
-                ref string path
-            )
-        {
-            var segments = path.Split('.');
-            var nextSegment = segments[0];
-
-            if (segments.Length == 1)
-            {
-                path = String.Empty;
-            }
-            else
-            {
-                path = path.Crop
-                (
-                    nextSegment.Length + 1
-                );
-            }
-
-            return nextSegment;
         }
         
         /// <summary>
@@ -598,37 +500,30 @@
         {
             Validate.IsNotEmpty(variablePath);
 
-            var isNested = TemplateContext.IsNested
-            (
-                variablePath
-            );
-
-            if (isNested)
+            var pathInfo = new PathInfo(variablePath);
+            
+            if (pathInfo.IsNested)
             {
-                var variableName = ExtractNextSegment
-                (
-                    ref variablePath
-                );
+                var variableName = pathInfo[0].Name;
 
                 var variableValue = ResolveVariableValue
                 (
                     variableName
                 );
 
-                var nestedValue = ResolveNestedPropertyValue
+                pathInfo.RemoveSegment(0);
+
+                var nestedValue = ResolveNestedValue
                 (
                     variableValue,
-                    variablePath
+                    pathInfo
                 );
 
                 return nestedValue;
             }
             else
             {
-                var indexerInfo = new IndexerInfo
-                (
-                    variablePath
-                );
+                var indexerInfo = pathInfo[0].IndexerInfo;
 
                 if (indexerInfo.HasIndexer)
                 {

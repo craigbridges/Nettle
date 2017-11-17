@@ -1,9 +1,6 @@
 TODO:
 -----
 
-- Indexers:
-	- Handle nested indexers (e.g. Rows[0].Values[1])
-	- Update VariableValidator, NettleRenderer and TemplateContext to use PathInfo instead of the TemplateContext static methods (remove those after)
 
 Low Priority:
 -------------

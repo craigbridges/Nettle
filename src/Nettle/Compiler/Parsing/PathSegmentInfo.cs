@@ -42,6 +42,14 @@
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets a flag indicating if the segment is a model pointer
+        /// </summary>
+        /// <remarks>
+        /// A model pointer is denoted using the dollar sign
+        /// </remarks>
+        public bool IsModelPointer { get; private set; }
+
+        /// <summary>
         /// Gets the segments indexer information
         /// </summary>
         public IndexerInfo IndexerInfo { get; private set; }
@@ -82,6 +90,11 @@
             this.Signature = signature;
             this.Name = indexerInfo.PathWithoutIndexer;
             this.IndexerInfo = indexerInfo;
+
+            this.IsModelPointer = TemplateContext.IsModelReference
+            (
+                indexerInfo.PathWithoutIndexer
+            );
         }
 
         /// <summary>
@@ -127,6 +140,15 @@
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Provides a custom description of the path segment info
+        /// </summary>
+        /// <returns>The segment signature</returns>
+        public override string ToString()
+        {
+            return this.Signature;
         }
     }
 }

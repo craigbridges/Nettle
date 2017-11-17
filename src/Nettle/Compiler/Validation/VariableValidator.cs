@@ -227,20 +227,9 @@
                 string variableName
             )
         {
-            var isNested = TemplateContext.IsNested
-            (
-                variableName
-            );
+            var pathInfo = new PathInfo(variableName);
 
-            if (isNested)
-            {
-                var path = String.Copy(variableName);
-
-                variableName = TemplateContext.ExtractNextSegment
-                (
-                    ref path
-                );
-            }
+            variableName = pathInfo[0].Name;
 
             var variableFound = declaredVariables.Any
             (

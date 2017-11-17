@@ -157,29 +157,9 @@
         {
             Validate.IsNotEmpty(bindingPath);
 
-            var indexerInfo = new IndexerInfo
-            (
-                bindingPath
-            );
-
-            var name = indexerInfo.PathWithoutIndexer;
-
-            var isNested = TemplateContext.IsNested
-            (
-                bindingPath
-            );
-
-            // Extract the name of the root variable or property
-            if (isNested)
-            {
-                var pathCopy = String.Copy(bindingPath);
-
-                name = TemplateContext.ExtractNextSegment
-                (
-                    ref pathCopy
-                );
-            }
-
+            var pathInfo = new PathInfo(bindingPath);
+            var name = pathInfo[0].Name;
+            
             var variableFound = context.Variables.ContainsKey
             (
                 name
