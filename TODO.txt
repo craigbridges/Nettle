@@ -1,10 +1,6 @@
 TODO:
 -----
 
-- If statement conditions
-	- Look into "No '{{/if}}' tag was found." bug with nested if-else statements (see emailed example)
-	- Update wiki to show support for else and else if statements
-
 - Indexers:
 	- Handle nested indexers (e.g. Rows[0].Values[1])
 

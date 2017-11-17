@@ -2,8 +2,8 @@
 {
     using Nettle.Compiler.Parsing.Blocks;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Represents a function code block parser
@@ -143,6 +143,7 @@
                     else if (body.EndsWith(closeTagSyntax))
                     {
                         closeTagCount++;
+                        partitionTagCount = 0;
                     }
                     else
                     {

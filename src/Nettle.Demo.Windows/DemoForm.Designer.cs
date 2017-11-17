@@ -58,6 +58,7 @@
             this.templateTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.templateTextBox.Size = new System.Drawing.Size(900, 300);
             this.templateTextBox.TabIndex = 1;
+            this.templateTextBox.TabStop = false;
             // 
             // label2
             // 
@@ -82,6 +83,7 @@
             this.outputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.outputTextBox.Size = new System.Drawing.Size(900, 300);
             this.outputTextBox.TabIndex = 3;
+            this.outputTextBox.TabStop = false;
             // 
             // renderButton
             // 
@@ -89,6 +91,7 @@
             this.renderButton.Name = "renderButton";
             this.renderButton.Size = new System.Drawing.Size(97, 26);
             this.renderButton.TabIndex = 4;
+            this.renderButton.TabStop = false;
             this.renderButton.Text = "Render Output";
             this.renderButton.UseVisualStyleBackColor = true;
             this.renderButton.Click += new System.EventHandler(this.renderButton_Click);
