@@ -6,6 +6,7 @@
     using Nettle.NCalc;
     using Nettle.Web;
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Drawing;
     using System.Windows.Forms;
@@ -66,6 +67,8 @@
                     templateTextBox.Text
                 );
 
+                var sampleData = GetSampleData();
+
                 var model = new
                 {
                     Message = "Hello World",
@@ -75,6 +78,7 @@
                         "John",
                         "Simon"
                     },
+                    SampleData = sampleData,
                     Success = true
                 };
 
@@ -88,6 +92,60 @@
                 outputTextBox.ForeColor = Color.Red;
                 outputTextBox.Text = ex.Message;
             }
+        }
+
+        private Nettle.Common.Serialization.Grid.IDataGrid GetSampleData()
+        {
+            var sampleData = new Nettle.Common.Serialization.Grid.DataGrid
+            (
+                "SampleData"
+            );
+
+            sampleData.AddRow
+            (
+                new Dictionary<string, object>()
+                {
+                    { "Language", "Ada" },
+                    { "Imperative", "Yes" },
+                    { "Object-oriented", "Yes" },
+                    { "Generic", "Yes" }
+                }
+            );
+
+            sampleData.AddRow
+            (
+                new Dictionary<string, object>()
+                {
+                    { "Language", "C" },
+                    { "Imperative", "Yes" },
+                    { "Object-oriented", "No" },
+                    { "Generic", "No" }
+                }
+            );
+
+            sampleData.AddRow
+            (
+                new Dictionary<string, object>()
+                {
+                    { "Language", "C#" },
+                    { "Imperative", "Yes" },
+                    { "Object-oriented", "Yes" },
+                    { "Generic", "Yes" }
+                }
+            );
+
+            sampleData.AddRow
+            (
+                new Dictionary<string, object>()
+                {
+                    { "Language", "Go" },
+                    { "Imperative", "Yes" },
+                    { "Object-oriented", "Yes" },
+                    { "Generic", "No" }
+                }
+            );
+
+            return sampleData;
         }
     }
 }
