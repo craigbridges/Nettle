@@ -636,7 +636,19 @@
             {
                 if (counter == index)
                 {
-                    return item;
+                    if (indexer.NextIndexer != null)
+                    {
+                        return ResolveIndexedBinding
+                        (
+                            indexer.FullPath,
+                            item,
+                            indexer.NextIndexer
+                        );
+                    }
+                    else
+                    {
+                        return item;
+                    }
                 }
 
                 counter++;
