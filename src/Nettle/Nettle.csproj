@@ -139,7 +139,17 @@
     <Compile Include="Compiler\Validation\IBlockValidator.cs" />
     <Compile Include="Compiler\Validation\VariableValidator.cs" />
     <Compile Include="Functions\Conversion\FromBase64StringFunction.cs" />
+    <Compile Include="Functions\Conversion\ToStringFunction.cs" />
+    <Compile Include="Functions\Conversion\ToSingleFunction.cs" />
+    <Compile Include="Functions\Conversion\ToInt16Function.cs" />
+    <Compile Include="Functions\Conversion\ToDoubleFunction.cs" />
+    <Compile Include="Functions\Conversion\ToDecimalFunction.cs" />
+    <Compile Include="Functions\Conversion\ToDateTimeFunction.cs" />
+    <Compile Include="Functions\Conversion\ToCharFunction.cs" />
+    <Compile Include="Functions\Conversion\ToByteFunction.cs" />
+    <Compile Include="Functions\Conversion\ToBooleanFunction.cs" />
     <Compile Include="Functions\Conversion\ToBase64Function.cs" />
+    <Compile Include="Functions\Conversion\ToInt32Function.cs" />
     <Compile Include="Functions\DateTime\ToLocalTimeFunction.cs" />
     <Compile Include="Functions\DateTime\GetDateFunction.cs" />
     <Compile Include="Functions\DateTime\FormatDateFunction.cs" />
