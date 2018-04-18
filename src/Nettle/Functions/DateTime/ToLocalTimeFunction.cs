@@ -1,24 +1,24 @@
-﻿namespace Nettle.Functions.Conversion
+﻿namespace Nettle.Functions.DateTime
 {
     using Nettle.Compiler;
     using System;
 
     /// <summary>
-    /// Represent a convert to Int64 (long) function implementation
+    /// Represent a format date and time function implementation
     /// </summary>
-    public sealed class ToInt64Function : FunctionBase
+    public sealed class ToLocalTimeFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToInt64Function() 
+        public ToLocalTimeFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Number",
-                "The number",
-                typeof(double)
+                "Date",
+                "The date and time to convert.",
+                typeof(DateTime)
             );
         }
 
@@ -29,16 +29,16 @@
         {
             get
             {
-                return "Converts a double to an equivalent 64-bit signed integer.";
+                return "Converts the value of the date to local time.";
             }
         }
 
         /// <summary>
-        /// Converts a number to an Int64 type
+        /// Converts the date time supplied to the local time
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The rounded number</returns>
+        /// <returns>The formatted date</returns>
         protected override object GenerateOutput
             (
                 TemplateContext context,
@@ -47,13 +47,13 @@
         {
             Validate.IsNotNull(context);
 
-            var number = GetParameterValue<double>
+            var date = GetParameterValue<DateTime>
             (
-                "Number",
+                "Date",
                 parameterValues
             );
-
-            return Convert.ToInt64(number);
+            
+            return date.ToLocalTime();
         }
     }
 }

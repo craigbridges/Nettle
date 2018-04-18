@@ -4,21 +4,21 @@
     using System;
 
     /// <summary>
-    /// Represent a convert to Int64 (long) function implementation
+    /// Represent a convert byte array to base-64 function implementation
     /// </summary>
-    public sealed class ToInt64Function : FunctionBase
+    public sealed class ToBase64Function : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToInt64Function() 
+        public ToBase64Function() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Number",
-                "The number",
-                typeof(double)
+                "Data",
+                "The byte array data.",
+                typeof(byte[])
             );
         }
 
@@ -29,12 +29,12 @@
         {
             get
             {
-                return "Converts a double to an equivalent 64-bit signed integer.";
+                return "Converts a byte array to a base-64 string.";
             }
         }
 
         /// <summary>
-        /// Converts a number to an Int64 type
+        /// Converts a byte array to a base-64 encoded string
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -47,13 +47,16 @@
         {
             Validate.IsNotNull(context);
 
-            var number = GetParameterValue<double>
+            var data = GetParameterValue<byte[]>
             (
-                "Number",
+                "Data",
                 parameterValues
             );
 
-            return Convert.ToInt64(number);
+            return Convert.ToBase64String
+            (
+                data
+            );
         }
     }
 }

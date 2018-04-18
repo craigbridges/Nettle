@@ -4,14 +4,14 @@
     using System;
 
     /// <summary>
-    /// Represent a convert to Int64 (long) function implementation
+    /// Represent a convert to Int16 (long) function implementation
     /// </summary>
-    public sealed class ToInt64Function : FunctionBase
+    public sealed class ToInt16Function : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToInt64Function() 
+        public ToInt16Function()
             : base()
         {
             DefineRequiredParameter
@@ -29,12 +29,12 @@
         {
             get
             {
-                return "Converts a double to an equivalent 64-bit signed integer.";
+                return "Converts a double to an equivalent 16-bit signed integer.";
             }
         }
 
         /// <summary>
-        /// Converts a number to an Int64 type
+        /// Converts a number to an Int16 type
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -53,7 +53,7 @@
                 parameterValues
             );
 
-            return Convert.ToInt64(number);
+            return Convert.ToInt16(number);
         }
     }
 }

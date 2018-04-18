@@ -4,21 +4,21 @@
     using System;
 
     /// <summary>
-    /// Represent a convert to Int64 (long) function implementation
+    /// Represent a convert object to double function implementation
     /// </summary>
-    public sealed class ToInt64Function : FunctionBase
+    public sealed class ToDoubleFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToInt64Function() 
+        public ToDoubleFunction() 
             : base()
         {
             DefineRequiredParameter
             (
-                "Number",
-                "The number",
-                typeof(double)
+                "Value",
+                "The object value to convert.",
+                typeof(object)
             );
         }
 
@@ -29,12 +29,12 @@
         {
             get
             {
-                return "Converts a double to an equivalent 64-bit signed integer.";
+                return "Converts an object to a double.";
             }
         }
 
         /// <summary>
-        /// Converts a number to an Int64 type
+        /// Converts the object to the conversion type
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -47,13 +47,16 @@
         {
             Validate.IsNotNull(context);
 
-            var number = GetParameterValue<double>
+            var value = GetParameterValue<object>
             (
-                "Number",
+                "Value",
                 parameterValues
             );
 
-            return Convert.ToInt64(number);
+            return Convert.ToDouble
+            (
+                value
+            );
         }
     }
 }
