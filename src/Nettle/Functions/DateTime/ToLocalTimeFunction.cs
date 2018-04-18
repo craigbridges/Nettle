@@ -29,7 +29,7 @@
         {
             get
             {
-                return "Converts the value of the date to local time.";
+                return "Converts the value of a date to local time.";
             }
         }
 
