@@ -150,6 +150,7 @@
     <Compile Include="Functions\Conversion\ToBooleanFunction.cs" />
     <Compile Include="Functions\Conversion\ToBase64Function.cs" />
     <Compile Include="Functions\Conversion\ToInt32Function.cs" />
+    <Compile Include="Functions\DateTime\ConvertTimeFunction.cs" />
     <Compile Include="Functions\DateTime\ToLocalTimeFunction.cs" />
     <Compile Include="Functions\DateTime\GetDateFunction.cs" />
     <Compile Include="Functions\DateTime\FormatDateFunction.cs" />

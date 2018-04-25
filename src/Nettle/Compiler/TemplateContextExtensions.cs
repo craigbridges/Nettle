@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Timers;
@@ -45,6 +46,16 @@
                 "Render Time: {0}".With
                 (
                     renderTimeFormatted
+                )
+            );
+
+            builder.Append("\r\n");
+
+            builder.Append
+            (
+                "Current Culture: {0}".With
+                (
+                    CultureInfo.CurrentCulture.Name
                 )
             );
 

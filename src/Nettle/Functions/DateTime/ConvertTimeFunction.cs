@@ -4,14 +4,14 @@
     using System;
 
     /// <summary>
-    /// Represent a to local date and time function implementation
+    /// Represent a convert date and time function implementation
     /// </summary>
-    public sealed class ToLocalTimeFunction : FunctionBase
+    public sealed class ConvertTimeFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToLocalTimeFunction() 
+        public ConvertTimeFunction() 
             : base()
         {
             DefineRequiredParameter
@@ -19,6 +19,13 @@
                 "Date",
                 "The date and time to convert.",
                 typeof(DateTime)
+            );
+
+            DefineRequiredParameter
+            (
+                "DestinationTimeZoneId",
+                "The identifier of the destination time zone.",
+                typeof(string)
             );
         }
 
@@ -29,7 +36,7 @@
         {
             get
             {
-                return "Converts the value of a date to local time.";
+                return "Converts a date to a specific time zone.";
             }
         }
 
@@ -52,8 +59,18 @@
                 "Date",
                 parameterValues
             );
-            
-            return date.ToLocalTime();
+
+            var timeZoneId = GetParameterValue<string>
+            (
+                "DestinationTimeZoneId",
+                parameterValues
+            );
+
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId
+            (
+                date,
+                timeZoneId
+            );
         }
     }
 }
