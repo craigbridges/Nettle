@@ -8,7 +8,7 @@
     /// <summary>
     /// Represents an if statement renderer
     /// </summary>
-    internal class IfStatementRenderer : NettleRenderer, IBlockRenderer
+    internal class IfStatementRenderer : NettleRendererBase, IBlockRenderer
     {
         private BooleanExpressionEvaluator _expressionEvaluator;
         private BlockCollectionRenderer _collectionRenderer;

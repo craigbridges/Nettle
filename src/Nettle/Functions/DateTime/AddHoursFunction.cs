@@ -4,21 +4,28 @@
     using System;
 
     /// <summary>
-    /// Represent a to local date and time function implementation
+    /// Represent an add hours to date and time function implementation
     /// </summary>
-    public sealed class ToLocalTimeFunction : FunctionBase
+    public sealed class AddHoursFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public ToLocalTimeFunction() 
+        public AddHoursFunction() 
             : base()
         {
             DefineRequiredParameter
             (
                 "Date",
-                "The date and time to convert.",
+                "The date and time to adjust.",
                 typeof(DateTime)
+            );
+
+            DefineRequiredParameter
+            (
+                "Value",
+                "A number of whole and fractional hours.",
+                typeof(double)
             );
         }
 
@@ -29,12 +36,12 @@
         {
             get
             {
-                return "Converts the value of a date to local time.";
+                return "Replicates the DateTime.AddHours method.";
             }
         }
 
         /// <summary>
-        /// Converts the date time supplied to the local time
+        /// Formats the date time supplied to the format specified
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
@@ -53,11 +60,13 @@
                 parameterValues
             );
 
-            return TimeZoneInfo.ConvertTime
+            var value = GetParameterValue<double>
             (
-                date,
-                NettleEngine.DefaultTimeZone
+                "Value",
+                parameterValues
             );
+
+            return date.AddHours(value);
         }
     }
 }

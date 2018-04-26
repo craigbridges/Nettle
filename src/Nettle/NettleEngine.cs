@@ -5,6 +5,7 @@
     using Nettle.Compiler.Rendering;
     using Nettle.Compiler.Validation;
     using Nettle.Functions;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -14,7 +15,8 @@
     public static class NettleEngine
     {
         private static INettleCompiler _compiler;
-        private static object _compilerLock = new object();
+        private static object _engineLock = new object();
+        private static TimeZoneInfo _defaultTimeZone = TimeZoneInfo.Local;
 
         private static List<INettleResolver> _resolvers
             = new List<INettleResolver>()
@@ -28,6 +30,37 @@
         internal const string ViewFileExtension = "nettle";
 
         /// <summary>
+        /// Gets the default time zone to use for dates
+        /// </summary>
+        public static TimeZoneInfo DefaultTimeZone
+        {
+            get
+            {
+                return _defaultTimeZone;
+            }
+        }
+
+        /// <summary>
+        /// Sets the default time zone to use for all date times
+        /// </summary>
+        /// <param name="timeZoneId">The time zone ID</param>
+        public static void SetDefaultTimeZone
+            (
+                string timeZoneId
+            )
+        {
+            Validate.IsNotEmpty(timeZoneId);
+            
+            lock (_engineLock)
+            {
+                _defaultTimeZone = TimeZoneInfo.FindSystemTimeZoneById
+                (
+                    timeZoneId
+                );
+            }
+        }
+
+        /// <summary>
         /// Registers resolvers to be used when generating compilers
         /// </summary>
         /// <param name="resolvers">The resolvers to register</param>
@@ -38,7 +71,7 @@
         {
             Validate.IsNotNull(resolvers);
 
-            lock (_compilerLock)
+            lock (_engineLock)
             {
                 foreach (var resolver in resolvers)
                 {
@@ -65,7 +98,7 @@
         {
             if (_compiler == null)
             {
-                lock (_compilerLock)
+                lock (_engineLock)
                 {
                     _compiler = GenerateCompiler();
                 }

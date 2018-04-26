@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a while loop renderer
     /// </summary>
-    internal class WhileLoopRenderer : NettleRenderer, IBlockRenderer
+    internal class WhileLoopRenderer : NettleRendererBase, IBlockRenderer
     {
         private BooleanExpressionEvaluator _expressionEvaluator;
         private BlockCollectionRenderer _collectionRenderer;

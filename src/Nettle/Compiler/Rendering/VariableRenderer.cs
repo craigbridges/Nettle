@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a variable renderer
     /// </summary>
-    internal class VariableRenderer : NettleRenderer, IBlockRenderer
+    internal class VariableRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies

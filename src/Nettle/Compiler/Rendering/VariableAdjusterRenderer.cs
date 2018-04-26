@@ -8,7 +8,7 @@
     /// Represents a variable adjuster renderer
     /// </summary>
     /// <typeparam name="T">The variable adjuster type</typeparam>
-    internal abstract class VariableAdjusterRenderer<T> : NettleRenderer, IBlockRenderer
+    internal abstract class VariableAdjusterRenderer<T> : NettleRendererBase, IBlockRenderer
         where T : VariableAdjuster
     {
         /// <summary>

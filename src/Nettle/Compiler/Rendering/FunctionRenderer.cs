@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a function renderer
     /// </summary>
-    internal class FunctionRenderer : NettleRenderer, IBlockRenderer
+    internal class FunctionRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies
@@ -66,7 +66,8 @@
 
             return ToString
             (
-                result.Output
+                result.Output,
+                flags
             );
         }
     }

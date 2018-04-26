@@ -4,16 +4,23 @@
     using System;
 
     /// <summary>
-    /// Represent a get date and time function implementation
+    /// Represent a parse date and time function implementation
     /// </summary>
-    public sealed class GetDateFunction : FunctionBase
+    public sealed class ParseDateFunction : FunctionBase
     {
         /// <summary>
         /// Constructs the function by defining the parameters
         /// </summary>
-        public GetDateFunction() 
+        public ParseDateFunction() 
             : base()
-        { }
+        {
+            DefineRequiredParameter
+            (
+                "RawValue",
+                "The string value to parse.",
+                typeof(string)
+            );
+        }
 
         /// <summary>
         /// Gets a description of the function
@@ -22,7 +29,7 @@
         {
             get
             {
-                return "Gets the current date and time.";
+                return "Parses a string into a new date and time.";
             }
         }
 
@@ -40,23 +47,13 @@
         {
             Validate.IsNotNull(context);
 
-            var forceUtc = context.IsFlagSet
+            var rawValue = GetParameterValue<string>
             (
-                TemplateFlag.UseUtc
+                "RawValue",
+                parameterValues
             );
 
-            if (forceUtc)
-            {
-                return DateTime.UtcNow;
-            }
-            else
-            {
-                return TimeZoneInfo.ConvertTime
-                (
-                    DateTime.UtcNow,
-                    NettleEngine.DefaultTimeZone
-                );
-            }
+            return DateTime.Parse(rawValue);
         }
     }
 }

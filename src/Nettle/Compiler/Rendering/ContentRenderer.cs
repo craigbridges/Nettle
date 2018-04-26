@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a content renderer
     /// </summary>
-    internal class ContentRenderer : NettleRenderer, IBlockRenderer
+    internal class ContentRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies

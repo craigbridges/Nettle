@@ -1,7 +1,6 @@
 ﻿namespace Nettle.Demo.Windows
 {
     using System;
-    using System.Globalization;
     using System.Windows.Forms;
 
     static class Program

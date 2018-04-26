@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a comment renderer
     /// </summary>
-    internal class CommentRenderer : NettleRenderer, IBlockRenderer
+    internal class CommentRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies

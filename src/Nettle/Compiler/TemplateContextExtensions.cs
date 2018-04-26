@@ -1,12 +1,9 @@
 ﻿namespace Nettle.Compiler
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
     using System.Text;
-    using System.Timers;
-
+    
     /// <summary>
     /// Various extension methods for the template context
     /// </summary>
@@ -27,53 +24,81 @@
             Validate.IsNotNull(context);
 
             var builder = new StringBuilder();
-
-            var mainHeading = GenerateDebugHeading
-            (
-                "Debug Information"
-            );
-
+            
             var renderTimeFormatted = "{0} milliseconds".With
             (
                 renderTime.Milliseconds
             );
 
-            builder.Append(mainHeading);
-            builder.Append("\r\n\r\n");
-
             builder.Append
             (
-                "Render Time: {0}".With
+                GenerateDebugHeading
                 (
+                    "Debug Information"
+                )
+            );
+            
+            builder.Append
+            (
+                GenerateDebugDetail
+                (
+                    "Render Time",
                     renderTimeFormatted
                 )
             );
 
-            builder.Append("\r\n");
-
             builder.Append
             (
-                "Current Culture: {0}".With
+                GenerateDebugDetail
                 (
+                    "Current Culture Name",
                     CultureInfo.CurrentCulture.Name
                 )
             );
 
-            // Generate property debug info
-            var propertyHeading = GenerateDebugHeading
+            builder.Append
             (
-                "Properties"
+                GenerateDebugDetail
+                (
+                    "Current Culture Description",
+                    CultureInfo.CurrentCulture.DisplayName
+                )
             );
 
-            builder.Append("\r\n\r\n");
-            builder.Append(propertyHeading);
-            builder.Append("\r\n");
+            builder.Append
+            (
+                GenerateDebugDetail
+                (
+                    "Default Time Zone ID",
+                    NettleEngine.DefaultTimeZone.Id
+                )
+            );
 
+            builder.Append
+            (
+                GenerateDebugDetail
+                (
+                    "Default Time Zone Name",
+                    NettleEngine.DefaultTimeZone.DisplayName
+                )
+            );
+                        
+            // Generate the property debug info
+            builder.Append("\r\n\r\n");
+
+            builder.Append
+            (
+                GenerateDebugHeading
+                (
+                    "Properties"
+                )
+            );
+            
             foreach (var property in context.PropertyValues)
             {
                 builder.Append
                 (
-                    "\r\n{0}: {1}".With
+                    GenerateDebugDetail
                     (
                         property.Key,
                         property.Value
@@ -81,21 +106,22 @@
                 );
             }
 
-            // Generate variable debug info
-            var variableHeading = GenerateDebugHeading
-            (
-                "Variables"
-            );
-
+            // Generate the variable debug info
             builder.Append("\r\n\r\n");
-            builder.Append(variableHeading);
-            builder.Append("\r\n");
+
+            builder.Append
+            (
+                GenerateDebugHeading
+                (
+                    "Variables"
+                )
+            );
 
             foreach (var variable in context.Variables)
             {
                 builder.Append
                 (
-                    "\r\n{0}: {1}".With
+                    GenerateDebugDetail
                     (
                         variable.Key,
                         variable.Value
@@ -104,6 +130,25 @@
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Generates a debug detail string
+        /// </summary>
+        /// <param name="label">The label</param>
+        /// <param name="value">The value</param>
+        /// <returns>The detail generated</returns>
+        private static string GenerateDebugDetail
+            (
+                string label,
+                object value
+            )
+        {
+            return "\r\n{0}: {1}".With
+            (
+                label,
+                value
+            );
         }
 
         /// <summary>
@@ -122,7 +167,7 @@
                 text.Length
             );
 
-            return "{0}\r\n{1}".With
+            return "{0}\r\n{1}\r\n".With
             (
                 text,
                 underline

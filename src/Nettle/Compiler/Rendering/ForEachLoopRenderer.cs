@@ -8,7 +8,7 @@
     /// <summary>
     /// Represents a for each loop renderer
     /// </summary>
-    internal class ForEachLoopRenderer : NettleRenderer, IBlockRenderer
+    internal class ForEachLoopRenderer : NettleRendererBase, IBlockRenderer
     {
         private BlockCollectionRenderer _collectionRenderer;
 

@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents the default implementation of a template renderer
     /// </summary>
-    internal class TemplateRenderer : NettleRenderer, ITemplateRenderer
+    internal class TemplateRenderer : NettleRendererBase, ITemplateRenderer
     {
         private BlockCollectionRenderer _collectionRenderer;
 

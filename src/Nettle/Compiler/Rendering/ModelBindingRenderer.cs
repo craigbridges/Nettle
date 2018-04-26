@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a model binding renderer
     /// </summary>
-    internal class ModelBindingRenderer : NettleRenderer, IBlockRenderer
+    internal class ModelBindingRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies
@@ -64,7 +64,7 @@
                 binding.BindingPath
             );
 
-            return ToString(value);
+            return ToString(value, flags);
         }
     }
 }

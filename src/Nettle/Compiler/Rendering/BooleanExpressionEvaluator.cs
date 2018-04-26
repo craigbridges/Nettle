@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a boolean expression evaluator
     /// </summary>
-    internal sealed class BooleanExpressionEvaluator : NettleRenderer
+    internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     {
         /// <summary>
         /// Constructs the expression evaluator with required dependencies

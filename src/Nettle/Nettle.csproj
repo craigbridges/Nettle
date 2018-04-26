@@ -131,7 +131,7 @@
     <Compile Include="Compiler\Parsing\NettleParser.cs" />
     <Compile Include="Compiler\RegisteredTemplate.cs" />
     <Compile Include="Compiler\RegisteredTemplateRepository.cs" />
-    <Compile Include="Compiler\Rendering\NettleRenderer.cs" />
+    <Compile Include="Compiler\Rendering\NettleRendererBase.cs" />
     <Compile Include="Compiler\Rendering\TemplateRenderer.cs" />
     <Compile Include="Compiler\Validation\TemplateValidationError.cs" />
     <Compile Include="Compiler\Validation\TemplateValidationResult.cs" />
@@ -150,7 +150,15 @@
     <Compile Include="Functions\Conversion\ToBooleanFunction.cs" />
     <Compile Include="Functions\Conversion\ToBase64Function.cs" />
     <Compile Include="Functions\Conversion\ToInt32Function.cs" />
+    <Compile Include="Functions\DateTime\AddYearsFunction.cs" />
+    <Compile Include="Functions\DateTime\AddSecondsFunction.cs" />
+    <Compile Include="Functions\DateTime\AddMonthsFunction.cs" />
+    <Compile Include="Functions\DateTime\AddMinutesFunction.cs" />
+    <Compile Include="Functions\DateTime\AddMillisecondsFunction.cs" />
+    <Compile Include="Functions\DateTime\AddHoursFunction.cs" />
     <Compile Include="Functions\DateTime\ConvertTimeFunction.cs" />
+    <Compile Include="Functions\DateTime\AddDaysFunction.cs" />
+    <Compile Include="Functions\DateTime\ParseDateFunction.cs" />
     <Compile Include="Functions\DateTime\ToLocalTimeFunction.cs" />
     <Compile Include="Functions\DateTime\GetDateFunction.cs" />
     <Compile Include="Functions\DateTime\FormatDateFunction.cs" />

@@ -457,9 +457,11 @@
 
                     if (false == isAssignable)
                     {
+                        var message = "The type {0} cannot be assigned to type {1}.";
+
                         throw new InvalidOperationException
                         (
-                            "The type {0} cannot be assigned to type {1}.".With
+                            message.With
                             (
                                 newValueType.Name,
                                 oldValueType.Name

@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a partial renderer
     /// </summary>
-    internal class PartialRenderer : NettleRenderer, IBlockRenderer
+    internal class PartialRenderer : NettleRendererBase, IBlockRenderer
     {
         private IRegisteredTemplateRepository _templateRepository;
         private BlockCollectionRenderer _collectionRenderer;

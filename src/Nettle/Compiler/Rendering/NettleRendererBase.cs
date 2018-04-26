@@ -5,18 +5,19 @@
     using Nettle.Functions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml;
 
     /// <summary>
     /// Represents a base class for all Nettle renderer's
     /// </summary>
-    internal abstract class NettleRenderer
+    internal abstract class NettleRendererBase
     {
         /// <summary>
         /// Constructs the renderer with required dependencies
         /// </summary>
         /// <param name="functionRepository">The function repository</param>
-        public NettleRenderer
+        public NettleRendererBase
             (
                 IFunctionRepository functionRepository
             )
@@ -41,7 +42,6 @@
         /// <param name="context">The template context</param>
         /// <param name="rawValue">The raw value</param>
         /// <param name="type">The value type</param>
-        /// <param name="parsedFunction">The parsed function (optional)</param>
         /// <returns>The resolved value</returns>
         protected object ResolveValue
             (
@@ -251,10 +251,12 @@
         /// Converts a generic object to a string representation
         /// </summary>
         /// <param name="value">The value to convert</param>
+        /// <param name="flags">The template flags</param>
         /// <returns>A string representation of the value</returns>
         protected string ToString
             (
-                object value
+                object value,
+                params TemplateFlag[] flags
             )
         {
             if (value == null)
@@ -268,6 +270,20 @@
                 if (valueType == typeof(string))
                 {
                     return (string)value;
+                }
+                else if (valueType == typeof(DateTime) || valueType == typeof(DateTime?))
+                {
+                    var dateValue = (DateTime)value;
+                    var forceUtc = flags.Contains(TemplateFlag.UseUtc);
+
+                    if (forceUtc && dateValue.Kind == DateTimeKind.Local)
+                    {
+                        return dateValue.ToUniversalTime().ToString();
+                    }
+                    else
+                    {
+                        return dateValue.ToString();
+                    }
                 }
                 else if (valueType == typeof(XmlDocument))
                 {

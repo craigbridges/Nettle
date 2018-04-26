@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a conditional binding renderer
     /// </summary>
-    internal class ConditionalBindingRenderer : NettleRenderer, IBlockRenderer
+    internal class ConditionalBindingRenderer : NettleRendererBase, IBlockRenderer
     {
         private BooleanExpressionEvaluator _expressionEvaluator;
         
@@ -92,7 +92,7 @@
                 );
             }
 
-            return ToString(value);
+            return ToString(value, flags);
         }
     }
 }

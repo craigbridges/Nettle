@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a flag renderer
     /// </summary>
-    internal class FlagRenderer : NettleRenderer, IBlockRenderer
+    internal class FlagRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies

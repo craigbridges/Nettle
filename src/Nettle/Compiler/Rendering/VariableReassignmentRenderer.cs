@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a variable reassignment renderer
     /// </summary>
-    internal class VariableReassignmentRenderer : NettleRenderer, IBlockRenderer
+    internal class VariableReassignmentRenderer : NettleRendererBase, IBlockRenderer
     {
         /// <summary>
         /// Constructs the renderer with required dependencies
