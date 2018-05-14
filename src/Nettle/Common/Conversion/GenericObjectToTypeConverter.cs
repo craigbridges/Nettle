@@ -19,15 +19,25 @@
             {
                 return default(T);
             }
-            else if (typeof(T) == typeof(object))
+            else if (typeof(T) == value.GetType())
             {
                 return (T)value;
             }
             else
             {
-                if (value.GetType().CanConvert(typeof(T), value))
+                var canConvert = value.GetType().CanConvert
+                (
+                    typeof(T),
+                    value
+                );
+
+                if (canConvert)
                 {
-                    return (T)System.Convert.ChangeType(value, typeof(T));
+                    return (T)System.Convert.ChangeType
+                    (
+                        value,
+                        typeof(T)
+                    );
                 }
                 else if (value.GetType() == typeof(string))
                 {
@@ -64,43 +74,43 @@
 
             if (convertType == typeof(DateTime))
             {
-                convertedValue = (object)System.Convert.ToDateTime(value);
+                convertedValue = System.Convert.ToDateTime(value);
             }
             else if (convertType == typeof(bool))
             {
-                convertedValue = (object)System.Convert.ToBoolean(value);
+                convertedValue = System.Convert.ToBoolean(value);
             }
             else if (convertType == typeof(double))
             {
-                convertedValue = (object)System.Convert.ToDouble(value);
+                convertedValue = System.Convert.ToDouble(value);
             }
             else if (convertType == typeof(Single))
             {
-                convertedValue = (object)System.Convert.ToSingle(value);
+                convertedValue = System.Convert.ToSingle(value);
             }
             else if (convertType == typeof(decimal))
             {
-                convertedValue = (object)System.Convert.ToDecimal(value);
+                convertedValue = System.Convert.ToDecimal(value);
             }
             else if (convertType == typeof(long))
             {
-                convertedValue = (object)System.Convert.ToInt64(value);
+                convertedValue = System.Convert.ToInt64(value);
             }
             else if (convertType == typeof(int))
             {
-                convertedValue = (object)System.Convert.ToInt32(value);
+                convertedValue = System.Convert.ToInt32(value);
             }
             else if (convertType == typeof(short))
             {
-                convertedValue = (object)System.Convert.ToInt16(value);
+                convertedValue = System.Convert.ToInt16(value);
             }
             else if (convertType == typeof(char))
             {
-                convertedValue = (object)System.Convert.ToChar(value);
+                convertedValue = System.Convert.ToChar(value);
             }
             else if (convertType == typeof(byte))
             {
-                convertedValue = (object)System.Convert.ToByte(value);
+                convertedValue = System.Convert.ToByte(value);
             }
             else if (convertType.IsEnum)
             {
@@ -125,10 +135,12 @@
         {
             var valueString = value.ToString();
             var typeName = typeof(T).ToString();
-            
+
+            var message = "The value '{0}' cannot be converted to the type '{1}'.";
+
             throw new InvalidCastException
             (
-                "The value '{0}' cannot be converted to the type '{1}'.".With
+                message.With
                 (
                     valueString,
                     typeName
