@@ -19,13 +19,16 @@
             {
                 return default(T);
             }
-            else if (typeof(T) == value.GetType())
+
+            var valueType = value.GetType();
+
+            if (typeof(T) == valueType || typeof(T).IsSubclassOf(valueType))
             {
                 return (T)value;
             }
             else
             {
-                var canConvert = value.GetType().CanConvert
+                var canConvert = valueType.CanConvert
                 (
                     typeof(T),
                     value
