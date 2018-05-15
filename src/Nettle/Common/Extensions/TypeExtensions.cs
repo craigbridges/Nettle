@@ -45,6 +45,11 @@
                 }
                 else
                 {
+                    if (false == fromObjectType.ImplementsInterface(typeof(IConvertible)))
+                    {
+                        return false;
+                    }
+
                     var converterType = typeof(TypeConverterChecker<,>).MakeGenericType
                     (
                         fromType,

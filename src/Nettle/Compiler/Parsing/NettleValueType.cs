@@ -78,6 +78,17 @@
         /// The key and value types can be any of the Nettle value types
         /// </remarks>
         [Description("Key Value Pair")]
-        KeyValuePair = 64
+        KeyValuePair = 64,
+
+        /// <summary>
+        /// Represents an anonymous type object
+        /// </summary>
+        /// <remarks>
+        /// Anonymous types provide a convenient way to encapsulate a set 
+        /// of read-only properties into a single object without having 
+        /// to explicitly define a type first.
+        /// </remarks>
+        [Description("Anonymous Type")]
+        AnonymousType = 128
     }
 }

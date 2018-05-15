@@ -22,7 +22,7 @@
 
             var valueType = value.GetType();
 
-            if (typeof(T) == valueType || typeof(T).IsSubclassOf(valueType))
+            if (typeof(T) == valueType || valueType.IsSubclassOf(typeof(T)))
             {
                 return (T)value;
             }

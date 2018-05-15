@@ -480,6 +480,33 @@
         }
 
         /// <summary>
+        /// Determines if a string constitutes a valid C# property name
+        /// </summary>
+        /// <param name="value">The value to check</param>
+        /// <returns>True, if valid property name; otherwise false</returns>
+        public static bool IsValidPropertyName
+            (
+                this string value
+            )
+        {
+            const string PropertyPattern = @"^@?[a-zA-Z_]\w*(\.@?[a-zA-Z_]\w*)*$";
+
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+            else
+            {
+                return Regex.IsMatch
+                (
+                    value,
+                    PropertyPattern,
+                    RegexOptions.Compiled
+                );
+            }
+        }
+
+        /// <summary>
         /// Determines if a string matches any values in an array
         /// </summary>
         /// <param name="value">The value to check</param>

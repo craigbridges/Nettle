@@ -2,7 +2,7 @@
 {
     using Nettle.Compiler.Parsing.Conditions;
     using System;
-
+    
     /// <summary>
     /// Represents various extension methods for the Nettle value type enum
     /// </summary>
@@ -132,6 +132,17 @@
                     var pairParser = new KeyValuePairParser();
 
                     convertedValue = pairParser.Parse
+                    (
+                        signature
+                    );
+
+                    break;
+                }
+                case NettleValueType.AnonymousType:
+                {
+                    var typeParser = new AnonymousTypeParser();
+
+                    convertedValue = typeParser.Parse
                     (
                         signature
                     );

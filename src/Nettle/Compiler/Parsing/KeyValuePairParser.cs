@@ -35,7 +35,7 @@
         {
             var signatureBody = UnwrapSignatureBody(signature);
 
-            // Remove wrapping <> characters and split by comma
+            // Remove wrapping '<' and '>' characters and split by comma
             signatureBody = signatureBody.Crop
             (
                 1,
@@ -47,12 +47,11 @@
 
             if (tokens.Length != 2)
             {
+                var message = "'{0}' is not a valid key value pair signature.";
+
                 throw new NettleParseException
                 (
-                    "'{0}' is not a valid key value pair signature.".With
-                    (
-                        signature
-                    )
+                    message.With(signature)
                 );
             }
 

@@ -5,6 +5,7 @@
     using Nettle.Functions;
     using System;
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.Linq;
     using System.Xml;
 
@@ -104,31 +105,66 @@
                     break;
                 }
                 case NettleValueType.KeyValuePair:
+                {
+                    var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
+
+                    var key = ResolveValue
+                    (
+                        ref context,
+                        unresolvedPair.ParsedKey,
+                        unresolvedPair.KeyType
+                    );
+
+                    var value = ResolveValue
+                    (
+                        ref context,
+                        unresolvedPair.ParsedValue,
+                        unresolvedPair.ValueType
+                    );
+
+                    resolvedValue = new KeyValuePair<object, object>
+                    (
+                        key,
+                        value
+                    );
+                    
+                    break;
+                }
+                case NettleValueType.AnonymousType:
+                {
+                    var unresolvedType = (UnresolvedAnonymousType)rawValue;
+                    var resolvedProperties = new Dictionary<string, object>();
+
+                    foreach (var unresolvedProperty in unresolvedType.Properties)
                     {
-                        var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
-
-                        var key = ResolveValue
+                        var propertyValue = ResolveValue
                         (
                             ref context,
-                            unresolvedPair.ParsedKey,
-                            unresolvedPair.KeyType
+                            unresolvedProperty.RawValue,
+                            unresolvedProperty.ValueType
                         );
-
-                        var value = ResolveValue
+                        
+                        resolvedProperties.Add
                         (
-                            ref context,
-                            unresolvedPair.ParsedValue,
-                            unresolvedPair.ValueType
+                            unresolvedProperty.Name,
+                            propertyValue
                         );
-
-                        resolvedValue = new KeyValuePair<object, object>
-                        (
-                            key,
-                            value
-                        );
-
-                        break;
                     }
+
+                    // Convert the property dictionary to an expando object
+                    dynamic eo = resolvedProperties.Aggregate
+                    (
+                        new ExpandoObject() as IDictionary<string, Object>,
+                        (a, p) =>
+                        {
+                            a.Add(p.Key, p.Value);
+                            return a;
+                        }
+                    );
+                    
+                    resolvedValue = eo;
+                    break;
+                }
                 default:
                 {
                     resolvedValue = rawValue;

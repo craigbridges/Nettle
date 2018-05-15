@@ -4,6 +4,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.Linq;
     using System.Reflection;
 
@@ -123,27 +124,43 @@
         {
             if (model != null)
             {
-                var properties = model.GetType().GetProperties
-                (
-                    BindingFlags.Public | BindingFlags.Instance
-                );
-
-                foreach (var property in properties)
+                if (model.GetType() == typeof(ExpandoObject))
                 {
-                    var indexParamaters = property.GetIndexParameters();
+                    var items = (IDictionary<string, object>)model;
 
-                    if (indexParamaters == null || indexParamaters.Length == 0)
+                    foreach (var item in items)
                     {
-                        var propertyValue = property.GetValue
-                        (
-                            model
-                        );
-
                         this.PropertyValues.Add
                         (
-                            property.Name,
-                            propertyValue
+                            item.Key,
+                            item.Value
                         );
+                    }
+                }
+                else
+                {
+                    var properties = model.GetType().GetProperties
+                    (
+                        BindingFlags.Public | BindingFlags.Instance
+                    );
+
+                    foreach (var property in properties)
+                    {
+                        var indexParameters = property.GetIndexParameters();
+
+                        if (indexParameters == null || indexParameters.Length == 0)
+                        {
+                            var propertyValue = property.GetValue
+                            (
+                                model
+                            );
+
+                            this.PropertyValues.Add
+                            (
+                                property.Name,
+                                propertyValue
+                            );
+                        }
                     }
                 }
             }
@@ -266,10 +283,7 @@
 
                 throw new NettleRenderException
                 (
-                    message.With
-                    (
-                        path
-                    )
+                    message.With(path)
                 );
             }
             
@@ -300,43 +314,11 @@
                     );
                 }
                 
-                var currentType = currentValue.GetType();
-                var propertyFound = currentType.HasProperty(segmentName);
-
-                if (false == propertyFound)
-                {
-                    var allowImplicit = IsFlagSet
-                    (
-                        TemplateFlag.AllowImplicitBindings
-                    );
-
-                    if (allowImplicit)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        var message = "The path '{0}' does not contain a property named '{1}'.";
-
-                        throw new NettleRenderException
-                        (
-                            message.With
-                            (
-                                path,
-                                segmentName
-                            )
-                        );
-                    }
-                }
-
-                var nextProperty = currentType.GetProperty
+                currentValue = GetPropertyValue
                 (
+                    currentValue,
+                    path,
                     segmentName
-                );
-
-                currentValue = nextProperty.GetValue
-                (
-                    currentValue
                 );
 
                 if (segment.IndexerInfo.HasIndexer)
@@ -351,6 +333,92 @@
             }
 
             return currentValue;
+        }
+        
+        /// <summary>
+        /// Gets a property value from a model
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="path">The path info</param>
+        /// <param name="propertyName">The property name</param>
+        /// <returns>The matching property value</returns>
+        /// <remarks>
+        /// Models of type ExpandoObject are handled separately to 
+        /// other object types. This is because ExpandoObject types 
+        /// are used for managing anonymous types internally.
+        /// </remarks>
+        private object GetPropertyValue
+            (
+                object model,
+                PathInfo path,
+                string propertyName
+            )
+        {
+            var modelType = model.GetType();
+            var propertyFound = false;
+
+            if (modelType == typeof(ExpandoObject))
+            {
+                var items = (IDictionary<string, object>)model;
+
+                propertyFound = items.ContainsKey
+                (
+                    propertyName
+                );
+            }
+            else
+            {
+                propertyFound = modelType.HasProperty
+                (
+                    propertyName
+                );
+            }
+
+            // Ensure the (or item entry) property exists first
+            if (false == propertyFound)
+            {
+                var allowImplicit = IsFlagSet
+                (
+                    TemplateFlag.AllowImplicitBindings
+                );
+
+                if (allowImplicit)
+                {
+                    return null;
+                }
+                else
+                {
+                    var message = "The path '{0}' does not contain a property named '{1}'.";
+
+                    throw new NettleRenderException
+                    (
+                        message.With
+                        (
+                            path,
+                            propertyName
+                        )
+                    );
+                }
+            }
+
+            if (modelType == typeof(ExpandoObject))
+            {
+                var items = (IDictionary<string, object>)model;
+                
+                return items[propertyName];
+            }
+            else
+            {
+                var matchingProperty = modelType.GetProperty
+                (
+                    propertyName
+                );
+
+                return matchingProperty.GetValue
+                (
+                    model
+                );
+            }
         }
 
         /// <summary>
@@ -427,12 +495,11 @@
 
             if (false == this.Variables.ContainsKey(name))
             {
+                var message = "No variable was defined with the name '{0}'.";
+
                 throw new InvalidOperationException
                 (
-                    "No variable was defined with the name '{0}'.".With
-                    (
-                        name
-                    )
+                    message.With(name)
                 );
             }
 

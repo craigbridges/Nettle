@@ -62,6 +62,8 @@
     <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
     <Compile Include="Compiler\Parsing\Blocks\ConditionalBinding.cs" />
     <Compile Include="Compiler\Parsing\Blocks\ElseIfStatement.cs" />
+    <Compile Include="Compiler\Parsing\Blocks\UnresolvedAnonymousTypeProperty.cs" />
+    <Compile Include="Compiler\Parsing\Blocks\UnresolvedAnonymousType.cs" />
     <Compile Include="Compiler\Parsing\Blocks\WhileLoop.cs" />
     <Compile Include="Compiler\Parsing\Blocks\UnresolvedKeyValuePair.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableDecrementer.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
     <Compile Include="Compiler\Parsing\Blocks\FlagDeclaration.cs" />
     <Compile Include="Compiler\Parsing\Blocks\VariableReassignment.cs" />
+    <Compile Include="Compiler\Parsing\AnonymousTypeParser.cs" />
     <Compile Include="Compiler\Parsing\PathInfo.cs" />
     <Compile Include="Compiler\Parsing\PathSegmentInfo.cs" />
     <Compile Include="Compiler\Parsing\WhileLoopParser.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="Functions\DateTime\ToLocalTimeFunction.cs" />
     <Compile Include="Functions\DateTime\GetDateFunction.cs" />
     <Compile Include="Functions\DateTime\FormatDateFunction.cs" />
+    <Compile Include="Functions\General\IsDefinedFunction.cs" />
     <Compile Include="Functions\Math\RandomDoubleFunction.cs" />
     <Compile Include="Functions\Math\RandomIntegerFunction.cs" />
     <Compile Include="Functions\Math\SmallestNumberFunction.cs" />

@@ -47,6 +47,10 @@
             {
                 type = NettleValueType.KeyValuePair;
             }
+            else if (value.StartsWith("[") && value.EndsWith("]"))
+            {
+                type = NettleValueType.AnonymousType;
+            }
             else
             {
                 // Decide if the value looks like a number or variable
