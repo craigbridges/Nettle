@@ -37,7 +37,7 @@
             var signatureBody = UnwrapSignatureBody(signature);
             var text = signatureBody.RightOf(@"!").Trim();
             var startPosition = positionOffSet;
-            var endPosition = startPosition + (signature.Length - 1);
+            var endPosition = (startPosition + signature.Length);
 
             TrimTemplate
             (

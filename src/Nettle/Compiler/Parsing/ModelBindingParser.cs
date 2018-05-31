@@ -52,7 +52,7 @@
 
             var bindingPath = bindingValue.ToString();
             var startPosition = positionOffSet;
-            var endPosition = startPosition + (signature.Length - 1);
+            var endPosition = (startPosition + signature.Length);
 
             TrimTemplate
             (

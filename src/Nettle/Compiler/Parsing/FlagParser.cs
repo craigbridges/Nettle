@@ -63,7 +63,7 @@
             }
 
             var startPosition = positionOffSet;
-            var endPosition = signature.Length - 1;
+            var endPosition = (startPosition + signature.Length);
 
             TrimTemplate
             (

@@ -88,8 +88,8 @@
             }
             
             var startPosition = positionOffSet;
-            var endPosition = startPosition + (signature.Length - 1);
-            
+            var endPosition = (startPosition + signature.Length);
+
             // Get the condition and model binding expressions
             var conditionSignature = tokens[0];
             var trueSignature = tokens[2];

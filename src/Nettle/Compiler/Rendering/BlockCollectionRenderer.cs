@@ -326,23 +326,7 @@
             var renderer = FindRenderer(block);
             var blockOutput = String.Empty;
 
-            if (ignoreErrors)
-            {
-                try
-                {
-                    blockOutput = renderer.Render
-                    (
-                        ref context,
-                        block,
-                        flags
-                    );
-                }
-                catch
-                {
-                    // NOTE: Purposefully ignore all errors
-                }
-            }
-            else
+            try
             {
                 blockOutput = renderer.Render
                 (
@@ -351,7 +335,25 @@
                     flags
                 );
             }
+            catch (Exception ex)
+            {
+                if (false == ignoreErrors)
+                {
+                    var message = "Exception raised during rendering:" +
+                                  "\r\n\r\n{0}\r\n\r\n{1}";
 
+                    throw new NettleRenderException
+                    (
+                        message.With
+                        (
+                            ex.Message,
+                            block.ToString()
+                        ),
+                        ex
+                    );
+                }
+            }
+            
             return blockOutput;
         }
 

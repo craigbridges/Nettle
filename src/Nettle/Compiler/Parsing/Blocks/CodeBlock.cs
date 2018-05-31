@@ -21,12 +21,30 @@
         public int EndPosition { get; set; }
 
         /// <summary>
+        /// Gets the number of characters in the code block
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                return (this.EndPosition - this.StartPosition);
+            }
+        }
+
+        /// <summary>
         /// Provides a custom string representation of the code block
         /// </summary>
         /// <returns>The string representation</returns>
         public override string ToString()
         {
-            return this.Signature;
+            var description = "[{0}, {1}] \r\n{2}";
+
+            return description.With
+            (
+                this.StartPosition,
+                this.EndPosition,
+                this.Signature
+            );
         }
     }
 }

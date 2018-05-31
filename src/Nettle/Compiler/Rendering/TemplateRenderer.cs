@@ -77,7 +77,10 @@
                     watch.Elapsed
                 );
 
-                output += "\r\n\r\n" + debugInfo;
+                output += "\r\n\r\n{0}".With
+                (
+                    debugInfo
+                );
             }
 
             return output;

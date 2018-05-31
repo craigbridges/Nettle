@@ -104,7 +104,7 @@
                 );
 
                 var startPosition = positionOffSet;
-                var endPosition = startPosition + (blockContent.Length - 1);
+                var endPosition = (startPosition + blockContent.Length);
 
                 templateContent = templateContent.Crop
                 (
@@ -125,7 +125,7 @@
             {
                 var blockContent = String.Copy(templateContent);
                 var startPosition = positionOffSet;
-                var endPosition = startPosition + (templateContent.Length - 1);
+                var endPosition = (startPosition + templateContent.Length);
 
                 positionOffSet = endPosition;
                 templateContent = String.Empty;
