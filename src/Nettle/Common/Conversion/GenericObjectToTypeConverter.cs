@@ -36,11 +36,13 @@
 
                 if (canConvert)
                 {
-                    return (T)System.Convert.ChangeType
-                    (
-                        value,
-                        typeof(T)
-                    );
+	                var t = typeof(T);
+	                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
+	                {
+		                t = Nullable.GetUnderlyingType(t);
+	                }
+
+	                return (T)System.Convert.ChangeType(value, t);
                 }
                 else if (value.GetType() == typeof(string))
                 {
