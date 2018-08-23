@@ -3,19 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle", "Nettle\Nettle.csproj", "{6D2A6A46-FEE4-4DC4-89DC-314808A89050}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Tests", "Nettle.Tests\Nettle.Tests.csproj", "{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Demo.Windows", "Nettle.Demo.Windows\Nettle.Demo.Windows.csproj", "{11832A2F-C733-48F6-B7DD-2B5819B7D564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nettle", "Nettle\Nettle.csproj", "{6D2A6A46-FEE4-4DC4-89DC-314808A89050}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Data", "Nettle.Data\Nettle.Data.csproj", "{424AA266-E3AA-48B3-95CD-400E36266FCB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Web", "Nettle.Web\Nettle.Web.csproj", "{0CE3E0E8-8375-4471-AAFC-65B62441D0A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.NCalc", "Nettle.NCalc\Nettle.NCalc.csproj", "{DCD45240-13C3-4698-9894-347553AD8B81}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Reporting", "Nettle.Reporting\Nettle.Reporting.csproj", "{FE18FF21-BDE5-4075-891A-E93355820AF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +21,6 @@ Global
 		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D2A6A46-FEE4-4DC4-89DC-314808A89050}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E02C74D4-E576-4E2B-8F4B-7A38BB957BBD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Release|Any CPU.Build.0 = Release|Any CPU
 		{424AA266-E3AA-48B3-95CD-400E36266FCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{424AA266-E3AA-48B3-95CD-400E36266FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{424AA266-E3AA-48B3-95CD-400E36266FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +33,6 @@ Global
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE18FF21-BDE5-4075-891A-E93355820AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE18FF21-BDE5-4075-891A-E93355820AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE18FF21-BDE5-4075-891A-E93355820AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE18FF21-BDE5-4075-891A-E93355820AF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
