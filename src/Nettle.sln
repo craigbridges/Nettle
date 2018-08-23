@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Web", "Nettle.Web\Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.NCalc", "Nettle.NCalc\Nettle.NCalc.csproj", "{DCD45240-13C3-4698-9894-347553AD8B81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Tests", "Nettle.Tests\Nettle.Tests.csproj", "{6899BE30-5764-4F12-A5D9-99A182F8A38D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCD45240-13C3-4698-9894-347553AD8B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
