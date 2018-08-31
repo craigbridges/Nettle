@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Nettle.NCalc</Product>
     <Description>An extension for the Nettle templating engine that provides direct integration with NCalc.</Description>
     <Copyright>Copyright © Craig Bridges 2018</Copyright>
