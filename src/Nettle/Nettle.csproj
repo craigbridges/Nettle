@@ -1,235 +1,34 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D2A6A46-FEE4-4DC4-89DC-314808A89050}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nettle</RootNamespace>
-    <AssemblyName>Nettle</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Product>Nettle</Product>
+    <Description>A lightweight .NET templating engine inspired by Handlebars, designed as an alternative solution to solving various content rendering problems faced in .NET applications.
+
+Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.</Description>
+    <Copyright>Copyright © Craig Bridges 2018</Copyright>
+    <Authors>Craig Bridges</Authors>
+    <AssemblyVersion>1.2.4.0</AssemblyVersion>
+    <Version>1.2.4</Version>
+    <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</PackageIconUrl>
+    <PackageReleaseNotes>- Better handling for conversion of nullable data types
+- Added more detail to render errors</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Nettle.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <None Remove="Icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\Conversion\GenericObjectToTypeConverter.cs" />
-    <Compile Include="Common\Extensions\DoubleExtensions.cs" />
-    <Compile Include="Common\Extensions\StringExtensions.cs" />
-    <Compile Include="Common\Extensions\TypeExtensions.cs" />
-    <Compile Include="Common\Extensions\XmlDocumentExtensions.cs" />
-    <Compile Include="Common\IO\NettleView.cs" />
-    <Compile Include="Common\IO\ViewReader.cs" />
-    <Compile Include="Common\Serialization\Grid\DataGrid.cs" />
-    <Compile Include="Common\Serialization\Grid\DataGridRow.cs" />
-    <Compile Include="Common\Serialization\Grid\IDataGrid.cs" />
-    <Compile Include="Common\Serialization\Grid\IDataGridRow.cs" />
-    <Compile Include="Common\Validation\TypeConverterChecker.cs" />
-    <Compile Include="Common\Validation\Validate.cs" />
-    <Compile Include="Compiler\DefaultNettleResolver.cs" />
-    <Compile Include="Compiler\IRegisteredTemplateRepository.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\ConditionalBinding.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\ElseIfStatement.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\UnresolvedAnonymousTypeProperty.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\UnresolvedAnonymousType.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\WhileLoop.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\UnresolvedKeyValuePair.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\VariableDecrementer.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\VariableAdjuster.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\VariableIncrementer.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\RenderPartial.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\FlagDeclaration.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\VariableReassignment.cs" />
-    <Compile Include="Compiler\Parsing\AnonymousTypeParser.cs" />
-    <Compile Include="Compiler\Parsing\PathInfo.cs" />
-    <Compile Include="Compiler\Parsing\PathSegmentInfo.cs" />
-    <Compile Include="Compiler\Parsing\WhileLoopParser.cs" />
-    <Compile Include="Compiler\Parsing\KeyValuePairParser.cs" />
-    <Compile Include="Compiler\Parsing\Conditions\BooleanCondition.cs" />
-    <Compile Include="Compiler\Parsing\Conditions\BooleanConditionValue.cs" />
-    <Compile Include="Compiler\Parsing\Conditions\BooleanExpression.cs" />
-    <Compile Include="Compiler\Parsing\Conditions\BooleanConditionOperator.cs" />
-    <Compile Include="Compiler\Parsing\Conditions\BooleanExpressionParser.cs" />
-    <Compile Include="Compiler\Parsing\ConditionalBindingParser.cs" />
-    <Compile Include="Compiler\Parsing\NettleValueResolver.cs" />
-    <Compile Include="Compiler\Parsing\Tokenizer.cs" />
-    <Compile Include="Compiler\Parsing\VariableAdjusterParser.cs" />
-    <Compile Include="Compiler\Parsing\IndexerInfo.cs" />
-    <Compile Include="Compiler\Parsing\RenderPartialParser.cs" />
-    <Compile Include="Compiler\Parsing\FlagParser.cs" />
-    <Compile Include="Compiler\Parsing\VariableDecrementerParser.cs" />
-    <Compile Include="Compiler\Parsing\VariableIncrementerParser.cs" />
-    <Compile Include="Compiler\Parsing\VariableReassignmentParser.cs" />
-    <Compile Include="Compiler\Rendering\BlockCollectionRenderer.cs" />
-    <Compile Include="Compiler\Rendering\BooleanExpressionEvaluator.cs" />
-    <Compile Include="Compiler\Rendering\CommentRenderer.cs" />
-    <Compile Include="Compiler\Rendering\ConditionalBindingRenderer.cs" />
-    <Compile Include="Compiler\Rendering\WhileLoopRenderer.cs" />
-    <Compile Include="Compiler\Rendering\PartialRenderer.cs" />
-    <Compile Include="Compiler\Rendering\ForEachLoopRenderer.cs" />
-    <Compile Include="Compiler\Rendering\IfStatementRenderer.cs" />
-    <Compile Include="Compiler\Rendering\VariableAdjusterRenderer.cs" />
-    <Compile Include="Compiler\Rendering\VariableDecrementerRenderer.cs" />
-    <Compile Include="Compiler\Rendering\VariableIncrementerRenderer.cs" />
-    <Compile Include="Compiler\TemplateContextExtensions.cs" />
-    <Compile Include="Compiler\TemplateFlag.cs" />
-    <Compile Include="Compiler\Rendering\VariableReassignmentRenderer.cs" />
-    <Compile Include="Compiler\Rendering\FlagRenderer.cs" />
-    <Compile Include="Compiler\Rendering\VariableRenderer.cs" />
-    <Compile Include="Compiler\Rendering\FunctionRenderer.cs" />
-    <Compile Include="Compiler\Rendering\ModelBindingRenderer.cs" />
-    <Compile Include="Compiler\Rendering\ContentRenderer.cs" />
-    <Compile Include="Compiler\Rendering\IBlockRenderer.cs" />
-    <Compile Include="Compiler\Rendering\ITemplateRenderer.cs" />
-    <Compile Include="Compiler\Validation\FunctionValidator.cs" />
-    <Compile Include="Compiler\Validation\ForLoopValidator.cs" />
-    <Compile Include="Compiler\Validation\ITemplateValidator.cs" />
-    <Compile Include="Compiler\NettleCompiler.cs" />
-    <Compile Include="Compiler\Validation\NettleValidationException.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\Comment.cs" />
-    <Compile Include="Compiler\Parsing\CommentParser.cs" />
-    <Compile Include="Compiler\Parsing\ModelBindingParser.cs" />
-    <Compile Include="Compiler\Parsing\IfStatementParser.cs" />
-    <Compile Include="Compiler\Parsing\ForEachLoopParser.cs" />
-    <Compile Include="Compiler\Parsing\NestedBlockParser.cs" />
-    <Compile Include="Compiler\Parsing\IBlockifier.cs" />
-    <Compile Include="Compiler\Parsing\Blockifier.cs" />
-    <Compile Include="Compiler\NettleRenderException.cs" />
-    <Compile Include="Compiler\Parsing\NettleValueTypeExtensions.cs" />
-    <Compile Include="Compiler\Parsing\VariableParser.cs" />
-    <Compile Include="Compiler\Parsing\FunctionParser.cs" />
-    <Compile Include="Compiler\Parsing\IBlockParser.cs" />
-    <Compile Include="Compiler\Parsing\NettleParser.cs" />
-    <Compile Include="Compiler\RegisteredTemplate.cs" />
-    <Compile Include="Compiler\RegisteredTemplateRepository.cs" />
-    <Compile Include="Compiler\Rendering\NettleRendererBase.cs" />
-    <Compile Include="Compiler\Rendering\TemplateRenderer.cs" />
-    <Compile Include="Compiler\Validation\TemplateValidationError.cs" />
-    <Compile Include="Compiler\Validation\TemplateValidationResult.cs" />
-    <Compile Include="Compiler\Validation\TemplateValidator.cs" />
-    <Compile Include="Compiler\Validation\IBlockValidator.cs" />
-    <Compile Include="Compiler\Validation\VariableValidator.cs" />
-    <Compile Include="Functions\Conversion\FromBase64StringFunction.cs" />
-    <Compile Include="Functions\Conversion\ToStringFunction.cs" />
-    <Compile Include="Functions\Conversion\ToSingleFunction.cs" />
-    <Compile Include="Functions\Conversion\ToInt16Function.cs" />
-    <Compile Include="Functions\Conversion\ToDoubleFunction.cs" />
-    <Compile Include="Functions\Conversion\ToDecimalFunction.cs" />
-    <Compile Include="Functions\Conversion\ToDateTimeFunction.cs" />
-    <Compile Include="Functions\Conversion\ToCharFunction.cs" />
-    <Compile Include="Functions\Conversion\ToByteFunction.cs" />
-    <Compile Include="Functions\Conversion\ToBooleanFunction.cs" />
-    <Compile Include="Functions\Conversion\ToBase64Function.cs" />
-    <Compile Include="Functions\Conversion\ToInt32Function.cs" />
-    <Compile Include="Functions\DateTime\AddYearsFunction.cs" />
-    <Compile Include="Functions\DateTime\AddSecondsFunction.cs" />
-    <Compile Include="Functions\DateTime\AddMonthsFunction.cs" />
-    <Compile Include="Functions\DateTime\AddMinutesFunction.cs" />
-    <Compile Include="Functions\DateTime\AddMillisecondsFunction.cs" />
-    <Compile Include="Functions\DateTime\AddHoursFunction.cs" />
-    <Compile Include="Functions\DateTime\ConvertTimeFunction.cs" />
-    <Compile Include="Functions\DateTime\AddDaysFunction.cs" />
-    <Compile Include="Functions\DateTime\ParseDateFunction.cs" />
-    <Compile Include="Functions\DateTime\ToLocalTimeFunction.cs" />
-    <Compile Include="Functions\DateTime\GetDateFunction.cs" />
-    <Compile Include="Functions\DateTime\FormatDateFunction.cs" />
-    <Compile Include="Functions\General\IsDefinedFunction.cs" />
-    <Compile Include="Functions\Math\RandomDoubleFunction.cs" />
-    <Compile Include="Functions\Math\RandomIntegerFunction.cs" />
-    <Compile Include="Functions\Math\SmallestNumberFunction.cs" />
-    <Compile Include="Functions\Math\LargestNumberFunction.cs" />
-    <Compile Include="Functions\Math\MultiplyFunction.cs" />
-    <Compile Include="Functions\Math\DivideFunction.cs" />
-    <Compile Include="Functions\Math\SubtractFunction.cs" />
-    <Compile Include="Functions\Math\CountFunction.cs" />
-    <Compile Include="Functions\Math\AddFunction.cs" />
-    <Compile Include="Functions\Math\AverageFunction.cs" />
-    <Compile Include="Functions\Math\SumFunction.cs" />
-    <Compile Include="Functions\String\FormatStringFunction.cs" />
-    <Compile Include="Functions\String\ToLowerFunction.cs" />
-    <Compile Include="Functions\String\ToTitleCaseFunction.cs" />
-    <Compile Include="Functions\String\ToUpperFunction.cs" />
-    <Compile Include="Functions\String\ReverseFunction.cs" />
-    <Compile Include="Functions\String\JoinFunction.cs" />
-    <Compile Include="Functions\String\PadRightFunction.cs" />
-    <Compile Include="Functions\Conversion\ToInt64Function.cs" />
-    <Compile Include="Functions\Math\RoundFunction.cs" />
-    <Compile Include="Functions\String\PadLeftFunction.cs" />
-    <Compile Include="Functions\FunctionBase.cs" />
-    <Compile Include="Functions\FunctionExecutionResult.cs" />
-    <Compile Include="Functions\FunctionParameter.cs" />
-    <Compile Include="Functions\FunctionParameterConfiguration.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\ContentBlock.cs" />
-    <Compile Include="Compiler\Parsing\TemplateParser.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\FunctionCallParameter.cs" />
-    <Compile Include="Compiler\Parsing\NettleValueType.cs" />
-    <Compile Include="Functions\FunctionParameterExtensions.cs" />
-    <Compile Include="Functions\IFunction.cs" />
-    <Compile Include="Functions\String\HtmlEncodeFunction.cs" />
-    <Compile Include="Functions\IFunctionRepository.cs" />
-    <Compile Include="Functions\String\ReplaceFunction.cs" />
-    <Compile Include="Functions\FunctionRepository.cs" />
-    <Compile Include="Functions\String\ConcatFunction.cs" />
-    <Compile Include="Functions\String\TruncateFunction.cs" />
-    <Compile Include="Compiler\INettleCompiler.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\CodeBlock.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\ForEachLoop.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\IfStatement.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\FunctionCall.cs" />
-    <Compile Include="Compiler\Parsing\ITemplateParser.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\ModelBinding.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\NestableCodeBlock.cs" />
-    <Compile Include="Compiler\Parsing\NettleParseException.cs" />
-    <Compile Include="Compiler\Template.cs" />
-    <Compile Include="Compiler\Parsing\Blocks\VariableDeclaration.cs" />
-    <Compile Include="INettleActivator.cs" />
-    <Compile Include="INettleResolver.cs" />
-    <Compile Include="NettleEngine.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Compiler\TemplateContext.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
+
 </Project>
