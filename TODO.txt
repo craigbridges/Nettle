@@ -1,13 +1,7 @@
 TODO:
 -----
 
-- Update CsvHelper to latest versions
-
-- Release NuGet package for latest version in .netstandard
-
-- Environment Variables
-	- Create environment variables that can be accessed in the template by name, these can be loaded on the fly by an environment variable provider (e.g. web.config or appsettings.json)
-	- This would be useful for scenarios such as specifying an endpoint URL that changes across deployments but we don't want to have multiple versions of the template
+- Create wiki entry for NettleEnvironment (including the GetEnvironmentVariable function)
 
 - Fix: Could not load file or assembly 'System.Data.SqlClient, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. The system cannot find the file specified.
 	- E.g. {{var results1 = @ExecuteQuery("Demo", query1)}}
