@@ -1,6 +1,10 @@
 TODO:
 -----
 
+- Update CsvHelper to latest versions
+
+- Release NuGet package for latest version in .netstandard
+
 - Environment Variables
 	- Create environment variables that can be accessed in the template by name, these can be loaded on the fly by an environment variable provider (e.g. web.config or appsettings.json)
 	- This would be useful for scenarios such as specifying an endpoint URL that changes across deployments but we don't want to have multiple versions of the template
