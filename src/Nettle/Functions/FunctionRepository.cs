@@ -69,10 +69,7 @@
             {
                 throw new InvalidOperationException
                 (
-                    "A function with the name '{0}' has already been added.".With
-                    (
-                        name
-                    )
+                    $"A function with the name '{name}' has already been added."
                 );
             }
 
@@ -118,10 +115,7 @@
             {
                 throw new KeyNotFoundException
                 (
-                    "No function was found matching the name '{0}'.".With
-                    (
-                        name
-                    )
+                    $"No function was found matching the name '{name}'."
                 );
             }
 

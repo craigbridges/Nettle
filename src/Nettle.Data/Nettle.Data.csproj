@@ -7,12 +7,13 @@
     <Description>An extension for the Nettle templating engine that provides support for database and file querying.</Description>
     <Copyright>Copyright © Craig Bridges 2018</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <Version>1.2.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</PackageIconUrl>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>- Ported entire library to .NET Standard 2.0
+- Upgraded CsvHelper to version 7.1.1</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
 

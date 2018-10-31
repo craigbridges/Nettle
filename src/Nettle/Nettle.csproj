@@ -9,13 +9,14 @@
 Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.</Description>
     <Copyright>Copyright © Craig Bridges 2018</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>1.2.4.0</AssemblyVersion>
-    <Version>1.2.4</Version>
+    <AssemblyVersion>1.3.0</AssemblyVersion>
+    <Version>1.3.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</PackageIconUrl>
-    <PackageReleaseNotes>- Better handling for conversion of nullable data types
-- Added more detail to render errors</PackageReleaseNotes>
+    <PackageReleaseNotes>- Ported entire library to .NET Standard 2.0
+- Created NettleEnvironment for managing environment variables
+- Created GetEnvironmentVariable Nettle function</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
 

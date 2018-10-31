@@ -54,10 +54,7 @@
             {
                 throw new InvalidOperationException
                 (
-                    "The function {0} has already been enabled.".With
-                    (
-                        this.Name
-                    )
+                    $"The function {this.Name} has already been enabled."
                 );
             }
 
@@ -73,10 +70,7 @@
             {
                 throw new InvalidOperationException
                 (
-                    "The function {0} has already been disabled.".With
-                    (
-                        this.Name
-                    )
+                    $"The function {this.Name} has already been disabled."
                 );
             }
 
@@ -190,10 +184,7 @@
             {
                 throw new InvalidOperationException
                 (
-                    "A parameter named '{0}' has already been defined.".With
-                    (
-                        configuration.Name
-                    )
+                    $"The parameter '{configuration.Name}' has already been defined."
                 );
             }
 
@@ -259,10 +250,7 @@
             {
                 throw new KeyNotFoundException
                 (
-                    "No parameter was found matching the name '{0}'.".With
-                    (
-                        name
-                    )
+                    $"No parameter was found matching the name '{name}'."
                 );
             }
 
@@ -450,10 +438,7 @@
             {
                 throw new InvalidOperationException
                 (
-                    "The function '{0}' cannot be executed because it's disabled.".With
-                    (
-                        this.Name
-                    )
+                    $"The Nettle function '{this.Name}' has been disabled."
                 );
             }
 
@@ -471,11 +456,7 @@
                 {
                     throw new ArgumentException
                     (
-                        "{0} parameter values were expected, {1} were supplied.".With
-                        (
-                            expectedCount,
-                            parameterCount
-                        )
+                        $"{expectedCount} parameters were expected, {parameterCount} were supplied."
                     );
                 }
             }
@@ -494,11 +475,7 @@
                         {
                             throw new ArgumentException
                             (
-                                "The value '{0}' is not valid for the parameter {1}.".With
-                                (
-                                    value,
-                                    parameter.Name
-                                )
+                                $"'{value}' is not valid for the parameter {parameter.Name}."
                             );
                         }
                     }
