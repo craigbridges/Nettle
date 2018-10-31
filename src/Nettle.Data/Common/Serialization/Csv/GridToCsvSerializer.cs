@@ -27,7 +27,7 @@
                 return String.Empty;
             }
 
-            var configuration = new CsvConfiguration()
+            var configuration = new Configuration()
             {
                 Delimiter = ",",
                 HasHeaderRecord = true,

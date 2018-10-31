@@ -32,7 +32,7 @@
                 {
                     var rowValues = new Dictionary<string, object>();
 
-                    foreach (var header in csv.FieldHeaders)
+                    foreach (var header in csv.Context.HeaderRecord)
                     {
                         rowValues[header] = csv.GetField
                         (
