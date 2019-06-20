@@ -52,7 +52,7 @@
                     {
                         case BooleanConditionOperator.And:
                         {
-                            if (previousConditionResult & conditionResult)
+                            if (previousConditionResult && conditionResult)
                             {
                                 expressionResult = true; 
                             }
@@ -66,7 +66,7 @@
 
                         case BooleanConditionOperator.Or:
                         {
-                            if (previousConditionResult | conditionResult)
+                            if (previousConditionResult || conditionResult)
                             {
                                 expressionResult = true;
                             }
@@ -137,7 +137,7 @@
                             var leftResult = ToBool(ref context, leftValue);
                             var rightResult = ToBool(ref context, rightValue);
 
-                            result = (leftResult & rightResult);
+                            result = (leftResult && rightResult);
                             break;
                         }
 
@@ -146,7 +146,7 @@
                             var leftResult = ToBool(ref context, leftValue);
                             var rightResult = ToBool(ref context, rightValue);
 
-                            result = (leftResult | rightResult);
+                            result = (leftResult || rightResult);
                             break;
                         }
 
