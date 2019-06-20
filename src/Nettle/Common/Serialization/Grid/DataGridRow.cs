@@ -53,7 +53,7 @@
                 {
                     var matchingItem = values.First
                     (
-                        m => m.Key.ToLower() == column.ToLower()
+                        m => m.Key.Equals(column, StringComparison.OrdinalIgnoreCase)
                     );
 
                     _columnValues.Add
@@ -143,7 +143,7 @@
 
             var columnExists = _columnValues.Any
             (
-                m => m.Key.ToLower() == columnName.ToLower()
+                m => m.Key.Equals(columnName, StringComparison.OrdinalIgnoreCase)
             );
 
             if (false == columnExists)
@@ -158,7 +158,7 @@
 
             var entry = _columnValues.FirstOrDefault
             (
-                m => m.Key.ToLower() == columnName.ToLower()
+                m => m.Key.Equals(columnName, StringComparison.OrdinalIgnoreCase)
             );
 
             return entry.Value;

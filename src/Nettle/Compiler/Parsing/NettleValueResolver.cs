@@ -58,7 +58,7 @@
                 {
                     type = NettleValueType.Number;
                 }
-                else if (value.ToLower() == "true" || value.ToLower() == "false")
+                else if (value.Equals("true", StringComparison.OrdinalIgnoreCase) || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                 {
                     type = NettleValueType.Boolean;
                 }
