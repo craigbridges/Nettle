@@ -617,11 +617,9 @@
                     }
                     else
                     {
-                        var message = "No variable has been defined with the name '{0}'.";
-
                         throw new NettleRenderException
                         (
-                            message.With(variablePath)
+                            $"No variable exists with the name '{variablePath}'."
                         );
                     }
                 }

@@ -128,19 +128,18 @@
         {
             Validate.IsNotNull(partial);
 
+            var templateName = partial.TemplateName;
+
             var previousCallFound = context.PartialCallStack.Contains
             (
-                partial.TemplateName
+                templateName
             );
 
             if (previousCallFound)
             {
                 throw new NettleRenderException
                 (
-                    "A circular reference to '{0}' was detected.".With
-                    (
-                        partial.TemplateName
-                    )
+                    $"A circular reference to '{templateName}' was detected."
                 );
             }
         }

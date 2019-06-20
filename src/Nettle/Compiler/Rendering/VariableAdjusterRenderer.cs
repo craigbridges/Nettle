@@ -99,7 +99,7 @@
             {
                 throw new NettleRenderException
                 (
-                    "The value for '{0}' cannot be adjusted because it is null."
+                    $"{variableName} cannot be adjusted because it is null."
                 );
             }
 
@@ -107,7 +107,7 @@
             {
                 throw new NettleRenderException
                 (
-                    "The value for '{0}' is not a numeric type."
+                    $"{variableName} is not a numeric type."
                 );
             }
 
