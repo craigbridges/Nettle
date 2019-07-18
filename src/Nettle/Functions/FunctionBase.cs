@@ -177,7 +177,7 @@
 
             var matchFound = this.Parameters.Any
             (
-                m => m.Name.ToLower() == configuration.Name.ToLower()
+                m => m.Name.Equals(configuration.Name, StringComparison.OrdinalIgnoreCase)
             );
 
             if (matchFound)
@@ -243,7 +243,7 @@
 
             var parameter = this.Parameters.FirstOrDefault
             (
-                m => m.Name.ToLower() == name.ToLower()
+                m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
             );
 
             if (parameter == null)
