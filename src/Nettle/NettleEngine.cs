@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
 
     /// <summary>
     /// Represents the entry point for all Nettle actions
@@ -44,6 +45,10 @@
         /// Sets the default time zone to use for all date times
         /// </summary>
         /// <param name="timeZoneId">The time zone ID</param>
+        /// <exception cref="OutOfMemoryException"></exception>
+        /// <exception cref="TimeZoneNotFoundException"></exception>
+        /// <exception cref="SecurityException"></exception>
+        /// <exception cref="InvalidTimeZoneException"></exception>
         public static void SetDefaultTimeZone
             (
                 string timeZoneId

@@ -19,7 +19,6 @@
             (
                 IFunctionRepository functionRepository
             )
-
             : base(functionRepository)
         { }
 

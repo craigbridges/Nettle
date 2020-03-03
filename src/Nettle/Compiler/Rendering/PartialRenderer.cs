@@ -8,8 +8,8 @@
     /// </summary>
     internal class PartialRenderer : NettleRendererBase, IBlockRenderer
     {
-        private IRegisteredTemplateRepository _templateRepository;
-        private BlockCollectionRenderer _collectionRenderer;
+        private readonly IRegisteredTemplateRepository _templateRepository;
+        private readonly BlockCollectionRenderer _collectionRenderer;
 
         /// <summary>
         /// Constructs the renderer with required dependencies

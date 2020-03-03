@@ -230,11 +230,9 @@
                     }
                     else
                     {
-                        var message = "No property could be found with the name '{0}'.";
-
                         throw new NettleRenderException
                         (
-                            message.With(propertyPath)
+                            % "No property could be found with the name '{propertyPath}'."
                         );
                     }
                 }
