@@ -232,7 +232,7 @@
                     {
                         throw new NettleRenderException
                         (
-                            % "No property could be found with the name '{propertyPath}'."
+                            $"No property could be found with the name '{propertyPath}'."
                         );
                     }
                 }
