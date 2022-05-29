@@ -182,7 +182,7 @@ public abstract class FunctionBase : IFunction
     /// <param name="parameterName">The parameter name</param>
     /// <param name="parameterValues">An array of values</param>
     /// <returns>The parameter value found</returns>
-    protected virtual object GetParameterValue(string parameterName, params object[] parameterValues)
+    protected virtual object? GetParameterValue(string parameterName, params object?[] parameterValues)
     {
         var parameter = GetParameter(parameterName);
         var index = Parameters.IndexOf(parameter);
@@ -204,7 +204,7 @@ public abstract class FunctionBase : IFunction
     /// <param name="parameterName">The parameter name</param>
     /// <param name="parameterValues">An array of values</param>
     /// <returns>The parameter value found</returns>
-    protected virtual T? GetParameterValue<T>(string parameterName, params object[] parameterValues)
+    protected virtual T? GetParameterValue<T>(string parameterName, params object?[] parameterValues)
     {
         var rawValue = GetParameterValue(parameterName, parameterValues);
 

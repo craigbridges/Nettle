@@ -1,152 +1,116 @@
-﻿namespace Nettle.Compiler.Validation
+﻿namespace Nettle.Compiler.Validation;
+
+using Nettle.Compiler.Parsing.Blocks;
+
+/// <summary>
+/// Represents a function code block validator
+/// </summary>
+internal sealed class FunctionValidator : IBlockValidator
 {
-    using Nettle.Compiler.Parsing.Blocks;
-    using Nettle.Functions;
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly IFunctionRepository _functionRepository;
+
+    public FunctionValidator(IFunctionRepository functionRepository)
+    {
+        Validate.IsNotNull(functionRepository);
+
+        _functionRepository = functionRepository;
+    }
 
     /// <summary>
-    /// Represents a function code block validator
+    /// Validates the templates function calls
     /// </summary>
-    internal sealed class FunctionValidator : IBlockValidator
+    /// <param name="template">The template</param>
+    /// <returns>An array of errors</returns>
+    /// <remarks>
+    /// There are two steps to function validation:
+    /// 
+    /// 1) Check all function names are valid (i.e. matching function is found)
+    /// 2) Check the correct parameter values are supplied
+    /// </remarks>
+    public TemplateValidationError[] ValidateTemplate(Template template)
     {
-        private IFunctionRepository _functionRepository;
+        Validate.IsNotNull(template);
 
-        /// <summary>
-        /// Constructs the template validator with required dependencies
-        /// </summary>
-        /// <param name="functionRepository">The function repository</param>
-        public FunctionValidator
-            (
-                IFunctionRepository functionRepository
-            )
+        var functionCalls = template.FindBlocks<FunctionCall>();
+
+        if (false == functionCalls.Any())
         {
-            Validate.IsNotNull(functionRepository);
-
-            _functionRepository = functionRepository;
+            return Array.Empty<TemplateValidationError>();
         }
-
-        /// <summary>
-        /// Validates the templates function calls
-        /// </summary>
-        /// <param name="template">The template</param>
-        /// <returns>An array of errors</returns>
-        /// <remarks>
-        /// There are two steps to function validation:
-        /// 
-        /// 1) Check all function names are valid (i.e. matching function is found)
-        /// 2) Check the correct parameter values are supplied
-        /// </remarks>
-        public TemplateValidationError[] ValidateTemplate
-            (
-                Template template
-            )
+        else
         {
-            Validate.IsNotNull(template);
+            var errors = new List<TemplateValidationError>();
 
-            var functionCalls = template.FindBlocks<FunctionCall>();
-
-            if (false == functionCalls.Any())
+            foreach (var call in functionCalls)
             {
-                return new TemplateValidationError[] { };
-            }
-            else
-            {
-                var errors = new List<TemplateValidationError>();
+                var exists = _functionRepository.FunctionExists(call.FunctionName);
 
-                foreach (var call in functionCalls)
+                if (false == exists)
                 {
-                    var exists = _functionRepository.FunctionExists
+                    errors.Add
                     (
-                        call.FunctionName
+                        new TemplateValidationError
+                        (
+                            call,
+                            $"No function was found with the name '{call.FunctionName}'."
+                        )
                     );
+                }
+                else
+                {
+                    var function = _functionRepository.GetFunction(call.FunctionName);
 
-                    if (false == exists)
+                    var parameters = function.GetAllParameters();
+                    var values = call.ParameterValues;
+
+                    if (parameters.Count() != values.Length)
                     {
-                        errors.Add
-                        (
-                            new TemplateValidationError
+                        var requiredParameters = function.GetRequiredParameters();
+
+                        if (requiredParameters.Count() > values.Length)
+                        {
+                            errors.Add
                             (
-                                call,
-                                "No function was found with the name '{0}'.".With
+                                new TemplateValidationError
                                 (
-                                    call.FunctionName
+                                    call,
+                                    $"One or more parameter values are missing for '{call.FunctionName}'."
                                 )
-                            )
-                        );
-                    }
-                    else
-                    {
-                        var function = _functionRepository.GetFunction
-                        (
-                            call.FunctionName
-                        );
-
-                        var parameters = function.GetAllParameters();
-                        var values = call.ParameterValues;
-
-                        if (parameters.Count() != values.Count())
-                        {
-                            var requiredParameters = function.GetRequiredParameters();
-
-                            if (requiredParameters.Count() > values.Count())
-                            {
-                                errors.Add
-                                (
-                                    new TemplateValidationError
-                                    (
-                                        call,
-                                        "One or more parameter values are missing for '{0}'.".With
-                                        (
-                                            call.FunctionName
-                                        )
-                                    )
-                                );
-                            }
+                            );
                         }
+                    }
 
-                        var counter = 0;
+                    var counter = 0;
 
-                        if (parameters.Any())
+                    if (parameters.Any())
+                    {
+                        foreach (var value in values)
                         {
-                            foreach (var value in values)
+                            if (counter < parameters.Count())
                             {
-                                if (counter < parameters.Count())
+                                var matchingParameter = parameters.ElementAt(counter);
+                                var acceptsValue = matchingParameter.Accepts(value);
+
+                                if (false == acceptsValue)
                                 {
-                                    var matchingParameter = parameters.ElementAt
+                                    errors.Add
                                     (
-                                        counter
-                                    );
-
-                                    var acceptsValue = matchingParameter.Accepts
-                                    (
-                                        value
-                                    );
-
-                                    if (false == acceptsValue)
-                                    {
-                                        errors.Add
+                                        new TemplateValidationError
                                         (
-                                            new TemplateValidationError
-                                            (
-                                                call,
-                                                "The parameter value '{0}' is not valid.".With
-                                                (
-                                                    call.FunctionName
-                                                )
-                                            )
-                                        );
-                                    }
+                                            call,
+                                            $"The parameter value '{call.FunctionName}' is not valid."
+                                        )
+                                    );
                                 }
-
-                                counter++;
                             }
+
+                            counter++;
                         }
                     }
                 }
-
-                return errors.ToArray();
             }
+
+            return errors.ToArray();
         }
     }
 }

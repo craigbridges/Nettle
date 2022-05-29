@@ -2,9 +2,7 @@
 {
     using Nettle.Compiler.Parsing;
     using Nettle.Compiler.Parsing.Blocks;
-    using System.Collections.Generic;
-    using System.Linq;
-
+    
     /// <summary>
     /// Represents a for each loop code block validator
     /// </summary>
@@ -15,10 +13,7 @@
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>An array of errors</returns>
-        public TemplateValidationError[] ValidateTemplate
-            (
-                Template template
-            )
+        public TemplateValidationError[] ValidateTemplate(Template template)
         {
             Validate.IsNotNull(template);
 
@@ -26,7 +21,7 @@
 
             if (false == loops.Any())
             {
-                return new TemplateValidationError[] { };
+                return Array.Empty<TemplateValidationError>();
             }
             else
             {
@@ -38,16 +33,7 @@
                     {
                         case NettleValueType.Number:
                         case NettleValueType.Boolean:
-
-                            errors.Add
-                            (
-                                new TemplateValidationError
-                                (
-                                    loop,
-                                    "Invalid for each loop collection type."
-                                )
-                            );
-
+                            errors.Add(new TemplateValidationError(loop, "Invalid for each loop collection type."));
                             break;
                     }
                 }

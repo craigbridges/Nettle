@@ -5,33 +5,7 @@
     /// <summary>
     /// Represents a template validation error
     /// </summary>
-    internal class TemplateValidationError
-    {
-        /// <summary>
-        /// Constructs the error with the block and message
-        /// </summary>
-        /// <param name="block">The code block</param>
-        /// <param name="message">The error message</param>
-        public TemplateValidationError
-            (
-                CodeBlock block,
-                string message
-            )
-        {
-            Validate.IsNotNull(block);
-
-            this.Block = block;
-            this.Message = message;
-        }
-
-        /// <summary>
-        /// Gets the code block
-        /// </summary>
-        public CodeBlock Block { get; private set; }
-
-        /// <summary>
-        /// Gets the error message
-        /// </summary>
-        public string Message { get; private set; }
-    }
+    /// <param name="Block">The invalid code block</param>
+    /// <param name="Message">The error message</param>
+    internal record class TemplateValidationError(CodeBlock Block, string Message);
 }

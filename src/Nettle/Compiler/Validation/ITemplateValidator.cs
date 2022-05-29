@@ -14,9 +14,6 @@
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>The validation result</returns>
-        TemplateValidationResult ValidateTemplate
-        (
-            Template template
-        );
+        TemplateValidationResult ValidateTemplate(Template template);
     }
 }

@@ -10,9 +10,6 @@
         /// </summary>
         /// <param name="template">The template to validate</param>
         /// <returns>The validation errors</returns>
-        TemplateValidationError[] ValidateTemplate
-        (
-            Template template
-        );
+        TemplateValidationError[] ValidateTemplate(Template template);
     }
 }

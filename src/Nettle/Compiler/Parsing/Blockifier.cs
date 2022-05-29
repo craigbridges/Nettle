@@ -8,35 +8,21 @@ internal sealed class Blockifier : NettleParser, IBlockifier
 
     public Blockifier()
     {
-        var commentParser = new CommentParser();
-        var bindingParser = new ModelBindingParser();
-        var conditionalBindingParser = new ConditionalBindingParser();
-        var functionParser = new FunctionParser();
-        var variableParser = new VariableParser();
-        var variableReassignmentParser = new VariableReassignmentParser();
-        var variableIncrementerParser = new VariableIncrementerParser();
-        var variableDecrementerParser = new VariableDecrementerParser();
-        var flagParser = new FlagParser();
-        var eachLoopParser = new ForEachLoopParser(this);
-        var whileLoopParser = new WhileLoopParser(this);
-        var ifParser = new IfStatementParser(this);
-        var partialParser = new RenderPartialParser();
-
         _parsers = new List<IBlockParser>()
         {
-            commentParser,
-            bindingParser,
-            conditionalBindingParser,
-            functionParser,
-            variableParser,
-            variableReassignmentParser,
-            variableIncrementerParser,
-            variableDecrementerParser,
-            flagParser,
-            eachLoopParser,
-            whileLoopParser,
-            ifParser,
-            partialParser
+            new CommentParser(),
+            new ModelBindingParser(),
+            new ConditionalBindingParser(),
+            new FunctionParser(),
+            new VariableParser(),
+            new VariableReassignmentParser(),
+            new VariableIncrementerParser(),
+            new VariableDecrementerParser(),
+            new FlagParser(),
+            new ForEachLoopParser(this),
+            new WhileLoopParser(this),
+            new IfStatementParser(this),
+            new RenderPartialParser()
         };
     }
 
