@@ -10,9 +10,6 @@
         /// </summary>
         /// <param name="content">The content to parse</param>
         /// <returns>The template</returns>
-        Template Parse
-        (
-            string content
-        );
+        Template Parse(string content);
     }
 }

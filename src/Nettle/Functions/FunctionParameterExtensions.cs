@@ -3,9 +3,6 @@
     using Nettle.Compiler.Parsing;
     using Nettle.Compiler.Parsing.Blocks;
 
-    /// <summary>
-    /// Represents various extension methods for function parameters
-    /// </summary>
     public static class FunctionParameterExtensions
     {
         /// <summary>
@@ -14,11 +11,7 @@
         /// <param name="parameter">The function parameter</param>
         /// <param name="parameterValue">The parameter value</param>
         /// <returns>True, if it accepts the value; otherwise false</returns>
-        internal static bool Accepts
-            (
-                this FunctionParameter parameter,
-                FunctionCallParameter parameterValue
-            )
+        internal static bool Accepts(this FunctionParameter parameter, FunctionCallParameter parameterValue)
         {
             Validate.IsNotNull(parameter);
             Validate.IsNotNull(parameterValue);
@@ -35,24 +28,15 @@
 
             if (parameter.DataType == typeof(string))
             {
-                return 
-                (
-                    parameterValue.Type == NettleValueType.String
-                );
+                return parameterValue.Type == NettleValueType.String;
             }
             else if (parameter.DataType.IsNumeric())
             {
-                return
-                (
-                    parameterValue.Type == NettleValueType.Number
-                );
+                return parameterValue.Type == NettleValueType.Number;
             }
             else if (parameter.DataType == typeof(bool))
             {
-                return
-                (
-                    parameterValue.Type == NettleValueType.Boolean
-                );
+                return parameterValue.Type == NettleValueType.Boolean;
             }
             else
             {

@@ -1,26 +1,15 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
     /// Represents a string tokenizer
     /// </summary>
     internal sealed class Tokenizer
     {
-        /// <summary>
-        /// Constructs the tokenizer by initialising the enclosures
-        /// </summary>
-        /// <param name="separator">The token separator</param>
-        public Tokenizer
-            (
-                char separator = ' '
-            )
+        public Tokenizer(char separator = ' ')
         {
-            this.Separator = separator;
+            Separator = separator;
 
-            this.Enclosures = new Dictionary<char, char>()
+            Enclosures = new Dictionary<char, char>()
             {
                 { '"', '"' },
                 { '(', ')' },
@@ -52,22 +41,15 @@
         /// </summary>
         /// <param name="value">The value to tokenize</param>
         /// <returns>An array of tokens</returns>
-        public string[] Tokenize
-            (
-                string value
-            )
+        public string[] Tokenize(string value)
         {
             // Remove extra white space before tokenizing
-            value = value.Trim().Replace
-            (
-                "  ",
-                " "
-            );
+            value = value.Trim().Replace("  ", " ");
 
             var tokens = new List<string>();
             var tokenBuilder = new StringBuilder();
             var newToken = true;
-            var enclosures = this.Enclosures;
+            var enclosures = Enclosures;
             var enclosureQueue = new Stack<char>();
             var index = 0;
 
@@ -76,40 +58,28 @@
                 if (newToken)
                 {
                     // Start a new token when the builder is empty
-                    if (c != this.Separator)
+                    if (c != Separator)
                     {
                         tokenBuilder.Append(c);
                     }
 
                     if (enclosures.ContainsKey(c))
                     {
-                        var containsClosing = value.Substring(index).Contains
-                        (
-                            enclosures[c].ToString()
-                        );
+                        var containsClosing = value[index..].Contains(enclosures[c].ToString());
 
                         // Only enqueue the enclosure if the remaining string has it
                         if (containsClosing)
                         {
-                            enclosureQueue.Push
-                            (
-                                enclosures[c]
-                            );
+                            enclosureQueue.Push(enclosures[c]);
                         }
                         else
                         {
-                            enclosureQueue.Push
-                            (
-                                this.Separator
-                            );
+                            enclosureQueue.Push(Separator);
                         }
                     }
                     else
                     {
-                        enclosureQueue.Push
-                        (
-                            this.Separator
-                        );
+                        enclosureQueue.Push(Separator);
                     }
 
                     newToken = false;
@@ -130,22 +100,16 @@
                     }
                     else if (enclosures.ContainsKey(c))
                     {
-                        var containsClosing = value.Substring(index).Contains
-                        (
-                            enclosures[c].ToString()
-                        );
+                        var containsClosing = value[index..].Contains(enclosures[c].ToString());
 
                         // Only enqueue the enclosure if the remaining string has it
                         if (containsClosing)
                         {
-                            enclosureQueue.Push
-                            (
-                                enclosures[c]
-                            );
+                            enclosureQueue.Push(enclosures[c]);
                         }
                     }
 
-                    if (false == tokenComplete || c != this.Separator)
+                    if (false == tokenComplete || c != Separator)
                     {
                         tokenBuilder.Append(c);
                     }
@@ -153,10 +117,7 @@
                     // Check if we should flush the current token
                     if (tokenComplete)
                     {
-                        tokens.Add
-                        (
-                            tokenBuilder.ToString().Trim()
-                        );
+                        tokens.Add(tokenBuilder.ToString().Trim());
 
                         tokenBuilder.Clear();
                         newToken = true;
@@ -168,10 +129,7 @@
 
             if (tokenBuilder.Length > 0)
             {
-                tokens.Add
-                (
-                    tokenBuilder.ToString().Trim()
-                );
+                tokens.Add(tokenBuilder.ToString().Trim());
             }
 
             return tokens.ToArray();

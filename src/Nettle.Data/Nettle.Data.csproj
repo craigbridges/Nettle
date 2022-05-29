@@ -1,38 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	<TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Nettle.Data</Product>
     <Description>An extension for the Nettle templating engine that provides support for database and file querying.</Description>
-    <Copyright>Copyright © Craig Bridges 2018</Copyright>
+    <Copyright>Copyright © Craig Bridges 2022</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>1.2.0</AssemblyVersion>
-    <Version>1.2.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</PackageIconUrl>
-    <PackageReleaseNotes>- Ported entire library to .NET Standard 2.0
-- Upgraded CsvHelper to version 7.1.1</PackageReleaseNotes>
+    <PackageIcon>Icon.ico</PackageIcon>
+	<PackageReleaseNotes>Complete overhaul of the code-base, including making the APIs asynchronous, removing redundant code, plus upgraded to .NET 6 and C# 10.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Remove="Icon.ico" />
+    <None Include="Icon.ico" Pack="true" PackagePath="" />
   </ItemGroup>
-
   <ItemGroup>
-    <Content Include="Icon.ico" />
+    <PackageReference Include="CsvHelper" Version="27.2.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="7.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Nettle\Nettle.csproj" />
   </ItemGroup>
-
 </Project>

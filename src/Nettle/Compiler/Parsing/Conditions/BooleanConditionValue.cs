@@ -1,43 +1,9 @@
-﻿namespace Nettle.Compiler.Parsing.Conditions
-{
-    /// <summary>
-    /// Represents a boolean condition value
-    /// </summary>
-    internal class BooleanConditionValue
-    {
-        /// <summary>
-        /// Constructs the condition with the details
-        /// </summary>
-        /// <param name="signature">The conditions signature</param>
-        /// <param name="valueType">The value type</param>
-        /// <param name="value">The parsed value</param>
-        public BooleanConditionValue
-            (
-                string signature,
-                NettleValueType valueType,
-                object value
-            )
-        {
-            Validate.IsNotEmpty(signature);
-            
-            this.Signature = signature;
-            this.ValueType = valueType;
-            this.Value = value;
-        }
+﻿namespace Nettle.Compiler.Parsing.Conditions;
 
-        /// <summary>
-        /// Gets or sets the statements conditions signature
-        /// </summary>
-        public string Signature { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the conditions value type
-        /// </summary>
-        public NettleValueType ValueType { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the conditions parsed value
-        /// </summary>
-        public object Value { get; private set; }
-    }
-}
+/// <summary>
+/// Represents a boolean condition value
+/// </summary>
+/// <param name="Signature">The statements conditions signature</param>
+/// <param name="ValueType">The conditions value type</param>
+/// <param name="Value">The conditions parsed value</param>
+internal record class BooleanConditionValue(string Signature, NettleValueType ValueType, object? Value);

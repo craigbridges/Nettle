@@ -2,11 +2,7 @@
 {
     using Nettle.Compiler.Parsing;
     using Nettle.Compiler.Parsing.Blocks;
-    using Nettle.Functions;
-    using System;
-    using System.Collections.Generic;
     using System.Dynamic;
-    using System.Linq;
     using System.Xml;
 
     /// <summary>
@@ -14,28 +10,17 @@
     /// </summary>
     internal abstract class NettleRendererBase
     {
-        /// <summary>
-        /// Constructs the renderer with required dependencies
-        /// </summary>
-        /// <param name="functionRepository">The function repository</param>
-        public NettleRendererBase
-            (
-                IFunctionRepository functionRepository
-            )
+        public NettleRendererBase(IFunctionRepository functionRepository)
         {
             Validate.IsNotNull(functionRepository);
 
-            this.FunctionRepository = functionRepository;
+            FunctionRepository = functionRepository;
         }
 
         /// <summary>
         /// Gets the function repository
         /// </summary>
-        protected IFunctionRepository FunctionRepository
-        {
-            get;
-            private set;
-        }
+        protected IFunctionRepository FunctionRepository { get; init; }
 
         /// <summary>
         /// Resolves a value by converting it to the Nettle value type specified
@@ -44,12 +29,7 @@
         /// <param name="rawValue">The raw value</param>
         /// <param name="type">The value type</param>
         /// <returns>The resolved value</returns>
-        protected object ResolveValue
-            (
-                ref TemplateContext context,
-                object rawValue,
-                NettleValueType type
-            )
+        protected object? ResolveValue(ref TemplateContext context, object? rawValue, NettleValueType type)
         {
             if (rawValue == null)
             {
@@ -62,72 +42,35 @@
             {
                 case NettleValueType.ModelBinding:
                 {
-                    var bindingName = rawValue.ToString();
-
-                    resolvedValue = ResolveBindingValue
-                    (
-                        ref context,
-                        bindingName
-                    );
-
+                    resolvedValue = ResolveBindingValue(ref context, rawValue.ToString()!);
                     break;
                 }
                 case NettleValueType.Function:
                 {
-                    if (rawValue != null && rawValue is FunctionCall)
+                    if (rawValue != null && rawValue is FunctionCall call)
                     {
-                        var parsedFunction = (FunctionCall)rawValue;
-
-                        var result = ExecuteFunction
-                        (
-                            ref context,
-                            parsedFunction
-                        );
+                        var result = ExecuteFunction(ref context, call);
 
                         resolvedValue = result.Output;
                         break;
                     }
                     else
                     {
-                        throw new NettleRenderException
-                        (
-                            "The function call is invalid."
-                        );
+                        throw new NettleRenderException("The function call is invalid.");
                     }
                 }
                 case NettleValueType.Variable:
                 {
-                    resolvedValue = context.ResolveVariableValue
-                    (
-                        rawValue.ToString()
-                    );
-
+                    resolvedValue = context.ResolveVariableValue(rawValue.ToString()!);
                     break;
                 }
                 case NettleValueType.KeyValuePair:
                 {
                     var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
+                    var key = ResolveValue(ref context, unresolvedPair.ParsedKey, unresolvedPair.KeyType);
+                    var value = ResolveValue(ref context, unresolvedPair.ParsedValue, unresolvedPair.ValueType);
 
-                    var key = ResolveValue
-                    (
-                        ref context,
-                        unresolvedPair.ParsedKey,
-                        unresolvedPair.KeyType
-                    );
-
-                    var value = ResolveValue
-                    (
-                        ref context,
-                        unresolvedPair.ParsedValue,
-                        unresolvedPair.ValueType
-                    );
-
-                    resolvedValue = new KeyValuePair<object, object>
-                    (
-                        key,
-                        value
-                    );
-                    
+                    resolvedValue = new KeyValuePair<object?, object?>(key, value);
                     break;
                 }
                 case NettleValueType.AnonymousType:
@@ -137,24 +80,15 @@
 
                     foreach (var unresolvedProperty in unresolvedType.Properties)
                     {
-                        var propertyValue = ResolveValue
-                        (
-                            ref context,
-                            unresolvedProperty.RawValue,
-                            unresolvedProperty.ValueType
-                        );
+                        var propertyValue = ResolveValue(ref context, unresolvedProperty.RawValue, unresolvedProperty.ValueType);
                         
-                        resolvedProperties.Add
-                        (
-                            unresolvedProperty.Name,
-                            propertyValue
-                        );
+                        resolvedProperties.Add(unresolvedProperty.Name, propertyValue);
                     }
 
                     // Convert the property dictionary to an expando object
                     dynamic eo = resolvedProperties.Aggregate
                     (
-                        new ExpandoObject() as IDictionary<string, Object>,
+                        new ExpandoObject() as IDictionary<string, object>,
                         (a, p) =>
                         {
                             a.Add(p.Key, p.Value);
@@ -185,36 +119,22 @@
         /// A check is made to see if the binding path refers to a variable.
         /// If not variable is found then it is assumed to be a property.
         /// </remarks>
-        protected object ResolveBindingValue
-            (
-                ref TemplateContext context,
-                string bindingPath
-            )
+        protected virtual object? ResolveBindingValue(ref TemplateContext context, string bindingPath)
         {
             Validate.IsNotEmpty(bindingPath);
 
-            var pathInfo = new PathInfo(bindingPath);
+            var pathInfo = new NettlePath(bindingPath);
             var name = pathInfo[0].Name;
-            
-            var variableFound = context.Variables.ContainsKey
-            (
-                name
-            );
+            var variableFound = context.Variables.ContainsKey(name);
 
             // Check if it's a variable or property
             if (variableFound)
             {
-                return context.ResolveVariableValue
-                (
-                    bindingPath
-                );
+                return context.ResolveVariableValue(bindingPath);
             }
             else
             {
-                return context.ResolvePropertyValue
-                (
-                    bindingPath
-                );
+                return context.ResolvePropertyValue(bindingPath);
             }
         }
         
@@ -224,30 +144,13 @@
         /// <param name="context">The template context</param>
         /// <param name="call">The function call code block</param>
         /// <returns>The function execution result</returns>
-        protected FunctionExecutionResult ExecuteFunction
-            (
-                ref TemplateContext context,
-                FunctionCall call
-            )
+        protected FunctionExecutionResult ExecuteFunction(ref TemplateContext context, FunctionCall call)
         {
             Validate.IsNotNull(call);
 
-            var function = this.FunctionRepository.GetFunction
-            (
-                call.FunctionName
-            );
-
-            var parameterValues = ResolveParameterValues
-            (
-                ref context,
-                call
-            );
-
-            var result = function.Execute
-            (
-                context,
-                parameterValues
-            );
+            var function = FunctionRepository.GetFunction(call.FunctionName);
+            var parameterValues = ResolveParameterValues(ref context, call);
+            var result = function.Execute(context, parameterValues);
 
             return result;
         }
@@ -258,24 +161,15 @@
         /// <param name="context">The template context</param>
         /// <param name="call">The function call</param>
         /// <returns>An array of resolved parameter values</returns>
-        protected object[] ResolveParameterValues
-            (
-                ref TemplateContext context,
-                FunctionCall call
-            )
+        protected object?[] ResolveParameterValues(ref TemplateContext context, FunctionCall call)
         {
             Validate.IsNotNull(call);
 
-            var parameterValues = new List<object>();
+            var parameterValues = new List<object?>();
 
             foreach (var parameter in call.ParameterValues)
             {
-                var value = ResolveValue
-                (
-                    ref context,
-                    parameter.Value,
-                    parameter.Type
-                );
+                var value = ResolveValue(ref context, parameter.Value, parameter.Type);
 
                 parameterValues.Add(value);
             }
@@ -289,11 +183,7 @@
         /// <param name="value">The value to convert</param>
         /// <param name="flags">The template flags</param>
         /// <returns>A string representation of the value</returns>
-        protected string ToString
-            (
-                object value,
-                params TemplateFlag[] flags
-            )
+        protected virtual string ToString(object? value, params TemplateFlag[] flags)
         {
             if (value == null)
             {
@@ -327,7 +217,7 @@
                 }
                 else
                 {
-                    return value.ToString();
+                    return value.ToString() ?? String.Empty;
                 }
             }
         }

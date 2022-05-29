@@ -1,62 +1,40 @@
-﻿namespace Nettle.Compiler
+﻿namespace Nettle.Compiler;
+
+public class DefaultNettleResolver : INettleResolver
 {
-    using Nettle.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-
     /// <summary>
-    /// Represents a default Nettle resolver implementation
+    /// Resolves a collection of all functions that can be resolved
     /// </summary>
-    public class DefaultNettleResolver : INettleResolver
+    /// <returns>A collection of matching functions</returns>
+    public virtual IEnumerable<IFunction> ResolveFunctions()
     {
-        /// <summary>
-        /// Resolves a collection of all functions that can be resolved
-        /// </summary>
-        /// <returns>A collection of matching functions</returns>
-        public virtual IEnumerable<IFunction> ResolveFunctions()
+        var functions = new List<IFunction>();
+        var interfaceType = typeof(IFunction);
+        var assembly = GetType().Assembly;
+
+        var typesFound = assembly
+            .GetTypes()
+            .Where(t => interfaceType.IsAssignableFrom(t) && false == t.IsAbstract && false == t.IsInterface);
+
+        foreach (var type in typesFound)
         {
-            var functions = new List<IFunction>();
-            var interfaceType = typeof(IFunction);
-            var assembly = this.GetType().Assembly;
+            var constructor = type.GetConstructor(Type.EmptyTypes);
 
-            var typesFound = assembly.GetTypes().Where
-            (
-                p => interfaceType.IsAssignableFrom(p)
-                    && false == p.IsAbstract
-                    && false == p.IsInterface
-            );
-
-            foreach (var type in typesFound)
+            if (constructor != null)
             {
-                var constructor = type.GetConstructor
-                (
-                    Type.EmptyTypes
-                );
+                var functionInstance = (IFunction?)Activator.CreateInstance(type);
 
-                if (constructor != null)
+                if (functionInstance != null)
                 {
-                    var functionInstance = (IFunction)Activator.CreateInstance
-                    (
-                        type
-                    );
-
                     functions.Add(functionInstance);
                 }
-                else
-                {
-                    Debug.WriteLine
-                    (
-                        "Warning: The type {0} could not be resolved.".With
-                        (
-                            type.Name
-                        )
-                    );
-                }
             }
-
-            return functions;
+            else
+            {
+                Debug.WriteLine($"Warning: The type {type.Name} could not be resolved.");
+            }
         }
+
+        return functions;
     }
 }

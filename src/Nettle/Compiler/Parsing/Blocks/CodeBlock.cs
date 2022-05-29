@@ -3,48 +3,28 @@
     /// <summary>
     /// Represents a parsed block of template code
     /// </summary>
-    internal abstract class CodeBlock
+    /// <param name="Signature">The blocks signature (i.e. the content that was parsed)</param>
+    internal abstract record class CodeBlock(string Signature)
     {
-        /// <summary>
-        /// Gets or sets the blocks signature
-        /// </summary>
-        public string Signature { get; set; }
-
         /// <summary>
         /// Gets or sets blocks the start position
         /// </summary>
-        public int StartPosition { get; set; }
+        public int StartPosition { get; init; }
 
         /// <summary>
         /// Gets or sets blocks the end position
         /// </summary>
-        public int EndPosition { get; set; }
+        public int EndPosition { get; init; }
 
         /// <summary>
         /// Gets the number of characters in the code block
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                return (this.EndPosition - this.StartPosition);
-            }
-        }
+        public int Length => (EndPosition - StartPosition);
 
         /// <summary>
         /// Provides a custom string representation of the code block
         /// </summary>
         /// <returns>The string representation</returns>
-        public override string ToString()
-        {
-            var description = "[{0}, {1}] \r\n{2}";
-
-            return description.With
-            (
-                this.StartPosition,
-                this.EndPosition,
-                this.Signature
-            );
-        }
+        public override string ToString() => $"[{StartPosition}, {EndPosition}] \r\n{Signature}";
     }
 }

@@ -1,30 +1,17 @@
 ﻿namespace Nettle.Functions
 {
-    using System.Text;
-
     /// <summary>
     /// Represents the result of a function execution
     /// </summary>
     public sealed class FunctionExecutionResult
     {
-        /// <summary>
-        /// Constructs the function execution result with dependencies
-        /// </summary>
-        /// <param name="function">The function that was executed</param>
-        /// <param name="output">The output generated</param>
-        /// <param name="parameterValues">The parameter values supplied</param>
-        public FunctionExecutionResult
-            (
-                IFunction function,
-                object output,
-                object[] parameterValues
-            )
+        public FunctionExecutionResult(IFunction function, object? output, object?[] parameterValues)
         {
             Validate.IsNotNull(function);
 
-            this.Function = function;
-            this.Output = output;
-            this.ParameterValues = parameterValues;
+            Function = function;
+            Output = output;
+            ParameterValues = parameterValues;
 
             GenerateCallSignature();
         }
@@ -34,12 +21,11 @@
         /// </summary>
         private void GenerateCallSignature()
         {
-            var template = "@{0}({1})";
             var parameterBuilder = new StringBuilder();
 
-            if (this.ParameterValues != null)
+            if (ParameterValues != null)
             {
-                foreach (var value in this.ParameterValues)
+                foreach (var value in ParameterValues)
                 {
                     var stringValue = "null";
 
@@ -57,11 +43,7 @@
                 }
             }
 
-            this.CallSignature = template.With
-            (
-                this.Function.Name,
-                parameterBuilder.ToString()
-            );
+            CallSignature = $"@{Function.Name}({parameterBuilder})";
         }
 
         /// <summary>
@@ -72,25 +54,22 @@
         /// <summary>
         /// Gets the functions output
         /// </summary>
-        public object Output { get; private set; }
+        public object? Output { get; private set; }
 
         /// <summary>
         /// Gets an array of parameter values that were supplied to the function
         /// </summary>
-        public object[] ParameterValues { get; private set; }
+        public object?[] ParameterValues { get; private set; }
 
         /// <summary>
         /// Gets the functions execution call signature
         /// </summary>
-        public string CallSignature { get; private set; }
+        public string CallSignature { get; private set; } = default!;
 
         /// <summary>
         /// Provides a customer description of the result
         /// </summary>
         /// <returns>A description of the result</returns>
-        public override string ToString()
-        {
-            return this.CallSignature;
-        }
+        public override string ToString() => CallSignature;
     }
 }

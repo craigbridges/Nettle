@@ -1,26 +1,22 @@
-﻿namespace Nettle.Compiler.Parsing.Blocks
+﻿namespace Nettle.Compiler.Parsing.Blocks;
+
+using Nettle.Compiler.Parsing.Conditions;
+
+/// <summary>
+/// Represents an 'if' statement code block
+/// </summary>
+/// <param name="Signature">The blocks signature</param>
+/// <param name="Body">The blocks raw body content (this could be empty, but should never be null)</param>
+/// <param name="ConditionExpression">The conditions expression</param>
+internal record class IfStatement(string Signature, string Body, BooleanExpression ConditionExpression) : NestableCodeBlock(Signature, Body)
 {
-    using Nettle.Compiler.Parsing.Conditions;
-    using System.Collections.Generic;
+    /// <summary>
+    /// Gets or sets a list of else if conditions
+    /// </summary>
+    public ElseIfStatement[] ElseIfConditions { get; init; } = Array.Empty<ElseIfStatement>();
 
     /// <summary>
-    /// Represents an 'if' statement code block
+    /// Gets or sets the else content
     /// </summary>
-    internal class IfStatement : NestableCodeBlock
-    {
-        /// <summary>
-        /// Gets or sets the conditions expression
-        /// </summary>
-        public BooleanExpression ConditionExpression { get; set; }
-
-        /// <summary>
-        /// Gets or sets a list of else if conditions
-        /// </summary>
-        public List<ElseIfStatement> ElseIfConditions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the else content
-        /// </summary>
-        public NestableCodeBlock ElseContent { get; set; }
-    }
+    public NestableCodeBlock? ElseContent { get; init; }
 }

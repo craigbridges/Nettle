@@ -1,26 +1,15 @@
 ﻿namespace Nettle
 {
-    using Nettle.Compiler;
-    using Nettle.Compiler.Parsing;
-    using Nettle.Compiler.Rendering;
-    using Nettle.Compiler.Validation;
-    using Nettle.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-
     /// <summary>
     /// Represents the entry point for all Nettle actions
     /// </summary>
     public static class NettleEngine
     {
-        private static INettleCompiler _compiler;
-        private static object _engineLock = new object();
+        private static INettleCompiler? _compiler;
+        private static readonly object _engineLock = new();
         private static TimeZoneInfo _defaultTimeZone = TimeZoneInfo.Local;
 
-        private static List<INettleResolver> _resolvers
-            = new List<INettleResolver>()
+        private static readonly List<INettleResolver> _resolvers = new()
         {
             new DefaultNettleResolver()
         };
@@ -33,35 +22,19 @@
         /// <summary>
         /// Gets the default time zone to use for dates
         /// </summary>
-        public static TimeZoneInfo DefaultTimeZone
-        {
-            get
-            {
-                return _defaultTimeZone;
-            }
-        }
+        public static TimeZoneInfo DefaultTimeZone => _defaultTimeZone;
 
         /// <summary>
         /// Sets the default time zone to use for all date times
         /// </summary>
         /// <param name="timeZoneId">The time zone ID</param>
-        /// <exception cref="OutOfMemoryException"></exception>
-        /// <exception cref="TimeZoneNotFoundException"></exception>
-        /// <exception cref="SecurityException"></exception>
-        /// <exception cref="InvalidTimeZoneException"></exception>
-        public static void SetDefaultTimeZone
-            (
-                string timeZoneId
-            )
+        public static void SetDefaultTimeZone(string timeZoneId)
         {
             Validate.IsNotEmpty(timeZoneId);
             
             lock (_engineLock)
             {
-                _defaultTimeZone = TimeZoneInfo.FindSystemTimeZoneById
-                (
-                    timeZoneId
-                );
+                _defaultTimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             }
         }
 
@@ -69,10 +42,7 @@
         /// Registers resolvers to be used when generating compilers
         /// </summary>
         /// <param name="resolvers">The resolvers to register</param>
-        public static void RegisterResolvers
-            (
-                params INettleResolver[] resolvers
-            )
+        public static void RegisterResolvers(params INettleResolver[] resolvers)
         {
             Validate.IsNotNull(resolvers);
 
@@ -80,10 +50,7 @@
             {
                 foreach (var resolver in resolvers)
                 {
-                    var registered = _resolvers.Any
-                    (
-                        r => r.GetType() == resolver.GetType()
-                    );
+                    var registered = _resolvers.Any(x => x.GetType() == resolver.GetType());
 
                     if (false == registered)
                     {
@@ -117,15 +84,9 @@
         /// </summary>
         /// <param name="customFunctions">The custom functions</param>
         /// <returns>The compiler</returns>
-        public static INettleCompiler GetCompiler
-            (
-                params IFunction[] customFunctions
-            )
+        public static INettleCompiler GetCompiler(params IFunction[] customFunctions)
         {
-            return GenerateCompiler
-            (
-                customFunctions
-            );
+            return GenerateCompiler(customFunctions);
         }
 
         /// <summary>
@@ -133,52 +94,23 @@
         /// </summary>
         /// <param name="customFunctions">The custom functions</param>
         /// <returns>The compiler generated</returns>
-        private static INettleCompiler GenerateCompiler
-            (
-                params IFunction[] customFunctions
-            )
+        private static INettleCompiler GenerateCompiler(params IFunction[] customFunctions)
         {
-            var blockifier = new Blockifier();
             var templateRepository = new RegisteredTemplateRepository();
+            var functionRepository = new FunctionRepository(_resolvers.ToArray());
 
-            var functionRepository = new FunctionRepository
-            (
-                _resolvers.ToArray()
-            );
+            var blockifier = new Blockifier();
+            var parser = new TemplateParser(blockifier);
+            var renderer = new TemplateRenderer(functionRepository, templateRepository);
+            var validator = new TemplateValidator(functionRepository);
 
-            var parser = new TemplateParser
-            (
-                blockifier
-            );
-
-            var renderer = new TemplateRenderer
-            (
-                functionRepository,
-                templateRepository
-            );
-
-            var validator = new TemplateValidator
-            (
-                functionRepository
-            );
-
-            var compiler = new NettleCompiler
-            (
-                parser,
-                renderer,
-                validator,
-                functionRepository,
-                templateRepository
-            );
+            var compiler = new NettleCompiler(parser, renderer, validator, functionRepository, templateRepository);
 
             if (customFunctions != null)
             {
                 foreach (var function in customFunctions)
                 {
-                    compiler.RegisterFunction
-                    (
-                        function
-                    );
+                    compiler.RegisterFunction(function);
                 }
             }
 

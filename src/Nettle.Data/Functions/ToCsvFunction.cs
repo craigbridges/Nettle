@@ -49,7 +49,7 @@
                 params object[] parameterValues
             )
         {
-            Validate.IsNotNull(context);
+            Nettle.Validate.IsNotNull(context);
 
             var obj = GetParameterValue<object>
             (

@@ -1,23 +1,11 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
-    /// Represents an aggregation of path information
+    /// Represents a full Nettle path
     /// </summary>
-    internal sealed class PathInfo
+    internal sealed class NettlePath
     {
-        /// <summary>
-        /// Constructs the path info with a path
-        /// </summary>
-        /// <param name="path">The binding path</param>
-        public PathInfo
-            (
-                string path
-            )
+        public NettlePath(string path)
         {
             PopulatePathDetails(path);
         }
@@ -25,7 +13,7 @@
         /// <summary>
         /// Gets the full path set against the path info
         /// </summary>
-        public string FullPath { get; private set; }
+        public string FullPath { get; private set; } = default!;
 
         /// <summary>
         /// Gets a flag indicating if the path is nested
@@ -38,31 +26,22 @@
         /// <summary>
         /// Gets an array of segments in the path
         /// </summary>
-        public PathSegmentInfo[] Segments { get; private set; }
+        public NettlePathSegment[] Segments { get; private set; } = Array.Empty<NettlePathSegment>();
 
         /// <summary>
         /// Gets the segment at the index specified
         /// </summary>
         /// <param name="index">The segment index</param>
         /// <returns>The segment info</returns>
-        public PathSegmentInfo this[int index]
-        {
-            get
-            {
-                return this.Segments[index];
-            }
-        }
+        public NettlePathSegment this[int index] => Segments[index];
 
         /// <summary>
         /// Removes a segment at the index specified
         /// </summary>
         /// <param name="index">The index</param>
-        public void RemoveSegment
-            (
-                int index
-            )
+        public void RemoveSegment(int index)
         {
-            var segments = this.Segments.ToList();
+            var segments = Segments.ToList();
 
             segments.RemoveAt(index);
 
@@ -76,63 +55,41 @@
                     pathBuilder.Append('.');
                 }
 
-                pathBuilder.Append
-                (
-                    segment.Signature
-                );
+                pathBuilder.Append(segment.Signature);
             }
 
-            PopulatePathDetails
-            (
-                pathBuilder.ToString()
-            );
+            PopulatePathDetails(pathBuilder.ToString());
         }
 
         /// <summary>
         /// Populates the path details based on the binding path
         /// </summary>
         /// <param name="path">The binding path</param>
-        private void PopulatePathDetails
-            (
-                string path
-            )
+        private void PopulatePathDetails(string path)
         {
             var fullPath = path;
-            var isValid = PathInfo.IsValidPath(path);
+            var isValid = IsValidPath(path);
 
             if (false == isValid)
             {
-                throw new ArgumentException
-                (
-                    "The path '{0}' is invalid.".With
-                    (
-                        path
-                    )
-                );
+                throw new ArgumentException($"The path '{path}' is invalid.");
             }
 
-            path = PathInfo.TrimPath(path);
+            path = TrimPath(path);
 
             // Split the path into segments
             var segments = path.Split('.');
-            var segmentInfos = new List<PathSegmentInfo>();
+            var segmentInfos = new List<NettlePathSegment>();
             var index = 0;
 
             foreach (var segment in segments)
             {
-                segmentInfos.Add
-                (
-                    new PathSegmentInfo
-                    (
-                        index,
-                        segment
-                    )
-                );
+                segmentInfos.Add(new NettlePathSegment(index, segment));
             }
 
-            this.FullPath = fullPath;
-            this.Segments = segmentInfos.ToArray();
-            this.IsNested = segmentInfos.Count > 1;
+            FullPath = fullPath;
+            Segments = segmentInfos.ToArray();
+            IsNested = segmentInfos.Count > 1;
         }
 
         /// <summary>
@@ -140,10 +97,7 @@
         /// </summary>
         /// <param name="path">The path to trim</param>
         /// <returns>The trimmed path</returns>
-        private static string TrimPath
-            (
-                string path
-            )
+        private static string TrimPath(string path)
         {
             path = path.Trim();
 
@@ -154,7 +108,7 @@
             }
             else if (path.Length > 1 && path.First() == '$')
             {
-                return path.Substring(1);
+                return path[1..];
             }
             else
             {
@@ -176,24 +130,17 @@
         /// - Subsequent characters may be letters, dots, square brackets or numbers
         /// - Sequential dots are not allowed (e.g. "..")
         /// </remarks>
-        public static bool IsValidPath
-            (
-                string path
-            )
+        public static bool IsValidPath(string path)
         {
             // Rule: the path must not contain spaces
-            if (String.IsNullOrWhiteSpace(path) || path.Contains(" "))
+            if (String.IsNullOrWhiteSpace(path) || path.Contains(' '))
             {
                 return false;
             }
 
             // Rule: must start with letter or dollar sign
             var firstChar = path.First();
-
-            var isValidChar =
-            (
-                Char.IsLetter(firstChar) || firstChar == '$'
-            );
+            var isValidChar = Char.IsLetter(firstChar) || firstChar == '$';
 
             if (false == isValidChar)
             {
@@ -206,17 +153,14 @@
                 return false;
             }
 
-            path = PathInfo.TrimPath(path);
+            path = TrimPath(path);
 
             // Rule: the path segments can end with an indexer
             var segments = path.Split('.');
 
             foreach (var segment in segments)
             {
-                var isValid = PathSegmentInfo.IsValidSegment
-                (
-                    segment
-                );
+                var isValid = NettlePathSegment.IsValidSegment(segment);
 
                 if (false == isValid)
                 {
@@ -231,9 +175,6 @@
         /// Provides a custom description of the path info
         /// </summary>
         /// <returns>The full path</returns>
-        public override string ToString()
-        {
-            return this.FullPath;
-        }
+        public override string ToString() => FullPath;
     }
 }

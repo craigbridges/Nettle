@@ -1,18 +1,14 @@
-﻿namespace Nettle.Compiler.Parsing.Blocks
+﻿namespace Nettle.Compiler.Parsing.Blocks;
+
+/// <summary>
+/// Represents a model binding code block
+/// </summary>
+/// <param name="Signature">The blocks signature</param>
+/// <param name="FunctionName">The name of the function being called</param>
+internal record class FunctionCall(string Signature, string FunctionName) : CodeBlock(Signature)
 {
     /// <summary>
-    /// Represents a model binding code block
+    /// Gets or sets an array of the parameters supplied
     /// </summary>
-    internal class FunctionCall : CodeBlock
-    {
-        /// <summary>
-        /// Gets or sets the name of the function
-        /// </summary>
-        public string FunctionName { get; set; }
-
-        /// <summary>
-        /// Gets or sets an array of the parameters supplied
-        /// </summary>
-        public FunctionCallParameter[] ParameterValues { get; set; }
-    }
+    public FunctionCallParameter[] ParameterValues { get; init; } = Array.Empty<FunctionCallParameter>();
 }

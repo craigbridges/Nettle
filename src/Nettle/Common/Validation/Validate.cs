@@ -1,10 +1,5 @@
 ﻿namespace Nettle
 {
-    using System;
-
-    /// <summary>
-    /// Provides various static parameter validation methods
-    /// </summary>
     public static class Validate
     {
         /// <summary>
@@ -12,11 +7,7 @@
         /// </summary>
         /// <param name="o">The value to check</param>
         /// <param name="paramName">The parameter name (optional)</param>
-        public static void IsNotNull
-            (
-                object o,
-                string paramName = null
-            )
+        public static void IsNotNull(object? o, string? paramName = null)
         {
             if (o == null)
             {
@@ -26,10 +17,7 @@
                 }
                 else
                 {
-                    throw new ArgumentNullException
-                    (
-                        paramName
-                    );
+                    throw new ArgumentNullException(paramName);
                 }
             }
         }
@@ -39,11 +27,7 @@
         /// </summary>
         /// <param name="input">The input string to validate</param>
         /// <param name="paramName">The parameter name (optional)</param>
-        public static void IsNotEmpty
-            (
-                string input,
-                string paramName = null
-            )
+        public static void IsNotEmpty(string? input, string? paramName = null)
         {
             if (String.IsNullOrEmpty(input))
             {
@@ -53,10 +37,7 @@
                 }
                 else
                 {
-                    throw new ArgumentNullException
-                    (
-                        paramName
-                    );
+                    throw new ArgumentNullException(paramName);
                 }
             }
         }

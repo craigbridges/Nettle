@@ -1,391 +1,215 @@
-﻿namespace Nettle.Compiler.Rendering
+﻿namespace Nettle.Compiler.Rendering;
+
+using Nettle.Compiler.Parsing.Blocks;
+
+internal sealed class BlockCollectionRenderer
 {
-    using Nettle.Compiler.Parsing.Blocks;
-    using Nettle.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    private readonly IBlockRenderer[] _renderers;
+
+    public BlockCollectionRenderer(IFunctionRepository functionRepository, IRegisteredTemplateRepository templateRepository)
+    {
+        Validate.IsNotNull(functionRepository);
+        Validate.IsNotNull(templateRepository);
+
+        var expressionEvaluator = new BooleanExpressionEvaluator(functionRepository);
+
+        _renderers = new IBlockRenderer[]
+        {
+            new CommentRenderer(functionRepository),
+            new ContentRenderer(functionRepository),
+            new ModelBindingRenderer(functionRepository),
+            new ConditionalBindingRenderer(functionRepository, expressionEvaluator),
+            new VariableRenderer(functionRepository),
+            new VariableReassignmentRenderer(functionRepository),
+            new VariableIncrementerRenderer(functionRepository),
+            new VariableDecrementerRenderer(functionRepository),
+            new FlagRenderer(functionRepository),
+            new FunctionRenderer(functionRepository),
+            new ForEachLoopRenderer(functionRepository, this),
+            new WhileLoopRenderer(functionRepository, expressionEvaluator, this),
+            new IfStatementRenderer(functionRepository, expressionEvaluator, this),
+            new PartialRenderer(functionRepository, templateRepository, this)
+        };
+    }
 
     /// <summary>
-    /// Represents the default implementation of a template renderer
+    /// Renders an array of code blocks to a string
     /// </summary>
-    internal sealed class BlockCollectionRenderer
+    /// <param name="context">The template context</param>
+    /// <param name="blocks">An array of blocks to render</param>
+    /// <param name="flags">The template flags</param>
+    /// <returns>The rendered code blocks</returns>
+    public string Render(ref TemplateContext context, CodeBlock[] blocks, params TemplateFlag[] flags)
     {
-        private List<IBlockRenderer> _renderers;
+        var builder = new StringBuilder();
 
-        /// <summary>
-        /// Constructs the renderer with required dependencies
-        /// </summary>
-        /// <param name="functionRepository">The function repository</param>
-        /// <param name="templateRepository">The template repository</param>
-        public BlockCollectionRenderer
-            (
-                IFunctionRepository functionRepository,
-                IRegisteredTemplateRepository templateRepository
-            )
+        var autoFormat = flags.Contains(TemplateFlag.AutoFormat);
+
+        var previousBlockType = default(Type);
+        var previousRawOutput = String.Empty;
+
+        foreach (var block in blocks)
         {
-            Validate.IsNotNull(functionRepository);
-            Validate.IsNotNull(templateRepository);
+            var blockOutput = RenderBlock(ref context, block, flags);
 
-            var expressionEvaluator = new BooleanExpressionEvaluator
-            (
-                functionRepository
-            );
+            var formattedOutput = blockOutput;
+            var blockType = block.GetType();
 
-            var commentRenderer = new CommentRenderer
-            (
-                functionRepository
-            );
-
-            var contentRenderer = new ContentRenderer
-            (
-                functionRepository
-            );
-
-            var bindingRenderer = new ModelBindingRenderer
-            (
-                functionRepository
-            );
-
-            var condtionalBindingRenderer = new ConditionalBindingRenderer
-            (
-                functionRepository,
-                expressionEvaluator
-            );
-
-            var variableRenderer = new VariableRenderer
-            (
-                functionRepository
-            );
-
-            var variableReassignmentRenderer = new VariableReassignmentRenderer
-            (
-                functionRepository
-            );
-
-            var variableIncrementerRenderer = new VariableIncrementerRenderer
-            (
-                functionRepository
-            );
-
-            var variableDecrementerRenderer = new VariableDecrementerRenderer
-            (
-                functionRepository
-            );
-
-            var flagRenderer = new FlagRenderer
-            (
-                functionRepository
-            );
-
-            var functionRenderer = new FunctionRenderer
-            (
-                functionRepository
-            );
-
-            var eachLoopRenderer = new ForEachLoopRenderer
-            (
-                functionRepository,
-                this
-            );
-
-            var whileLoopRenderer = new WhileLoopRenderer
-            (
-                functionRepository,
-                expressionEvaluator,
-                this
-            );
-
-            var ifStatementRenderer = new IfStatementRenderer
-            (
-                functionRepository,
-                expressionEvaluator,
-                this
-            );
-
-            var partialRenderer = new PartialRenderer
-            (
-                functionRepository,
-                templateRepository,
-                this
-            );
-
-            _renderers = new List<IBlockRenderer>()
+            if (autoFormat)
             {
-                commentRenderer,
-                contentRenderer,
-                bindingRenderer,
-                condtionalBindingRenderer,
-                variableRenderer,
-                variableReassignmentRenderer,
-                variableIncrementerRenderer,
-                variableDecrementerRenderer,
-                flagRenderer,
-                functionRenderer,
-                eachLoopRenderer,
-                whileLoopRenderer,
-                ifStatementRenderer,
-                partialRenderer
-            };
-        }
-        
-        /// <summary>
-        /// Renders an array of code blocks to a string
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="blocks">An array of blocks to render</param>
-        /// <param name="flags">The template flags</param>
-        /// <returns>The rendered code blocks</returns>
-        public string Render
-            (
-                ref TemplateContext context,
-                CodeBlock[] blocks,
-                params TemplateFlag[] flags
-            )
-        {
-            var builder = new StringBuilder();
-            
-            var autoFormat = flags.Contains
-            (
-                TemplateFlag.AutoFormat
-            );
-
-            var previousBlockType = default(Type);
-            var previousRawOutput = String.Empty;
-
-            foreach (var block in blocks)
-            {
-                var blockOutput = RenderBlock
+                var previousHadLineBreak = previousRawOutput.EndsWithAny
                 (
-                    ref context,
-                    block,
-                    flags
+                    "\n",
+                    "\r",
+                    "\r\n",
+                    "\n\t",
+                    "\r\t",
+                    "\r\n\t"
                 );
 
-                var formattedOutput = blockOutput;
-                var blockType = block.GetType();
-
-                if (autoFormat)
+                if (blockType == typeof(ContentBlock))
                 {
-                    var previousHadLineBreak = previousRawOutput.EndsWithAny
-                    (
-                        "\n",
-                        "\r",
-                        "\r\n",
-                        "\n\t",
-                        "\r\t",
-                        "\r\n\t"
-                    );
-
-                    if (blockType == typeof(ContentBlock))
+                    if (previousBlockType == null || previousBlockType != typeof(ContentBlock))
                     {
-                        if (previousBlockType == null || previousBlockType != typeof(ContentBlock))
-                        {
-                            var startsWithLineBreak = formattedOutput.StartsWithAny
-                            (
-                                "\n",
-                                "\r",
-                                "\r\n"
-                            );
+                        var startsWithLineBreak = formattedOutput.StartsWithAny("\n", "\r", "\r\n");
 
-                            // Determine if content is only tabs or line breaks
-                            var isWhitespace = formattedOutput.IsMadeUpOf
-                            (
-                                '\n',
-                                '\r',
-                                '\t'
-                            );
+                        // Determine if content is only tabs or line breaks
+                        var isWhitespace = formattedOutput.IsMadeUpOf('\n', '\r', '\t');
 
-                            formattedOutput = RemoveExtraPadding
-                            (
-                                formattedOutput
-                            );
+                        formattedOutput = RemoveExtraPadding(formattedOutput);
 
-                            if (startsWithLineBreak && false == isWhitespace && false == previousHadLineBreak)
-                            {
-                                formattedOutput = "\r\n" + formattedOutput;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Determine if previous output was only tabs or line breaks
-                        var wasWhitespace = previousRawOutput.IsMadeUpOf
-                        (
-                            '\n',
-                            '\r',
-                            '\t'
-                        );
-
-                        if (previousHadLineBreak && false == wasWhitespace)
+                        if (startsWithLineBreak && false == isWhitespace && false == previousHadLineBreak)
                         {
                             formattedOutput = "\r\n" + formattedOutput;
                         }
                     }
                 }
-                
-                builder.Append(formattedOutput);
-
-                previousBlockType = block.GetType();
-                previousRawOutput = blockOutput;
-            }
-
-            // Check if we should minify the output (this overrides auto format)
-            if (flags.Contains(TemplateFlag.Minify))
-            {
-                builder.Replace("\t", String.Empty);
-                builder.Replace("    ", String.Empty);
-                builder.Replace("\r\n", String.Empty);
-                builder.Replace("\n", String.Empty);
-                builder.Replace("\r", String.Empty);
-            }
-
-            var output = builder.ToString();
-
-            if (autoFormat)
-            {
-                if (context.IsRoot())
-                {
-                    // Remove leading and trailing padding from template output
-                    output = RemoveExtraPadding(output);
-                }
                 else
                 {
-                    var endsWithLineBreak = output.EndsWithAny
-                    (
-                        "\n",
-                        "\r",
-                        "\r\n"
-                    );
+                    // Determine if previous output was only tabs or line breaks
+                    var wasWhitespace = previousRawOutput.IsMadeUpOf('\n', '\r', '\t');
 
-                    // Ensure nested blocks end with line breaks
-                    if (false == endsWithLineBreak)
+                    if (previousHadLineBreak && false == wasWhitespace)
                     {
-                        output = output + "\r\n";
+                        formattedOutput = "\r\n" + formattedOutput;
                     }
                 }
             }
 
-            return output;
+            builder.Append(formattedOutput);
+
+            previousBlockType = block.GetType();
+            previousRawOutput = blockOutput;
         }
 
-        /// <summary>
-        /// Removes extra padding around a string text
-        /// </summary>
-        /// <param name="text">The text</param>
-        /// <returns>The updated text</returns>
-        /// <remarks>
-        /// Extra padding are tabs or line breaks at the start or end of the text
-        /// </remarks>
-        private string RemoveExtraPadding
-            (
-                string text
-            )
+        // Check if we should minify the output (this overrides auto format)
+        if (flags.Contains(TemplateFlag.Minify))
         {
-            if (String.IsNullOrEmpty(text))
+            builder.Replace("\t", String.Empty);
+            builder.Replace("    ", String.Empty);
+            builder.Replace("\r\n", String.Empty);
+            builder.Replace("\n", String.Empty);
+            builder.Replace("\r", String.Empty);
+        }
+
+        var output = builder.ToString();
+
+        if (autoFormat)
+        {
+            if (context.IsRoot())
             {
-                return text;
+                // Remove leading and trailing padding from template output
+                output = RemoveExtraPadding(output);
             }
             else
             {
-                text = text.Trim
-                (
-                    "\t",
-                    "\n\t",
-                    "\r\t",
-                    "\r\n\t",
-                    "\n",
-                    "\r",
-                    "\r\n"
-                );
+                var endsWithLineBreak = output.EndsWithAny("\n", "\r", "\r\n");
+
+                // Ensure nested blocks end with line breaks
+                if (false == endsWithLineBreak)
+                {
+                    output += "\r\n";
+                }
             }
-            
+        }
+
+        return output;
+    }
+
+    /// <summary>
+    /// Removes extra padding around a string text
+    /// </summary>
+    /// <param name="text">The text</param>
+    /// <returns>The updated text</returns>
+    /// <remarks>
+    /// Extra padding are tabs or line breaks at the start or end of the text
+    /// </remarks>
+    private static string RemoveExtraPadding(string text)
+    {
+        if (String.IsNullOrEmpty(text))
+        {
             return text;
         }
-
-        /// <summary>
-        /// Renders a single code block into a string
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="block">The code block to render</param>
-        /// <param name="flags">The template flags</param>
-        /// <returns>The rendered block</returns>
-        private string RenderBlock
-            (
-                ref TemplateContext context,
-                CodeBlock block,
-                params TemplateFlag[] flags
-            )
+        else
         {
-            var ignoreErrors = flags.Contains
-            (
-                TemplateFlag.IgnoreErrors
-            );
+            text = text.Trim("\t", "\n\t", "\r\t", "\r\n\t", "\n", "\r", "\r\n");
+        }
 
-            var renderer = FindRenderer(block);
-            var blockOutput = String.Empty;
+        return text;
+    }
 
-            try
+    /// <summary>
+    /// Renders a single code block into a string
+    /// </summary>
+    /// <param name="context">The template context</param>
+    /// <param name="block">The code block to render</param>
+    /// <param name="flags">The template flags</param>
+    /// <returns>The rendered block</returns>
+    private string RenderBlock(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+    {
+        var ignoreErrors = flags.Contains(TemplateFlag.IgnoreErrors);
+
+        var renderer = FindRenderer(block);
+        var blockOutput = String.Empty;
+
+        try
+        {
+            blockOutput = renderer.Render(ref context, block, flags);
+        }
+        catch (Exception ex)
+        {
+            if (false == ignoreErrors)
             {
-                blockOutput = renderer.Render
+                throw new NettleRenderException
                 (
-                    ref context,
-                    block,
-                    flags
+                    $"Exception raised during rendering:\r\n\r\n{ex.Message}\r\n\r\n{block}",
+                    ex
                 );
             }
-            catch (Exception ex)
-            {
-                if (false == ignoreErrors)
-                {
-                    var message = "Exception raised during rendering:" +
-                                  "\r\n\r\n{0}\r\n\r\n{1}";
-
-                    throw new NettleRenderException
-                    (
-                        message.With
-                        (
-                            ex.Message,
-                            block.ToString()
-                        ),
-                        ex
-                    );
-                }
-            }
-            
-            return blockOutput;
         }
 
-        /// <summary>
-        /// Finds a renderer for the code block specified
-        /// </summary>
-        /// <param name="block">The code block</param>
-        /// <returns>The matching renderer</returns>
-        private IBlockRenderer FindRenderer
-            (
-                CodeBlock block
-            )
+        return blockOutput;
+    }
+
+    /// <summary>
+    /// Finds a renderer for the code block specified
+    /// </summary>
+    /// <param name="block">The code block</param>
+    /// <returns>The matching renderer</returns>
+    private IBlockRenderer FindRenderer(CodeBlock block)
+    {
+        Validate.IsNotNull(block);
+
+        foreach (var renderer in _renderers)
         {
-            Validate.IsNotNull(block);
+            var canRender = renderer.CanRender(block);
 
-            foreach (var renderer in _renderers)
+            if (canRender)
             {
-                var canRender = renderer.CanRender(block);
-
-                if (canRender)
-                {
-                    return renderer;
-                }
+                return renderer;
             }
-
-            throw new NettleRenderException
-            (
-                "No renderer could be found for '{0}'.".With
-                (
-                    block.ToString()
-                )
-            );
         }
+
+        throw new NettleRenderException($"No renderer could be found for '{block}'.");
     }
 }

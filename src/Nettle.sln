@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nettle", "Nettle\Nettle.csproj", "{6D2A6A46-FEE4-4DC4-89DC-314808A89050}"
 EndProject
@@ -13,7 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nettle.NCalc", "Nettle.NCal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nettle.Tests", "Nettle.Tests\Nettle.Tests.csproj", "{6899BE30-5764-4F12-A5D9-99A182F8A38D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nettle.Demo.Windows", "Nettle.Demo.Windows\Nettle.Demo.Windows.csproj", "{11832A2F-C733-48F6-B7DD-2B5819B7D564}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48F1AA12-0154-40E4-9C6D-F656976BD685}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +44,6 @@ Global
 		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6899BE30-5764-4F12-A5D9-99A182F8A38D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11832A2F-C733-48F6-B7DD-2B5819B7D564}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

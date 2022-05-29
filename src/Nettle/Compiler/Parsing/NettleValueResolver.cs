@@ -1,7 +1,5 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
-    using System;
-
     /// <summary>
     /// Represents a Nettle value type resolver
     /// </summary>
@@ -12,12 +10,9 @@
         /// </summary>
         /// <param name="value">The raw value</param>
         /// <returns>The value type resolved</returns>
-        public NettleValueType ResolveType
-            (
-                string value
-            )
+        public static NettleValueType ResolveType(string value)
         {
-            var type = default(NettleValueType);
+            NettleValueType type;
 
             if (String.IsNullOrWhiteSpace(value))
             {

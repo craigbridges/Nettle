@@ -1,925 +1,399 @@
-﻿namespace Nettle
+﻿namespace Nettle;
+
+public static class StringExtensions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
+    /// <summary>
+    /// Truncates a given string to the number of characters specified by the length value
+    /// </summary>
+    /// <param name="input">The string to truncate</param>
+    /// <param name="length">The length to reduce to</param>
+    /// <returns>The truncated string</returns>
+    public static string Truncate(this string input, int length)
+    {
+        if (String.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+        else
+        {
+            return input.Length <= length ? input : input[..length];
+        }
+    }
 
     /// <summary>
-    /// Provides various extension methods for the String class
+    /// Crops a string by removing the characters preceding a start index
     /// </summary>
-    public static class StringExtensions
+    /// <param name="value">The value to crop</param>
+    /// <param name="startIndex">The start index</param>
+    /// <returns>The cropped string</returns>
+    public static string Crop(this string value, int startIndex)
     {
-        /// <summary>
-        /// Truncates a given string to the number of characters specified by the length value
-        /// </summary>
-        /// <param name="input">The string to truncate</param>
-        /// <param name="length">The length to reduce to</param>
-        /// <returns>The truncated string</returns>
-        public static string Truncate
-            (
-                this string input,
-                int length
-            )
+        if (String.IsNullOrEmpty(value))
         {
-            if (String.IsNullOrEmpty(input))
-            {
-                return input;
-            }
-            else
-            {
-                var allowedLength = input.Length <= length;
-
-                return 
-                (
-                    allowedLength ? input : input.Substring(0, length)
-                );
-            }
+            return value;
         }
-
-        /// <summary>
-        /// Crops a string by removing the characters preceding a start index
-        /// </summary>
-        /// <param name="value">The value to crop</param>
-        /// <param name="startIndex">The start index</param>
-        /// <returns>The cropped string</returns>
-        public static string Crop
-            (
-                this string value,
-                int startIndex
-            )
+        else
         {
-            if (String.IsNullOrEmpty(value))
+            int endIndex;
+
+            if (startIndex == value.Length)
             {
-                return value;
+                endIndex = startIndex;
             }
             else
             {
-                var endIndex = default(int);
-                
-                if (startIndex == value.Length)
-                {
-                    endIndex = startIndex;
-                }
-                else
-                {
-                    endIndex = value.Length - 1;
-                }
-
-                return Crop
-                (
-                    value,
-                    startIndex,
-                    endIndex
-                );
+                endIndex = value.Length - 1;
             }
+
+            return Crop(value, startIndex, endIndex);
         }
+    }
 
-        /// <summary>
-        /// Crops a string by removing the characters between a two indexes
-        /// </summary>
-        /// <param name="value">The value to crop</param>
-        /// <param name="startIndex">The start index</param>
-        /// <param name="endIndex">The end index</param>
-        /// <returns>The cropped string</returns>
-        public static string Crop
-            (
-                this string value,
-                int startIndex,
-                int endIndex
-            )
+    /// <summary>
+    /// Crops a string by removing the characters between a two indexes
+    /// </summary>
+    /// <param name="value">The value to crop</param>
+    /// <param name="startIndex">The start index</param>
+    /// <param name="endIndex">The end index</param>
+    /// <returns>The cropped string</returns>
+    public static string Crop(this string value, int startIndex, int endIndex)
+    {
+        if (String.IsNullOrEmpty(value))
         {
-            if (String.IsNullOrEmpty(value))
+            return value;
+        }
+        else
+        {
+            if (startIndex < 0 || endIndex < 0)
             {
-                return value;
+                throw new ArgumentOutOfRangeException("The index values cannot be less than zero.");
+            }
+
+            if (startIndex > value.Length)
+            {
+                throw new IndexOutOfRangeException("The start index must be before the end of the string.");
+            }
+
+            if (endIndex > value.Length)
+            {
+                throw new IndexOutOfRangeException("The end index must be before the end of the string.");
+            }
+
+            if (startIndex > endIndex)
+            {
+                throw new ArgumentException("The start index must be smaller than the end index.");
+            }
+
+            if (startIndex == value.Length)
+            {
+                return String.Empty;
             }
             else
             {
-                if (startIndex < 0 || endIndex < 0)
+                var length = (endIndex - startIndex) + 1;
+
+                if (length == 0)
                 {
-                    throw new ArgumentOutOfRangeException
-                    (
-                        "The index values cannot be less than zero."
-                    );
+                    length = 1;
                 }
 
-                if (startIndex > value.Length)
-                {
-                    throw new IndexOutOfRangeException
-                    (
-                        "The start index must be before the end of the string."
-                    );
-                }
-
-                if (endIndex > value.Length)
-                {
-                    throw new IndexOutOfRangeException
-                    (
-                        "The end index must be before the end of the string."
-                    );
-                }
-
-                if (startIndex > endIndex)
-                {
-                    throw new ArgumentException
-                    (
-                        "The start index must be smaller than the end index."
-                    );
-                }
-
-                if (startIndex == value.Length)
-                {
-                    return String.Empty;
-                }
-                else
-                {
-                    var length = (endIndex - startIndex) + 1;
-
-                    if (length == 0)
-                    {
-                        length = 1;
-                    }
-
-                    return value.Substring
-                    (
-                        startIndex,
-                        length
-                    );
-                }
+                return value.Substring(startIndex, length);
             }
         }
+    }
 
-        /// <summary>
-        /// Shortcut syntax sugar for String.Format() that just requires the args values
-        /// </summary>
-        /// <param name="value">The string to format</param>
-        /// <param name="args">The args values to merge into the string</param>
-        /// <returns>The formatted string</returns>
-        public static string With
-            (
-                this string value,
-                params object[] args
-            )
+    /// <summary>
+    /// Use the current thread's culture info for conversion
+    /// </summary>
+    public static string ToTitleCase(this string value)
+    {
+        if (String.IsNullOrEmpty(value))
         {
-            if (value == null)
-            {
-                return value;
-            }
-            else
-            {
-                return String.Format(value, args);
-            }
+            return value;
         }
-
-        /// <summary>
-        /// Use the current thread's culture info for conversion
-        /// </summary>
-        public static string ToTitleCase
-            (
-                this string value
-            )
+        else
         {
-            if (value == null)
-            {
-                return value;
-            }
-            else
-            {
-                var cultureInfo = Thread.CurrentThread.CurrentCulture;
+            var cultureInfo = Thread.CurrentThread.CurrentCulture;
 
-                return cultureInfo.TextInfo.ToTitleCase
-                (
-                    value.ToLower()
-                );
-            }
+            return cultureInfo.TextInfo.ToTitleCase(value.ToLower());
         }
+    }
 
-        /// <summary>
-        /// Overload which uses the culture info with the specified name
-        /// </summary>
-        public static string ToTitleCase
-            (
-                this string value,
-                string cultureInfoName
-            )
+    /// <summary>
+    /// Determines if a string value is numeric
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <returns>True, if the string is numeric; otherwise false</returns>
+    public static bool IsNumeric(this string value)
+    {
+        if (String.IsNullOrWhiteSpace(value))
         {
-            if (value == null)
-            {
-                return value;
-            }
-            else
-            {
-                var cultureInfo = new CultureInfo(cultureInfoName);
-
-                return cultureInfo.TextInfo.ToTitleCase
-                (
-                    value.ToLower()
-                );
-            }
+            return false;
         }
-
-        /// <summary>
-        /// Overload which uses the specified culture info
-        /// </summary>
-        public static string ToTitleCase
-            (
-                this string value,
-                CultureInfo cultureInfo
-            )
+        else
         {
-            Validate.IsNotNull(cultureInfo);
-
-            if (value == null)
-            {
-                return value;
-            }
-            else
-            {
-                return cultureInfo.TextInfo.ToTitleCase
-                (
-                    value.ToLower()
-                );
-            }
+            return Double.TryParse(value, out double _);
         }
+    }
 
-        /// <summary>
-        /// Determines if the string has a value
-        /// </summary>
-        public static bool HasValue
-            (
-                this string value
-            )
+    /// <summary>
+    /// Determines if a string contains only alpha numeric characters
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <returns>True, if the string contains only alpha numeric; otherwise false</returns>
+    public static bool IsAlphaNumeric(this string value)
+    {
+        if (String.IsNullOrWhiteSpace(value))
         {
-            return 
-            (
-                false == String.IsNullOrEmpty(value) && value.Trim().Length > 0
-            );
+            return false;
         }
-
-        /// <summary>
-        /// Determines if one string has the same value as another
-        /// </summary>
-        public static bool IsEqualTo
-            (
-                this string value,
-                string other
-            )
+        else
         {
-            return value.Equals
-            (
-                other,
-                StringComparison.OrdinalIgnoreCase
-            );
+            return value.All(Char.IsLetterOrDigit);
         }
+    }
 
-        /// <summary>
-        /// Determines if the given string contains non-printable (control) characters
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if the string contains non-printable characters; otherwise false</returns>
-        public static bool ContainsNonPrintableCharacters
-            (
-                this string value
-            )
+    /// <summary>
+    /// Determines if a string constitutes a valid C# property name
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <returns>True, if valid property name; otherwise false</returns>
+    public static bool IsValidPropertyName(this string value)
+    {
+        const string PropertyPattern = @"^@?[a-zA-Z_]\w*(\.@?[a-zA-Z_]\w*)*$";
+
+        if (String.IsNullOrWhiteSpace(value))
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else
-            {
-                return value.Any
-                (
-                    c => Char.IsControl(c)
-                );
-            }
+            return false;
         }
-
-        /// <summary>
-        /// Determines if the string specified contains any non-ASCII characters
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if the string is ASCII only; otherwise false</returns>
-        /// <remarks>
-        /// ASCII encoding replaces non-ASCII with question marks, so we use UTF8 to see 
-        /// if multi-byte sequences are there.
-        /// </remarks>
-        public static bool ContainsNonAscii
-            (
-                this string value
-            )
+        else
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else
-            {
-                return Encoding.UTF8.GetByteCount(value) != value.Length;
-            }
+            return Regex.IsMatch(value, PropertyPattern, RegexOptions.Compiled);
         }
-        
-        /// <summary>
-        /// Removes all special characters from the string value
-        /// </summary>
-        /// <param name="value">The value to remove special characters from</param>
-        /// <returns>The string without special characters</returns>
-        /// <remarks>
-        /// See http://stackoverflow.com/a/16725861
-        /// </remarks>
-        public static string RemoveSpecialCharacters
-            (
-                this string value
-            )
+    }
+
+    /// <summary>
+    /// Determines if a string is made up of any of the characters in an array
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <param name="matchValues">An array of match values</param>
+    /// <returns>True, if a match was found; otherwise false</returns>
+    public static bool IsMadeUpOf(this string value, params char[] matchValues)
+    {
+        if (String.IsNullOrEmpty(value))
         {
-            if (value == null)
-            {
-                return value;
-            }
-            else
-            {
-                var sb = new StringBuilder();
-
-                foreach (char c in value)
-                {
-                    if (Char.IsLetterOrDigit(c) || Char.IsSymbol(c) || Char.IsWhiteSpace(c) || Char.IsPunctuation(c))
-                    {
-                        sb.Append(c);
-                    }
-                }
-
-                return sb.ToString();
-            }
+            return false;
         }
-
-        /// <summary>
-        /// Returns the first string with a non-empty non-null value
-        /// </summary>
-        /// <param name="input">The input value</param>
-        /// <param name="alternative">The alternative value</param>
-        /// <returns>The first string with a non-empty non-null value</returns>
-        public static string Or
-            (
-                this string input,
-                string alternative
-            )
+        else
         {
-            return 
-            (
-                (String.IsNullOrEmpty(input) == false) ? input : alternative
-            );
+            return value.All(c => matchValues.Any(mv => mv == c));
         }
+    }
 
-        /// <summary>
-        /// Determines if the pattern is like the text using a wildcard match
-        /// </summary>
-        /// <param name="pattern">The pattern containing the wildcards</param>
-        /// <param name="text">The text to match against</param>
-        /// <param name="caseSensitive">If true, a case sensitive match is performed</param>
-        /// <returns>True, if the pattern matches the text</returns>
-        public static bool IsLike
-            (
-                this string pattern,
-                string text,
-                bool caseSensitive = false
-            )
+    /// <summary>
+    /// Determines if a string starts with any values in an array
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <param name="matchValues">An array of match values</param>
+    /// <returns>True, if a match was found; otherwise false</returns>
+    public static bool StartsWithAny(this string value, params string[] matchValues)
+    {
+        if (String.IsNullOrEmpty(value))
         {
-            Contract.Requires(false == String.IsNullOrEmpty(pattern));
-
-            pattern = pattern.Replace(".", @"\.");
-            pattern = pattern.Replace("?", ".");
-            pattern = pattern.Replace("*", ".*?");
-            pattern = pattern.Replace(@"\", @"\\");
-            pattern = pattern.Replace(" ", @"\s");
-
-            var regex = new Regex
-            (
-                pattern,
-                caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase
-            );
-
-            return regex.IsMatch
-            (
-                text
-            );
+            return false;
         }
-
-        /// <summary>
-        /// Determines if a string value is numeric
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if the string is numeric; otherwise false</returns>
-        public static bool IsNumeric
-            (
-                this string value
-            )
-        {
-            if (String.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-            else
-            {
-                return Double.TryParse
-                (
-                    value,
-                    out double number
-                );
-            }
-        }
-
-        /// <summary>
-        /// Determines if a string contains only alpha numeric characters
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if the string contains only alpha numeric; otherwise false</returns>
-        public static bool IsAlphaNumeric
-            (
-                this string value
-            )
-        {
-            if (String.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-            else
-            {
-                return value.All
-                (
-                    Char.IsLetterOrDigit
-                );
-            }
-        }
-
-        /// <summary>
-        /// Determines if a string value is a new line
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if the string is a new line; otherwise false</returns>
-        public static bool IsNewLine
-            (
-                this string value
-            )
-        {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else if (value == "\n" || value == "\r" || value == "\r\n")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Determines if a string constitutes a valid C# property name
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <returns>True, if valid property name; otherwise false</returns>
-        public static bool IsValidPropertyName
-            (
-                this string value
-            )
-        {
-            const string PropertyPattern = @"^@?[a-zA-Z_]\w*(\.@?[a-zA-Z_]\w*)*$";
-
-            if (String.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-            else
-            {
-                return Regex.IsMatch
-                (
-                    value,
-                    PropertyPattern,
-                    RegexOptions.Compiled
-                );
-            }
-        }
-
-        /// <summary>
-        /// Determines if a string matches any values in an array
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <param name="matchValues">An array of match values</param>
-        /// <returns>True, if a match was found; otherwise false</returns>
-        public static bool MatchesAny
-            (
-                this string value,
-                params string[] matchValues
-            )
+        else
         {
             foreach (var matchValue in matchValues)
             {
-                var matches = String.Equals
-                (
-                    value,
-                    matchValue,
-                    StringComparison.InvariantCulture
-                );
-
-                if (matches)
+                if (value.StartsWith(matchValue))
                 {
                     return true;
                 }
             }
+        }
 
+        return false;
+    }
+
+    /// <summary>
+    /// Determines if a string ends with any values in an array
+    /// </summary>
+    /// <param name="value">The value to check</param>
+    /// <param name="matchValues">An array of match values</param>
+    /// <returns>True, if a match was found; otherwise false</returns>
+    public static bool EndsWithAny(this string value, params string[] matchValues)
+    {
+        if (String.IsNullOrEmpty(value))
+        {
             return false;
         }
-
-        /// <summary>
-        /// Determines if a string contains any values in an array
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <param name="matchValues">An array of match values</param>
-        /// <returns>True, if a match was found; otherwise false</returns>
-        public static bool ContainsAny
-            (
-                this string value,
-                params string[] matchValues
-            )
+        else
         {
-            if (String.IsNullOrEmpty(value))
+            foreach (var matchValue in matchValues)
             {
-                return false;
-            }
-            else
-            {
-                foreach (var matchValue in matchValues)
+                if (value.EndsWith(matchValue))
                 {
-                    if (value.Contains(matchValue))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
-
-            return false;
         }
 
-        /// <summary>
-        /// Determines if a string is made up of any of the characters in an array
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <param name="matchValues">An array of match values</param>
-        /// <returns>True, if a match was found; otherwise false</returns>
-        public static bool IsMadeUpOf
-            (
-                this string value,
-                params char[] matchValues
-            )
+        return false;
+    }
+
+    /// <summary>
+    /// Extracts the string found to the left of the string value specified
+    /// </summary>
+    /// <param name="input">The string to search</param>
+    /// <param name="value">The matching value</param>
+    /// <returns>The string found to the left of the value specified</returns>
+    public static string LeftOf(this string input, string value)
+    {
+        Validate.IsNotEmpty(input);
+
+        var firstIndex = input.IndexOf(value);
+
+        if (firstIndex < 1)
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else
-            {
-                return value.All
-                (
-                    c => matchValues.Any(mv => mv == c)
-                );
-            }
+            return String.Empty;
         }
-
-        /// <summary>
-        /// Determines if a string starts with any values in an array
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <param name="matchValues">An array of match values</param>
-        /// <returns>True, if a match was found; otherwise false</returns>
-        public static bool StartsWithAny
-            (
-                this string value,
-                params string[] matchValues
-            )
+        else
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else
-            {
-                foreach (var matchValue in matchValues)
-                {
-                    if (value.StartsWith(matchValue))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return input[..firstIndex];
         }
+    }
 
-        /// <summary>
-        /// Determines if a string ends with any values in an array
-        /// </summary>
-        /// <param name="value">The value to check</param>
-        /// <param name="matchValues">An array of match values</param>
-        /// <returns>True, if a match was found; otherwise false</returns>
-        public static bool EndsWithAny
-            (
-                this string value,
-                params string[] matchValues
-            )
+    /// <summary>
+    /// Extracts the string found to the right of the string value specified
+    /// </summary>
+    /// <param name="input">The string to search</param>
+    /// <param name="value">The matching value</param>
+    /// <returns>The string found to the right of the value specified</returns>
+    public static string RightOf(this string input, string value)
+    {
+        Validate.IsNotEmpty(input);
+
+        var lastIndex = input.LastIndexOf(value);
+
+        if ((lastIndex + value.Length) == input.Length)
         {
-            if (String.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-            else
-            {
-                foreach (var matchValue in matchValues)
-                {
-                    if (value.EndsWith(matchValue))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return String.Empty;
         }
-
-        /// <summary>
-        /// Gets the line number from the position specified in a string
-        /// </summary>
-        /// <param name="value">The string value to get the line number from</param>
-        /// <param name="position">The position to get the line number for</param>
-        /// <returns>The line number found</returns>
-        public static int LineFromPosition
-            (
-                this string value,
-                int position
-            )
+        else
         {
-            Validate.IsNotEmpty(value);
+            var startIndex = (lastIndex + value.Length);
 
-            var lineNumber = 1;
-
-            if (position > value.Length) position = value.Length;
-
-            for (int i = 0; i <= position - 1; i++)
-            {
-                if (value[i] == '\n') lineNumber++;
-            }
-
-            return lineNumber;
+            return input[startIndex..];
         }
+    }
 
-        /// <summary>
-        /// Finds all instances of a substring within a string and returns the indexes of each occurrence
-        /// </summary>
-        /// <param name="haystack">The string to search</param>
-        /// <param name="needle">The string to search for</param>
-        /// <returns>An enumeration of all indexes indicating where the substring was found</returns>
-        public static IEnumerable<int> IndexesOf
-            (
-                this string haystack,
-                string needle
-            )
+    /// <summary>
+    /// Replaces the first occurrence of a string within another string
+    /// </summary>
+    /// <param name="text">The text to search</param>
+    /// <param name="search">The search value</param>
+    /// <param name="replace">The replace value</param>
+    /// <returns>The updated string</returns>
+    public static string ReplaceFirst(this string text, string search, string replace)
+    {
+        var position = text.IndexOf(search);
+
+        if (position < 0)
         {
-            Validate.IsNotEmpty(haystack);
-
-            int lastIndex = 0;
-
-            while (true)
-            {
-                int index = haystack.IndexOf(needle, lastIndex);
-
-                if (index == -1)
-                {
-                    yield break;
-                }
-
-                yield return index;
-
-                lastIndex = index + needle.Length;
-            }
-        }
-
-        /// <summary>
-        /// Counts the number of occurrences of a substring within the string specified
-        /// </summary>
-        /// <param name="input">The input string to search</param>
-        /// <param name="search">The search string</param>
-        /// <returns>The number of occurrences found</returns>
-        public static int Count
-            (
-                this string input,
-                string search
-            )
-        {
-            Validate.IsNotEmpty(input);
-
-            var indexes = input.IndexesOf(search);
-
-            return
-            (
-                indexes == null ? 0 : indexes.Count()
-            );
-        }
-
-        /// <summary>
-        /// Extracts the string found to the left of the string value specified
-        /// </summary>
-        /// <param name="input">The string to search</param>
-        /// <param name="value">The matching value</param>
-        /// <returns>The string found to the left of the value specified</returns>
-        public static string LeftOf
-            (
-                this string input,
-                string value
-            )
-        {
-            Validate.IsNotEmpty(input);
-
-            var firstIndex = input.IndexOf(value);
-
-            if (firstIndex < 1)
-            {
-                return String.Empty;
-            }
-            else
-            {
-                return input.Substring
-                (
-                    0,
-                    firstIndex
-                );
-            }
-        }
-
-        /// <summary>
-        /// Extracts the string found to the right of the string value specified
-        /// </summary>
-        /// <param name="input">The string to search</param>
-        /// <param name="value">The matching value</param>
-        /// <returns>The string found to the right of the value specified</returns>
-        public static string RightOf
-            (
-                this string input,
-                string value
-            )
-        {
-            Validate.IsNotEmpty(input);
-
-            var lastIndex = input.LastIndexOf(value);
-
-            if ((lastIndex + value.Length) == input.Length)
-            {
-                return String.Empty;
-            }
-            else
-            {
-                var startIndex = 
-                (
-                    lastIndex + value.Length
-                );
-
-                return input.Substring(startIndex);
-            }
-        }
-
-        /// <summary>
-        /// Replaces the first occurrence of a string within another string
-        /// </summary>
-        /// <param name="text">The text to search</param>
-        /// <param name="search">The search value</param>
-        /// <param name="replace">The replace value</param>
-        /// <returns>The updated string</returns>
-        public static string ReplaceFirst
-            (
-                this string text,
-                string search,
-                string replace
-            )
-        {
-            var position = text.IndexOf(search);
-
-            if (position < 0)
-            {
-                return text;
-            }
-            else
-            {
-                var leftValue = text.Substring(0, position);
-                var rightValue = text.Substring(position + search.Length);
-
-                return leftValue + replace + rightValue;
-            }
-        }
-
-        /// <summary>
-        /// Replaces the last occurrence of a string within another string
-        /// </summary>
-        /// <param name="text">The text to search</param>
-        /// <param name="search">The search value</param>
-        /// <param name="replace">The replace value</param>
-        /// <returns>The updated string</returns>
-        public static string ReplaceLast
-            (
-                this string text,
-                string search,
-                string replace
-            )
-        {
-            var position = text.LastIndexOf(search);
-
-            if (position < 0)
-            {
-                return text;
-            }
-            else
-            {
-                var leftValue = text.Substring(0, position);
-                var rightValue = text.Substring(position + search.Length);
-
-                return leftValue + replace + rightValue;
-            }
-        }
-
-        /// <summary>
-        /// Removes the first occurrence of a string within another string
-        /// </summary>
-        /// <param name="text">The text to search</param>
-        /// <param name="search">The search value</param>
-        /// <returns>The updated string</returns>
-        public static string RemoveFirst
-            (
-                this string text,
-                string search
-            )
-        {
-            return ReplaceFirst(text, search, String.Empty);
-        }
-
-        /// <summary>
-        /// Removes the last occurrence of a string within another string
-        /// </summary>
-        /// <param name="text">The text to search</param>
-        /// <param name="search">The search value</param>
-        /// <returns>The updated string</returns>
-        public static string RemoveLast
-            (
-                this string text,
-                string search
-            )
-        {
-            return ReplaceLast(text, search, String.Empty);
-        }
-
-        /// <summary>
-        /// Removes all leading and trailing phrases specified in an array from a string
-        /// </summary>
-        /// <param name="text">The text</param>
-        /// <param name="phases">The search phases</param>
-        /// <returns>The updated text</returns>
-        public static string Trim
-            (
-                this string text,
-                params string[] phases
-            )
-        {
-            if (String.IsNullOrEmpty(text))
-            {
-                return text;
-            }
-
-            var phrasesFound = false;
-
-            do
-            {
-                phrasesFound = false;
-
-                foreach (var phrase in phases)
-                {
-                    if (text.StartsWith(phrase))
-                    {
-                        phrasesFound = true;
-                        text = text.RemoveFirst(phrase);
-                    }
-
-                    if (text.EndsWith(phrase))
-                    {
-                        phrasesFound = true;
-                        text = text.RemoveLast(phrase);
-                    }
-                }
-            }
-            while (phrasesFound);
-
             return text;
         }
+        else
+        {
+            var leftValue = text[..position];
+            var rightValue = text[(position + search.Length)..];
+
+            return leftValue + replace + rightValue;
+        }
+    }
+
+    /// <summary>
+    /// Replaces the last occurrence of a string within another string
+    /// </summary>
+    /// <param name="text">The text to search</param>
+    /// <param name="search">The search value</param>
+    /// <param name="replace">The replace value</param>
+    /// <returns>The updated string</returns>
+    public static string ReplaceLast(this string text, string search, string replace)
+    {
+        var position = text.LastIndexOf(search);
+
+        if (position < 0)
+        {
+            return text;
+        }
+        else
+        {
+            var leftValue = text[..position];
+            var rightValue = text[(position + search.Length)..];
+
+            return leftValue + replace + rightValue;
+        }
+    }
+
+    /// <summary>
+    /// Removes the first occurrence of a string within another string
+    /// </summary>
+    /// <param name="text">The text to search</param>
+    /// <param name="search">The search value</param>
+    /// <returns>The updated string</returns>
+    public static string RemoveFirst(this string text, string search)
+    {
+        return ReplaceFirst(text, search, String.Empty);
+    }
+
+    /// <summary>
+    /// Removes the last occurrence of a string within another string
+    /// </summary>
+    /// <param name="text">The text to search</param>
+    /// <param name="search">The search value</param>
+    /// <returns>The updated string</returns>
+    public static string RemoveLast(this string text, string search)
+    {
+        return ReplaceLast(text, search, String.Empty);
+    }
+
+    /// <summary>
+    /// Removes all leading and trailing phrases specified in an array from a string
+    /// </summary>
+    /// <param name="text">The text</param>
+    /// <param name="phases">The search phases</param>
+    /// <returns>The updated text</returns>
+    public static string Trim(this string text, params string[] phases)
+    {
+        if (String.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        bool phrasesFound;
+
+        do
+        {
+            phrasesFound = false;
+
+            foreach (var phrase in phases)
+            {
+                if (text.StartsWith(phrase))
+                {
+                    phrasesFound = true;
+                    text = text.RemoveFirst(phrase);
+                }
+
+                if (text.EndsWith(phrase))
+                {
+                    phrasesFound = true;
+                    text = text.RemoveLast(phrase);
+                }
+            }
+        }
+        while (phrasesFound);
+
+        return text;
     }
 }

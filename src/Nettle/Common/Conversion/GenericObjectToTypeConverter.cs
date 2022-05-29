@@ -1,156 +1,145 @@
-﻿namespace Nettle
+﻿namespace Nettle;
+
+/// <summary>
+/// Generic converter for converting an object to a specific type
+/// </summary>
+/// <typeparam name="T">The type to convert to</typeparam>
+public class GenericObjectToTypeConverter<T>
 {
-    using System;
-
     /// <summary>
-    /// Converter implementation for converting an object to a type value
+    /// Converts an object value to a value of the type specified, if a conversion is possible
     /// </summary>
-    /// <typeparam name="T">The type to convert to</typeparam>
-    public class GenericObjectToTypeConverter<T>
+    /// <param name="value">The object value to convert</param>
+    /// <returns>The converted value</returns>
+    public T? Convert(object? value)
     {
-        /// <summary>
-        /// Converts an object value to a value of the type specified, if a conversion is possible
-        /// </summary>
-        /// <param name="value">The object value to convert</param>
-        /// <returns>The converted value</returns>
-        public T Convert(object value)
+        if (value == null)
         {
-            if (value == null)
-            {
-                return default(T);
-            }
+            return default;
+        }
 
-            var valueType = value.GetType();
+        var valueType = value.GetType();
 
-            if (typeof(T) == valueType || valueType.IsSubclassOf(typeof(T)))
-            {
-                return (T)value;
-            }
-            else
-            {
-                var canConvert = valueType.CanConvert
-                (
-                    typeof(T),
-                    value
-                );
+        if (typeof(T) == valueType || valueType.IsSubclassOf(typeof(T)))
+        {
+            return (T)value;
+        }
+        else
+        {
+            var canConvert = valueType.CanConvert(typeof(T), value);
 
-                if (canConvert)
+            if (canConvert)
+            {
+                var type = typeof(T);
+
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
-	                var t = typeof(T);
-	                if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>))
-	                {
-		                t = Nullable.GetUnderlyingType(t);
-	                }
-
-	                return (T)System.Convert.ChangeType(value, t);
+                    type = Nullable.GetUnderlyingType(type);
                 }
-                else if (value.GetType() == typeof(string))
+
+                if (type != null)
                 {
-                    return ConvertFromString((string)value);
+                    return (T)System.Convert.ChangeType(value, type);
                 }
                 else
                 {
-                    RaiseCannotConvertException(value);
-
-                    return default(T);
+                    return default;
                 }
             }
-        }
-
-        /// <summary>
-        /// Converts a string value to the type specified
-        /// </summary>
-        /// <param name="value">The string value to convert</param>
-        /// <returns>The converted value</returns>
-        private T ConvertFromString(string value)
-        {
-            var convertedValue = default(object);
-            var convertType = typeof(T);
-
-            if (String.IsNullOrEmpty(value))
+            else if (value.GetType() == typeof(string))
             {
-                return default(T);
-            }
-
-            if (convertType.IsNullable())
-            {
-                convertType = Nullable.GetUnderlyingType(convertType);
-            }
-
-            if (convertType == typeof(DateTime))
-            {
-                convertedValue = System.Convert.ToDateTime(value);
-            }
-            else if (convertType == typeof(bool))
-            {
-                convertedValue = System.Convert.ToBoolean(value);
-            }
-            else if (convertType == typeof(double))
-            {
-                convertedValue = System.Convert.ToDouble(value);
-            }
-            else if (convertType == typeof(Single))
-            {
-                convertedValue = System.Convert.ToSingle(value);
-            }
-            else if (convertType == typeof(decimal))
-            {
-                convertedValue = System.Convert.ToDecimal(value);
-            }
-            else if (convertType == typeof(long))
-            {
-                convertedValue = System.Convert.ToInt64(value);
-            }
-            else if (convertType == typeof(int))
-            {
-                convertedValue = System.Convert.ToInt32(value);
-            }
-            else if (convertType == typeof(short))
-            {
-                convertedValue = System.Convert.ToInt16(value);
-            }
-            else if (convertType == typeof(char))
-            {
-                convertedValue = System.Convert.ToChar(value);
-            }
-            else if (convertType == typeof(byte))
-            {
-                convertedValue = System.Convert.ToByte(value);
-            }
-            else if (convertType.IsEnum)
-            {
-                convertedValue = Enum.Parse(convertType, value);
+                return ConvertFromString((string)value);
             }
             else
             {
-                RaiseCannotConvertException(value);
+                GenericObjectToTypeConverter<T>.RaiseCannotConvertException(value);
+
+                return default;
             }
-
-            return (T)convertedValue;
         }
+    }
 
-        /// <summary>
-        /// Raises an exception to indicate that the value could not be converted
-        /// </summary>
-        /// <param name="value">The value that could not be converted</param>
-        private void RaiseCannotConvertException
-            (
-                object value
-            )
+    /// <summary>
+    /// Converts a string value to the type specified
+    /// </summary>
+    /// <param name="value">The string value to convert</param>
+    /// <returns>The converted value</returns>
+    private T? ConvertFromString(string? value)
+    {
+        var convertedValue = default(object);
+        var convertType = typeof(T);
+
+        if (String.IsNullOrEmpty(value))
         {
-            var valueString = value.ToString();
-            var typeName = typeof(T).ToString();
-
-            var message = "The value '{0}' cannot be converted to the type '{1}'.";
-
-            throw new InvalidCastException
-            (
-                message.With
-                (
-                    valueString,
-                    typeName
-                )
-            );
+            return default;
         }
+
+        if (convertType.IsNullable())
+        {
+            convertType = Nullable.GetUnderlyingType(convertType);
+        }
+
+        if (convertType == typeof(DateTime))
+        {
+            convertedValue = System.Convert.ToDateTime(value);
+        }
+        else if (convertType == typeof(bool))
+        {
+            convertedValue = System.Convert.ToBoolean(value);
+        }
+        else if (convertType == typeof(double))
+        {
+            convertedValue = System.Convert.ToDouble(value);
+        }
+        else if (convertType == typeof(Single))
+        {
+            convertedValue = System.Convert.ToSingle(value);
+        }
+        else if (convertType == typeof(decimal))
+        {
+            convertedValue = System.Convert.ToDecimal(value);
+        }
+        else if (convertType == typeof(long))
+        {
+            convertedValue = System.Convert.ToInt64(value);
+        }
+        else if (convertType == typeof(int))
+        {
+            convertedValue = System.Convert.ToInt32(value);
+        }
+        else if (convertType == typeof(short))
+        {
+            convertedValue = System.Convert.ToInt16(value);
+        }
+        else if (convertType == typeof(char))
+        {
+            convertedValue = System.Convert.ToChar(value);
+        }
+        else if (convertType == typeof(byte))
+        {
+            convertedValue = System.Convert.ToByte(value);
+        }
+        else if (convertType != null && convertType.IsEnum)
+        {
+            convertedValue = Enum.Parse(convertType, value);
+        }
+        else
+        {
+            GenericObjectToTypeConverter<T>.RaiseCannotConvertException(value);
+        }
+
+        return (T?)convertedValue;
+    }
+
+    /// <summary>
+    /// Raises an exception to indicate that the value could not be converted
+    /// </summary>
+    /// <param name="value">The value that could not be converted</param>
+    private static void RaiseCannotConvertException(object value)
+    {
+        var valueString = value.ToString();
+        var typeName = typeof(T).ToString();
+
+        throw new InvalidCastException($"'{valueString}' cannot be converted to type {typeName}.");
     }
 }

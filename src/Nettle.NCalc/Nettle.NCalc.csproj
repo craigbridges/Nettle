@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	<TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Nettle.NCalc</Product>
     <Description>An extension for the Nettle templating engine that provides direct integration with NCalc.</Description>
-    <Copyright>Copyright © Craig Bridges 2018</Copyright>
+    <Copyright>Copyright © Craig Bridges 2022</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/craigbridges/Nettle/master/docs/Logo/Icon.ico</PackageIconUrl>
+    <PackageIcon>Icon.ico</PackageIcon>
     <PackageReleaseNotes>- Ported entire library to .NET Standard 2.0</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
-
+  <ItemGroup>
+    <None Include="Icon.ico" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NCalc.NetCore" Version="1.0.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Nettle\Nettle.csproj" />
   </ItemGroup>
-
 </Project>

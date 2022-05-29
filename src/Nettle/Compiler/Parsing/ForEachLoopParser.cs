@@ -1,100 +1,54 @@
-﻿namespace Nettle.Compiler.Parsing
+﻿namespace Nettle.Compiler.Parsing;
+
+using Nettle.Compiler.Parsing.Blocks;
+
+/// <summary>
+/// Represents a for each loop code block parser
+/// </summary>
+internal sealed class ForEachLoopParser : NestedBlockParser
 {
-    using Nettle.Compiler.Parsing.Blocks;
-    using System;
+    public ForEachLoopParser(IBlockifier blockifier)
+        : base(blockifier)
+    { }
 
     /// <summary>
-    /// Represents a for each loop code block parser
+    /// Gets the open tag name
     /// </summary>
-    internal sealed class ForEachLoopParser : NestedBlockParser
+    protected override string TagName => "each";
+
+    /// <summary>
+    /// Extracts the 'for each' signature into a code block object
+    /// </summary>
+    /// <param name="templateContent">The template content</param>
+    /// <param name="positionOffSet">The position offset index</param>
+    /// <param name="signature">The variable signature</param>
+    /// <returns>The parsed for each code block</returns>
+    public override CodeBlock Parse(ref string templateContent, ref int positionOffSet, string signature)
     {
-        /// <summary>
-        /// Constructs the parser with a blockifier
-        /// </summary>
-        /// <param name="blockifier">The blockifier</param>
-        public ForEachLoopParser
-            (
-                IBlockifier blockifier
-            )
+        var forLoop = UnwrapSignatureBody(signature);
+        var collectionSignature = forLoop.RightOf($"{TagName} ");
 
-            : base(blockifier)
-        { }
-
-        /// <summary>
-        /// Gets the open tag name
-        /// </summary>
-        protected override string TagName
+        if (String.IsNullOrWhiteSpace(collectionSignature))
         {
-            get
-            {
-                return "each";
-            }
+            throw new NettleParseException
+            (
+                "The loops collection name must be specified.",
+                positionOffSet
+            );
         }
 
-        /// <summary>
-        /// Extracts the 'for each' signature into a code block object
-        /// </summary>
-        /// <param name="templateContent">The template content</param>
-        /// <param name="positionOffSet">The position offset index</param>
-        /// <param name="signature">The variable signature</param>
-        /// <returns>The parsed for each code block</returns>
-        public override CodeBlock Parse
-            (
-                ref string templateContent,
-                ref int positionOffSet,
-                string signature
-            )
+        var collectionType = ResolveType(collectionSignature);
+        var collectionValue = collectionType.ParseValue(collectionSignature);
+
+        var nestedBody = ExtractNestedBody(ref templateContent, ref positionOffSet, signature);
+
+        return new ForEachLoop(nestedBody.Signature, nestedBody.Body, collectionSignature)
         {
-            var forLoop = UnwrapSignatureBody
-            (
-                signature
-            );
-
-            var collectionSignature = forLoop.RightOf
-            (
-                "{0} ".With
-                (
-                    this.TagName
-                )
-            );
-
-            if (String.IsNullOrWhiteSpace(collectionSignature))
-            {
-                throw new NettleParseException
-                (
-                    "The loops collection name must be specified.",
-                    positionOffSet
-                );
-            }
-
-            var collectionType = ResolveType
-            (
-                collectionSignature
-            );
-
-            var collectionValue = collectionType.ParseValue
-            (
-                collectionSignature
-            );
-
-            var nestedBody = ExtractNestedBody
-            (
-                ref templateContent,
-                ref positionOffSet,
-                signature
-            );
-
-            return new ForEachLoop()
-            {
-                Signature = nestedBody.Signature,
-                StartPosition = nestedBody.StartPosition,
-                EndPosition = nestedBody.EndPosition,
-                CollectionSignature = collectionSignature,
-                CollectionType = collectionType,
-                CollectionValue = collectionValue,
-                Body = nestedBody.Body,
-                Blocks = nestedBody.Blocks
-            };
-        }
+            StartPosition = nestedBody.StartPosition,
+            EndPosition = nestedBody.EndPosition,
+            CollectionType = collectionType,
+            CollectionValue = collectionValue,
+            Blocks = nestedBody.Blocks
+        };
     }
 }

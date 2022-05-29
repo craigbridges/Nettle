@@ -1,32 +1,23 @@
 ﻿namespace Nettle
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    
+{    
     /// <summary>
     /// Represents the state of the Nettle environment
     /// </summary>
     public static class NettleEnvironment
     {
-        private static readonly Dictionary<string, object> _variables 
-            = InitializeVariables();
+        private static readonly Dictionary<string, object?> _variables = InitializeVariables();
 
         /// <summary>
         /// Initializes the environment variables dictionary
         /// </summary>
         /// <returns>A new dictionary with system environment variables</returns>
-        private static Dictionary<string, object> InitializeVariables()
+        private static Dictionary<string, object?> InitializeVariables()
         {
-            var variables = new Dictionary<string, object>();
+            var variables = new Dictionary<string, object?>();
 
             foreach (DictionaryEntry entry in Environment.GetEnvironmentVariables())
             {
-                variables.Add
-                (
-                    entry.Key.ToString(),
-                    entry.Value
-                );
+                variables.Add(entry.Key.ToString()!, entry.Value);
             }
 
             return variables;
@@ -36,32 +27,14 @@
         /// Retrieves the value of a Nettle environment variable
         /// </summary>
         /// <param name="name">The variable name</param>
-        public static object GetEnvironmentVariable
-            (
-                string name
-            )
+        public static object? GetEnvironmentVariable(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException
-                (
-                    "The variable name must be a non empty string."
-                );
+                throw new ArgumentNullException("The variable name must be a non empty string.");
             }
 
-            var entryFound = _variables.ContainsKey
-            (
-                name
-            );
-
-            if (entryFound)
-            {
-                return _variables[name];
-            }
-            else
-            {
-                return null;
-            }
+            return _variables.ContainsKey(name) ? _variables[name] : null;
         }
 
         /// <summary>
@@ -69,18 +42,11 @@
         /// </summary>
         /// <param name="name">The variable name</param>
         /// <param name="value">The value to set</param>
-        public static void SetEnvironmentVariable
-            (
-                string name,
-                object value
-            )
+        public static void SetEnvironmentVariable(string name, object? value)
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException
-                (
-                    "The variable name must be a non empty string."
-                );
+                throw new ArgumentNullException("The variable name must be a non empty string.");
             }
 
             _variables[name] = value;

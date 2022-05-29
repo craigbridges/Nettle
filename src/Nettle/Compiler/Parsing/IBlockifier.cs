@@ -12,9 +12,6 @@
         /// </summary>
         /// <param name="content">The content to parse</param>
         /// <returns>An array of code blocks</returns>
-        CodeBlock[] Blockify
-        (
-            string content
-        );
+        CodeBlock[] Blockify(string content);
     }
 }

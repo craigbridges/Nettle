@@ -11,19 +11,12 @@
         private readonly IRegisteredTemplateRepository _templateRepository;
         private readonly BlockCollectionRenderer _collectionRenderer;
 
-        /// <summary>
-        /// Constructs the renderer with required dependencies
-        /// </summary>
-        /// <param name="functionRepository">The function repository</param>
-        /// <param name="templateRepository">The template repository</param>
-        /// <param name="collectionRenderer">The block collection renderer</param>
         public PartialRenderer
             (
                 IFunctionRepository functionRepository,
                 IRegisteredTemplateRepository templateRepository,
                 BlockCollectionRenderer collectionRenderer
             )
-
             : base(functionRepository)
         {
             Validate.IsNotNull(templateRepository);
@@ -33,86 +26,36 @@
             _collectionRenderer = collectionRenderer;
         }
 
-        /// <summary>
-        /// Determines if the renderer can render the code block specified
-        /// </summary>
-        /// <param name="block">The code block</param>
-        /// <returns>True, if it can be rendered; otherwise false</returns>
-        public bool CanRender
-            (
-                CodeBlock block
-            )
+        public bool CanRender(CodeBlock block)
         {
             Validate.IsNotNull(block);
 
-            var blockType = block.GetType();
-
-            return
-            (
-                blockType == typeof(RenderPartial)
-            );
+            return block.GetType() == typeof(RenderPartial);
         }
 
-        /// <summary>
-        /// Renders the code block specified into a string
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="block">The code block to render</param>
-        /// <param name="flags">The template flags</param>
-        /// <returns>The rendered block</returns>
-        public string Render
-            (
-                ref TemplateContext context,
-                CodeBlock block,
-                params TemplateFlag[] flags
-            )
+        public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
         {
             Validate.IsNotNull(block);
 
             var partial = (RenderPartial)block;
 
-            CheckForCircularReference
-            (
-                ref context,
-                partial
-            );
+            CheckForCircularReference(ref context, partial);
 
-            var template = _templateRepository.Get
-            (
-                partial.TemplateName
-            );
-
+            var template = _templateRepository.Get(partial.TemplateName);
             var partialContent = template.ParsedTemplate.Blocks;
             var model = context.Model;
 
             if (partial.ModelType.HasValue && partial.ModelValue != null)
             {
-                model = ResolveValue
-                (
-                    ref context,
-                    partial.ModelValue,
-                    partial.ModelType.Value
-                );
+                model = ResolveValue(ref context, partial.ModelValue, partial.ModelType.Value);
             }
 
-            var newContext = context.CreateNestedContext
-            (
-                model
-            );
+            var newContext = context.CreateNestedContext(model ?? context.Model);
 
             newContext.Variables.Clear();
+            newContext.PartialCallStack.Add(partial.TemplateName);
 
-            newContext.PartialCallStack.Add
-            (
-                partial.TemplateName
-            );
-
-            return _collectionRenderer.Render
-            (
-                ref newContext,
-                partialContent,
-                flags
-            );
+            return _collectionRenderer.Render(ref newContext, partialContent, flags);
         }
 
         /// <summary>
@@ -120,20 +63,12 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="partial">The partial code block</param>
-        private void CheckForCircularReference
-            (
-                ref TemplateContext context,
-                RenderPartial partial
-            )
+        private static void CheckForCircularReference(ref TemplateContext context, RenderPartial partial)
         {
             Validate.IsNotNull(partial);
 
             var templateName = partial.TemplateName;
-
-            var previousCallFound = context.PartialCallStack.Contains
-            (
-                templateName
-            );
+            var previousCallFound = context.PartialCallStack.Contains(templateName);
 
             if (previousCallFound)
             {

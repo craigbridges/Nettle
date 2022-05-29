@@ -1,8 +1,6 @@
 ﻿namespace Nettle.Compiler.Parsing
 {
     using Nettle.Compiler.Parsing.Blocks;
-    using System;
-    using System.Linq;
 
     /// <summary>
     /// Represents a model binding code block parser
@@ -18,18 +16,7 @@
         /// The signature body will match the model binding rules 
         /// if it is a valid binding path.
         /// </remarks>
-        public bool Matches
-            (
-                string signatureBody
-            )
-        {
-            signatureBody = signatureBody.Trim();
-
-            return PathInfo.IsValidPath
-            (
-                signatureBody
-            );
-        }
+        public bool Matches(string signatureBody) => NettlePath.IsValidPath(signatureBody.Trim());
         
         /// <summary>
         /// Parses the code block signature into a code block object
@@ -38,35 +25,20 @@
         /// <param name="positionOffSet">The position offset index</param>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public CodeBlock Parse
-            (
-                ref string templateContent,
-                ref int positionOffSet,
-                string signature
-            )
+        public CodeBlock Parse(ref string templateContent, ref int positionOffSet, string signature)
         {
-            var bindingValue = NettleValueType.ModelBinding.ParseValue
-            (
-                signature
-            );
+            var bindingValue = NettleValueType.ModelBinding.ParseValue(signature);
 
-            var bindingPath = bindingValue.ToString();
+            var bindingPath = bindingValue?.ToString() ?? String.Empty;
             var startPosition = positionOffSet;
             var endPosition = (startPosition + signature.Length);
 
-            TrimTemplate
-            (
-                ref templateContent,
-                ref positionOffSet,
-                signature
-            );
+            TrimTemplate(ref templateContent, ref positionOffSet, signature);
 
-            return new ModelBinding()
+            return new ModelBinding(signature, bindingPath)
             {
-                Signature = signature,
                 StartPosition = startPosition,
-                EndPosition = endPosition,
-                BindingPath = bindingPath
+                EndPosition = endPosition
             };
         }
     }

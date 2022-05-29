@@ -227,7 +227,7 @@
                 string variableName
             )
         {
-            var pathInfo = new PathInfo(variableName);
+            var pathInfo = new NettlePath(variableName);
 
             variableName = pathInfo[0].Name;
 

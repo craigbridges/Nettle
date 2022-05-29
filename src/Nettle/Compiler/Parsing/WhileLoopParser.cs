@@ -1,98 +1,55 @@
-﻿namespace Nettle.Compiler.Parsing
+﻿namespace Nettle.Compiler.Parsing;
+
+using Nettle.Compiler.Parsing.Blocks;
+using Nettle.Compiler.Parsing.Conditions;
+
+/// <summary>
+/// Represents a 'while' loop code block parser
+/// </summary>
+internal sealed class WhileLoopParser : NestedBlockParser
 {
-    using Nettle.Compiler.Parsing.Blocks;
-    using Nettle.Compiler.Parsing.Conditions;
-    using System;
+    private readonly BooleanExpressionParser _expressionParser;
+
+    public WhileLoopParser(IBlockifier blockifier) : base(blockifier)
+    {
+        _expressionParser = new BooleanExpressionParser();
+    }
 
     /// <summary>
-    /// Represents an 'while' loop code block parser
+    /// Gets the tag name
     /// </summary>
-    internal sealed class WhileLoopParser : NestedBlockParser
+    protected override string TagName => "while";
+
+    /// <summary>
+    /// Parses the 'while' loop signature into a code block object
+    /// </summary>
+    /// <param name="templateContent">The template content</param>
+    /// <param name="positionOffSet">The position offset index</param>
+    /// <param name="signature">The loop signature</param>
+    /// <returns>The parsed while loop</returns>
+    public override CodeBlock Parse(ref string templateContent, ref int positionOffSet, string signature)
     {
-        private BooleanExpressionParser _expressionParser;
+        var signatureBody = UnwrapSignatureBody(signature);
+        var conditionSignature = signatureBody.RightOf($"{TagName} ");
 
-        /// <summary>
-        /// Constructs the parser with a blockifier
-        /// </summary>
-        /// <param name="blockifier">The blockifier</param>
-        public WhileLoopParser
+        if (String.IsNullOrWhiteSpace(conditionSignature))
+        {
+            throw new NettleParseException
             (
-                IBlockifier blockifier
-            )
-
-            : base(blockifier)
-        {
-            _expressionParser = new BooleanExpressionParser();
-        }
-        
-        /// <summary>
-        /// Gets the tag name
-        /// </summary>
-        protected override string TagName
-        {
-            get
-            {
-                return "while";
-            }
+                "The while loops condition must be specified.",
+                positionOffSet
+            );
         }
 
-        /// <summary>
-        /// Parses the 'while' loop signature into a code block object
-        /// </summary>
-        /// <param name="templateContent">The template content</param>
-        /// <param name="positionOffSet">The position offset index</param>
-        /// <param name="signature">The loop signature</param>
-        /// <returns>The parsed while loop</returns>
-        public override CodeBlock Parse
-            (
-                ref string templateContent,
-                ref int positionOffSet,
-                string signature
-            )
+        var expression = _expressionParser.Parse(conditionSignature);
+
+        var nestedBody = ExtractNestedBody(ref templateContent, ref positionOffSet, signature);
+
+        return new WhileLoop(nestedBody.Signature, nestedBody.Body, expression)
         {
-            var signatureBody = UnwrapSignatureBody
-            (
-                signature
-            );
-
-            var conditionSignature = signatureBody.RightOf
-            (
-                "{0} ".With
-                (
-                    this.TagName
-                )
-            );
-
-            if (String.IsNullOrWhiteSpace(conditionSignature))
-            {
-                throw new NettleParseException
-                (
-                    "The while loops condition must be specified.",
-                    positionOffSet
-                );
-            }
-
-            var expression = _expressionParser.Parse
-            (
-                conditionSignature
-            );
-            
-            var nestedBody = ExtractNestedBody
-            (
-                ref templateContent,
-                ref positionOffSet,
-                signature
-            );
-
-            return new WhileLoop()
-            {
-                Signature = nestedBody.Signature,
-                StartPosition = nestedBody.StartPosition,
-                EndPosition = nestedBody.EndPosition,
-                ConditionExpression = expression,
-                Body = nestedBody.Body,
-                Blocks = nestedBody.Blocks
-            };
-        }
+            StartPosition = nestedBody.StartPosition,
+            EndPosition = nestedBody.EndPosition,
+            Blocks = nestedBody.Blocks
+        };
     }
 }

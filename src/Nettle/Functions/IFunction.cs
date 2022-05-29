@@ -1,7 +1,6 @@
 ﻿namespace Nettle.Functions
 {
     using Nettle.Compiler;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Defines a contract for a Nettle function
@@ -55,10 +54,7 @@
         /// </summary>
         /// <param name="name">The name of the parameter to get</param>
         /// <returns>The matching parameter</returns>
-        FunctionParameter GetParameter
-        (
-            string name
-        );
+        FunctionParameter GetParameter(string name);
 
         /// <summary>
         /// Executes the function against a template context and parameter values
@@ -66,10 +62,6 @@
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The execution result</returns>
-        FunctionExecutionResult Execute
-        (
-            TemplateContext context,
-            params object[] parameterValues
-        );
+        FunctionExecutionResult Execute(TemplateContext context, params object?[] parameterValues);
     }
 }

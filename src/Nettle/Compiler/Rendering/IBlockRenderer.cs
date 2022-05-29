@@ -12,10 +12,7 @@
         /// </summary>
         /// <param name="block">The code block</param>
         /// <returns>True, if it can be rendered; otherwise false</returns>
-        bool CanRender
-        (
-            CodeBlock block
-        );
+        bool CanRender(CodeBlock block);
 
         /// <summary>
         /// Renders the code block specified into a string
@@ -24,11 +21,6 @@
         /// <param name="block">The code block to render</param>
         /// <param name="flags">The template flags</param>
         /// <returns>The rendered block</returns>
-        string Render
-        (
-            ref TemplateContext context,
-            CodeBlock block,
-            params TemplateFlag[] flags
-        );
+        string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags);
     }
 }

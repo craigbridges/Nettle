@@ -12,13 +12,10 @@
         /// </summary>
         /// <param name="signatureBody">The signature body</param>
         /// <returns>True, if it matches; otherwise false</returns>
-        public bool Matches
-            (
-                string signatureBody
-            )
+        public static bool Matches(string signatureBody)
         {
-            var validStart = signatureBody.StartsWith(@"<");
-            var validEnd = signatureBody.EndsWith(@">");
+            var validStart = signatureBody.StartsWith('<');
+            var validEnd = signatureBody.EndsWith('>');
 
             return validStart && validEnd;
         }
@@ -28,30 +25,21 @@
         /// </summary>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public UnresolvedKeyValuePair Parse
-            (
-                string signature
-            )
+        public UnresolvedKeyValuePair Parse(string signature)
         {
             var signatureBody = UnwrapSignatureBody(signature);
 
             // Remove wrapping '<' and '>' characters and split by comma
-            signatureBody = signatureBody.Crop
-            (
-                1,
-                signatureBody.Length - 2
-            );
+            signatureBody = signatureBody.Crop(1, signatureBody.Length - 2);
 
             var tokenizer = new Tokenizer(',');
             var tokens = tokenizer.Tokenize(signatureBody);
 
             if (tokens.Length != 2)
             {
-                var message = "'{0}' is not a valid key value pair signature.";
-
                 throw new NettleParseException
                 (
-                    message.With(signature)
+                    $"'{signature}' is not a valid key value pair signature."
                 );
             }
 
@@ -65,9 +53,8 @@
             var parsedKey = keyType.ParseValue(keySignature);
             var parsedValue = valueType.ParseValue(valueSignature);
 
-            return new UnresolvedKeyValuePair()
+            return new UnresolvedKeyValuePair(signature)
             {
-                Signature = signature,
                 ParsedKey = parsedKey,
                 KeyType = keyType,
                 ParsedValue = parsedValue,

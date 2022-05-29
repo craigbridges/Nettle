@@ -1,27 +1,16 @@
 ﻿namespace Nettle.Functions
 {
-    using System;
-
     /// <summary>
     /// Represents a single function parameter
     /// </summary>
     public sealed class FunctionParameter
     {
-        /// <summary>
-        /// Constructs the function parameter with dependencies
-        /// </summary>
-        /// <param name="function">The function</param>
-        /// <param name="configuration">The configuration details</param>
-        public FunctionParameter
-            (
-                IFunction function,
-                FunctionParameterConfiguration configuration
-            )
+        public FunctionParameter(IFunction function, FunctionParameterConfiguration configuration)
         {
             Validate.IsNotNull(function);
             Validate.IsNotNull(configuration);
 
-            this.Function = function;
+            Function = function;
 
             Configure(configuration);
         }
@@ -35,10 +24,7 @@
         /// Configures the function parameter using the details specified
         /// </summary>
         /// <param name="configuration">The configuration details</param>
-        private void Configure
-            (
-                FunctionParameterConfiguration configuration
-            )
+        private void Configure(FunctionParameterConfiguration configuration)
         {
             Validate.IsNotNull(configuration);
             Validate.IsNotEmpty(configuration.Name);
@@ -46,28 +32,19 @@
 
             var defaultValue = configuration.DefaultValue;
 
-            this.Name = configuration.Name;
-            this.Description = configuration.Description;
-            this.DataType = configuration.DataType;
-            this.Optional = configuration.Optional;
-            this.DefaultValue = defaultValue;
+            Name = configuration.Name;
+            Description = configuration.Description;
+            DataType = configuration.DataType;
+            Optional = configuration.Optional;
+            DefaultValue = defaultValue;
 
             if (defaultValue != null)
             {
-                var isValid = IsValidParameterValue
-                (
-                    defaultValue
-                );
+                var isValid = IsValidParameterValue(defaultValue);
 
                 if (false == isValid)
                 {
-                    throw new ArgumentException
-                    (
-                        "The default value for '{0}' is not valid.".With
-                        (
-                            this.Name
-                        )
-                    );
+                    throw new ArgumentException($"The default value for '{Name}' is not valid.");
                 }
             }
         }
@@ -78,22 +55,22 @@
         /// <remarks>
         /// The name must be a valid parameter name (i.e. alpha numeric and not contain spaces)
         /// </remarks>
-        public string Name { get; private set; }
+        public string Name { get; private set; } = default!;
 
         /// <summary>
         /// Gets a description for the parameter
         /// </summary>
-        public string Description { get; private set; }
+        public string? Description { get; private set; }
 
         /// <summary>
         /// Gets the parameters data type
         /// </summary>
-        public Type DataType { get; private set; }
+        public Type DataType { get; private set; } = default!;
 
         /// <summary>
         /// Gets the parameters default value
         /// </summary>
-        public object DefaultValue { get; private set; }
+        public object? DefaultValue { get; private set; }
 
         /// <summary>
         /// Gets a flag value used to determine if the parameter is optional
@@ -104,51 +81,38 @@
         /// Determines if the function parameter is required (i.e. it doesn't have a default value)
         /// </summary>
         /// <returns>True, if the parameter is required; otherwise false</returns>
-        public bool IsRequired()
-        {
-            return false == this.Optional;
-        }
+        public bool IsRequired() => false == Optional;
 
         /// <summary>
         /// Determines if the function parameter is optional (i.e. it has a default value)
         /// </summary>
         /// <returns>True, if the parameter is optional; otherwise false</returns>
-        public bool IsOptional()
-        {
-            return this.Optional;
-        }
+        public bool IsOptional() => Optional;
 
         /// <summary>
         /// Determines if the value specified is valid for the function parameter
         /// </summary>
         /// <param name="value">The value to check</param>
         /// <returns>True, if the value is valid; otherwise false</returns>
-        public bool IsValidParameterValue
-            (
-                object value
-            )
+        public bool IsValidParameterValue(object? value)
         {
             if (value == null)
             {
-                return this.DataType.IsNullable();
+                return DataType.IsNullable();
             }
             else
             {
-                if (this.DataType == typeof(object))
+                if (DataType == typeof(object))
                 {
                     return true;
                 }
-                else if (value.GetType() == this.DataType)
+                else if (value.GetType() == DataType)
                 {
                     return true;
                 }
                 else
                 {
-                    return value.GetType().CanConvert
-                    (
-                        this.DataType,
-                        value
-                    );
+                    return value.GetType().CanConvert(DataType, value);
                 }
             }
         }

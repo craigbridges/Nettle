@@ -2,38 +2,26 @@
 {
     using Nettle.Compiler.Parsing.Blocks;
     using Nettle.Compiler.Validation;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Represents a parsed Nettle template
     /// </summary>
     internal class Template
     {
-        /// <summary>
-        /// Constructs the template with the details
-        /// </summary>
-        /// <param name="rawText">The raw text</param>
-        /// <param name="blocks">The blocks that make up the template</param>
-        public Template
-            (
-                string rawText,
-                params CodeBlock[] blocks
-            )
+        public Template(string rawText, params CodeBlock[] blocks)
         {
-            this.RawText = rawText;
+            RawText = rawText;
             
             if (blocks == null)
             {
-                this.Blocks = new CodeBlock[] { };
+                Blocks = Array.Empty<CodeBlock>();
             }
             else
             {
-                this.Blocks = blocks;
+                Blocks = blocks;
             }
             
-            this.Flags = FindAllFlags();
+            Flags = FindAllFlags();
         }
 
         /// <summary>
@@ -56,12 +44,9 @@
         /// </summary>
         /// <param name="flag">The flag</param>
         /// <returns>True, if the flag has been set; otherwise false</returns>
-        public bool IsFlagSet
-            (
-                TemplateFlag flag
-            )
+        public bool IsFlagSet(TemplateFlag flag)
         {
-            return this.Flags.Contains(flag);
+            return Flags.Contains(flag);
         }
 
         /// <summary>
@@ -75,31 +60,15 @@
 
             foreach (var block in flagBlocks)
             {
-                var enumFound = Enum.TryParse
-                (
-                    block.FlagName,
-                    out TemplateFlag flag
-                );
+                var enumFound = Enum.TryParse(block.FlagName, out TemplateFlag flag);
 
                 if (false == enumFound)
                 {
-                    throw new NettleValidationException
-                    (
-                        "The flag {0} does not exist.".With
-                        (
-                            block.FlagName
-                        )
-                    );
+                    throw new NettleValidationException($"The flag {block.FlagName} does not exist.");
                 }
                 else if (flagsFound.Contains(flag))
                 {
-                    throw new NettleValidationException
-                    (
-                        "The {0} flag was declared more than once.".With
-                        (
-                            block.FlagName
-                        )
-                    );
+                    throw new NettleValidationException($"{block.FlagName} flag was declared more than once.");
                 }
 
                 flagsFound.Add(flag);
@@ -113,19 +82,15 @@
         /// </summary>
         /// <typeparam name="T">The block type</typeparam>
         /// <returns>An array of matching code blocks</returns>
-        public T[] FindBlocks<T>() 
-            where T : CodeBlock
+        public T[] FindBlocks<T>() where T : CodeBlock
         {
-            if (this.Blocks == null || this.Blocks.Length == 0)
+            if (Blocks == null || Blocks.Length == 0)
             {
-                return new T[] {};
+                return Array.Empty<T>();
             }
             else
             {
-                return FindBlocks<T>
-                (
-                    this.Blocks
-                );
+                return FindBlocks<T>(Blocks);
             }
         }
         
@@ -134,58 +99,39 @@
         /// </summary>
         /// <typeparam name="T">The block type</typeparam>
         /// <returns>An array of matching code blocks</returns>
-        private T[] FindBlocks<T>
-            (
-                CodeBlock[] blocks
-            )
-
-            where T : CodeBlock
+        private T[] FindBlocks<T>(CodeBlock[] blocks) where T : CodeBlock
         {
             Validate.IsNotNull(blocks);
 
-            var matchingBlocks = new List<CodeBlock>();
+            var matchingBlocks = new List<T>();
 
-            var blockFilterResults = blocks.Where
-            (
-                block => block.GetType() == typeof(T)
-            )
-            .Select
-            (
-                block => block as T
-            );
+            var blockFilterResults = blocks
+                .Where(block => block != null && block.GetType() == typeof(T))
+                .Select(block => block as T);
 
             foreach (var block in blockFilterResults)
             {
-                matchingBlocks.Add(block);
+                matchingBlocks.Add(block!);
 
-                var isNested = typeof(NestableCodeBlock).IsAssignableFrom
-                (
-                    typeof(T)
-                );
+                var isNested = typeof(NestableCodeBlock).IsAssignableFrom(typeof(T));
 
                 if (isNested)
                 {
                     var nestedBlock = block as NestableCodeBlock;
 
-                    if (nestedBlock.Blocks != null)
+                    if (nestedBlock!.Blocks != null)
                     {
-                        var matchingNestedBlocks = FindBlocks<T>
-                        (
-                            nestedBlock.Blocks
-                        );
+                        var matchingNestedBlocks = FindBlocks<T>(nestedBlock.Blocks);
 
                         if (matchingNestedBlocks.Any())
                         {
-                            matchingBlocks.AddRange
-                            (
-                                matchingNestedBlocks
-                            );
+                            matchingBlocks.AddRange(matchingNestedBlocks);
                         }
                     }
                 }
             }
 
-            return blockFilterResults.ToArray();
+            return matchingBlocks.ToArray();
         }
     }
 }

@@ -1,23 +1,9 @@
-﻿namespace Nettle.Compiler.Parsing.Blocks
-{
-    /// <summary>
-    /// Represents a function call parameter
-    /// </summary>
-    internal class FunctionCallParameter
-    {
-        /// <summary>
-        /// Gets or sets the value signature
-        /// </summary>
-        public string ValueSignature { get; set; }
+﻿namespace Nettle.Compiler.Parsing.Blocks;
 
-        /// <summary>
-        /// Gets or sets the value
-        /// </summary>
-        public object Value { get; set; }
-
-        /// <summary>
-        /// Gets or sets the parameter value type
-        /// </summary>
-        public NettleValueType Type { get; set; }
-    }
-}
+/// <summary>
+/// Represents a function call parameter
+/// </summary>
+/// <param name="ValueSignature">The parameter value signature</param>
+/// <param name="Value">The parameter value supplied</param>
+/// <param name="Type">The parameter value type</param>
+internal record class FunctionCallParameter(string ValueSignature, object? Value, NettleValueType Type);

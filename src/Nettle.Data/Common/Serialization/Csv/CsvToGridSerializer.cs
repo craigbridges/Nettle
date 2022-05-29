@@ -21,7 +21,7 @@
                 string filePath
             )
         {
-            Validate.IsNotEmpty(filePath);
+            Nettle.Validate.IsNotEmpty(filePath);
 
             using (var textReader = File.OpenText(filePath))
             {

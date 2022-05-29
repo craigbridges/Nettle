@@ -1,7 +1,5 @@
 ﻿namespace Nettle
 {
-    using System;
-
     /// <summary>
     /// Used for checking if an object of type TFrom can be converted to the type TTo
     /// </summary>
@@ -17,7 +15,7 @@
         /// <param name="from">The object to be converted</param>
         public TypeConverterChecker(TFrom from)
         {
-            this.CanConvert = false;
+            CanConvert = false;
 
             // Check for string to numeric type conversions first
             if (typeof(TFrom) == typeof(string) && typeof(TTo).IsNumeric())
@@ -27,7 +25,7 @@
                     try
                     {
                         Convert.ChangeType(from, typeof(TTo));
-                        this.CanConvert = true;
+                        CanConvert = true;
                     }
                     catch { }
                 }
@@ -36,8 +34,8 @@
             {
                 try
                 {
-                    var to = (TTo)(dynamic)from;
-                    this.CanConvert = true;
+                    var to = (TTo)(dynamic)from!;
+                    CanConvert = true;
                 }
                 catch { }
             }

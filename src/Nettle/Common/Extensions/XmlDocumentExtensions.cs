@@ -1,12 +1,7 @@
 ﻿namespace Nettle
 {
-    using System;
-    using System.Text;
     using System.Xml;
 
-    /// <summary>
-    /// Represents various extension methods for the XmlDocument class
-    /// </summary>
     public static class XmlDocumentExtensions
     {
         /// <summary>
@@ -14,10 +9,7 @@
         /// </summary>
         /// <param name="document">The XML document</param>
         /// <returns>The stringified version</returns>
-        public static string Stringify
-            (
-                this XmlDocument document
-            )
+        public static string Stringify(this XmlDocument? document)
         {
             if (document == null)
             {

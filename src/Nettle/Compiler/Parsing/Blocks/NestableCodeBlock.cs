@@ -1,18 +1,14 @@
-﻿namespace Nettle.Compiler.Parsing.Blocks
+﻿namespace Nettle.Compiler.Parsing.Blocks;
+
+/// <summary>
+/// Represents a nestable code block
+/// </summary>
+/// <param name="Signature">The blocks signature</param>
+/// <param name="Body">The blocks raw body content (this could be empty, but should never be null)</param>
+internal record class NestableCodeBlock(string Signature, string Body) : CodeBlock(Signature)
 {
     /// <summary>
-    /// Represents a nestable code block
+    /// Gets or sets the nested code blocks
     /// </summary>
-    internal class NestableCodeBlock : CodeBlock
-    {
-        /// <summary>
-        /// Gets or sets the blocks raw body content
-        /// </summary>
-        public string Body { get; set; }
-
-        /// <summary>
-        /// Gets or sets the nested code blocks
-        /// </summary>
-        public CodeBlock[] Blocks { get; set; }
-    }
+    public CodeBlock[] Blocks { get; init; } = Array.Empty<CodeBlock>();
 }

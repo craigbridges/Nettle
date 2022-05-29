@@ -11,10 +11,6 @@
         /// <param name="template">The template</param>
         /// <param name="model">The model data</param>
         /// <returns>The rendered template</returns>
-        string Render
-        (
-            Template template,
-            object model
-        );
+        string Render(Template template, object model);
     }
 }

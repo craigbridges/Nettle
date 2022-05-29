@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Craig Bridges")]
 [assembly: AssemblyProduct("Nettle.Demo.Windows")]
-[assembly: AssemblyCopyright("Copyright © Craig Bridges 2017")]
+[assembly: AssemblyCopyright("Copyright © Craig Bridges 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

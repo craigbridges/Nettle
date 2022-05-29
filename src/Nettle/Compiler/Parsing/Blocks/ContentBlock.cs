@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a content code block
     /// </summary>
-    internal class ContentBlock : CodeBlock
+    internal record class ContentBlock(string Signature) : CodeBlock(Signature)
     {
 
     }
