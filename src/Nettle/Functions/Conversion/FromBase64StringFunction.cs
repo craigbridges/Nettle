@@ -12,7 +12,7 @@
 
         public override string Description => "Converts a base-64 encoded string to a byte array.";
 
-        protected override object GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 

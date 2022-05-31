@@ -360,7 +360,7 @@ public abstract class FunctionBase : IFunction
     /// <param name="context">The template context</param>
     /// <param name="parameterValues">The parameter values</param>
     /// <returns>The output value</returns>
-    protected abstract object GenerateOutput(TemplateContext context, params object?[] parameterValues);
+    protected abstract object? GenerateOutput(TemplateContext context, params object?[] parameterValues);
 
     /// <summary>
     /// Provides a syntax description of the content function

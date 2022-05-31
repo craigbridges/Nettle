@@ -1,20 +1,12 @@
 ﻿namespace Nettle.Data
 {
-    using Nettle.Compiler;
-    using Nettle.Data.Database;
     using Nettle.Data.Functions;
-    using Nettle.Functions;
-    using System.Collections.Generic;
-    using System.Linq;
 
-    /// <summary>
-    /// Represents a Nettle data resolver
-    /// </summary>
     public class NettleDataResolver : DefaultNettleResolver
     {
         public NettleDataResolver()
         {
-            this.ConnectionRepository = new DbConnectionRepository();
+            ConnectionRepository = new DbConnectionRepository();
         }
 
         /// <summary>
@@ -25,15 +17,8 @@
         {
             var functions = base.ResolveFunctions().ToList();
 
-            var queryFunction = new ExecuteQueryFunction
-            (
-                this.ConnectionRepository
-            );
-
-            var procedureFunction = new ExecuteStoredProcedureFunction
-            (
-                this.ConnectionRepository
-            );
+            var queryFunction = new ExecuteQueryFunction(ConnectionRepository);
+            var procedureFunction = new ExecuteStoredProcedureFunction(ConnectionRepository);
 
             functions.Add(queryFunction);
             functions.Add(procedureFunction);
@@ -44,10 +29,6 @@
         /// <summary>
         /// Gets the database connections repository
         /// </summary>
-        public IDbConnectionRepository ConnectionRepository
-        {
-            get;
-            private set;
-        }
+        public IDbConnectionRepository ConnectionRepository { get; private set; }
     }
 }

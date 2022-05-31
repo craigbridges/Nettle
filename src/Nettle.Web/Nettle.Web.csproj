@@ -11,7 +11,7 @@
     <Version>2.0.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
-    <PackageIcon>Icon.ico</PackageIcon>
+    <PackageIcon>Icon.png</PackageIcon>
     <PackageReleaseNotes>Complete overhaul of the code-base, including making the APIs asynchronous, removing redundant code, plus upgraded to .NET 6 and C# 10.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
@@ -21,10 +21,11 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Icon.ico" Pack="true" PackagePath="" />
+	<None Include="Icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nettle\Nettle.csproj" />

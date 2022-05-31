@@ -3,9 +3,7 @@
     using CsvHelper;
     using CsvHelper.Configuration;
     using Nettle.Common.Serialization.Grid;
-    using System;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Represents a class for serializing a data grid into a CSV file
@@ -17,17 +15,14 @@
         /// </summary>
         /// <param name="grid">The data grid binder to convert</param>
         /// <returns>A string that represents the data grid in CSV format</returns>
-        public string Serialize
-            (
-                IDataGrid grid
-            )
+        public string Serialize(IDataGrid grid)
         {
-            if (grid == null || grid.Count() == 0)
+            if (grid == null || false == grid.Any())
             {
                 return String.Empty;
             }
 
-            var configuration = new Configuration()
+            var configuration = new CsvConfiguration()
             {
                 Delimiter = ",",
                 HasHeaderRecord = true,
@@ -39,11 +34,7 @@
             using (var csv = new CsvWriter(writer, configuration))
             {
                 // Create the CSV headings
-                grid.GetColumnNames().ToList().ForEach
-                (
-                    m => csv.WriteField(m)
-                );
-
+                grid.GetColumnNames().ToList().ForEach(x => csv.WriteField(x));
                 csv.NextRecord();
 
                 // Create a CSV record for every row in the data grid
@@ -52,10 +43,7 @@
                     foreach (var cell in row)
                     {
                         // Get a string representation of the cells value
-                        var value = 
-                        (
-                            cell.Value == null ? String.Empty : cell.Value.ToString()
-                        );
+                        var value = (cell.Value == null ? String.Empty : cell.Value.ToString());
 
                         csv.WriteField(value);
                     }

@@ -11,12 +11,12 @@
     <Version>2.0.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
-    <PackageIcon>Icon.ico</PackageIcon>
+    <PackageIcon>Icon.png</PackageIcon>
     <PackageReleaseNotes>- Ported entire library to .NET Standard 2.0</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Icon.ico" Pack="true" PackagePath="" />
+    <None Include="Icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NCalc.NetCore" Version="1.0.1" />

@@ -1,44 +1,14 @@
 ﻿namespace Nettle.Functions.String
 {
-    using Nettle.Compiler;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Text;
-
-    /// <summary>
-    /// Represent a concatenate function implementation
-    /// </summary>
     public sealed class ConcatFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
         public ConcatFunction() 
             : base()
         { }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Concatenates a collection of values into a single string.";
-            }
-        }
+        public override string Description => "Concatenates a collection of values into a single string.";
 
-        /// <summary>
-        /// Concatenates every parameter value into a single string
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The concatenated text</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
@@ -55,10 +25,7 @@
         /// <remarks>
         /// Values that are enumerable are recursively concatenated.
         /// </remarks>
-        private string Concatenate
-            (
-                params object[] values
-            )
+        private string Concatenate(params object?[] values)
         {
             var builder = new StringBuilder();
 
@@ -71,24 +38,18 @@
                     {
                         var items = new List<object>();
 
-                        foreach (var item in value as IEnumerable)
+                        foreach (var item in (IEnumerable)value)
                         {
                             items.Add(item);
                         }
 
-                        var segment = Concatenate
-                        (
-                            items.ToArray()
-                        );
+                        var segment = Concatenate(items.ToArray());
 
                         builder.Append(segment);
                     }
                     else
                     {
-                        builder.Append
-                        (
-                            value.ToString()
-                        );
+                        builder.Append(value.ToString());
                     }
                 }
             }

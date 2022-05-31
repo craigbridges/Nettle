@@ -1,63 +1,23 @@
 ﻿namespace Nettle.Functions.DateTime
 {
-    using Nettle.Compiler;
     using System;
 
-    /// <summary>
-    /// Represent a to local date and time function implementation
-    /// </summary>
     public sealed class ToLocalTimeFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
-        public ToLocalTimeFunction() 
-            : base()
+        public ToLocalTimeFunction() : base()
         {
-            DefineRequiredParameter
-            (
-                "Date",
-                "The date and time to convert.",
-                typeof(DateTime)
-            );
+            DefineRequiredParameter("Date", "The date and time to convert.", typeof(DateTime));
         }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Converts the value of a date to local time.";
-            }
-        }
+        public override string Description => "Converts the value of a date to local time.";
 
-        /// <summary>
-        /// Converts the date time supplied to the local time
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The formatted date</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
-            var date = GetParameterValue<DateTime>
-            (
-                "Date",
-                parameterValues
-            );
+            var date = GetParameterValue<DateTime>("Date", parameterValues);
 
-            return TimeZoneInfo.ConvertTime
-            (
-                date,
-                NettleEngine.DefaultTimeZone
-            );
+            return TimeZoneInfo.ConvertTime(date, NettleEngine.DefaultTimeZone);
         }
     }
 }
