@@ -13,29 +13,12 @@
     /// </summary>
     public class ToXmlFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
         public ToXmlFunction()
         {
-            DefineRequiredParameter
-            (
-                "Object",
-                "The object to convert.",
-                typeof(object)
-            );
+            DefineRequiredParameter("Object", "The object to convert.", typeof(object));
         }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Converts an object to an XML string.";
-            }
-        }
+        public override string Description => "Converts an object to an XML string.";
 
         /// <summary>
         /// Converts an object to an XML string
@@ -43,30 +26,22 @@
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The data grid</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
-            var obj = GetParameterValue<object>
-            (
-                "Object",
-                parameterValues
-            );
+            var obj = GetParameterValue<object>("Object", parameterValues);
+            var type = obj?.GetType() ?? typeof(object);
 
             var xml = String.Empty;
-            var type = obj.GetType();
 
             if (type.IsDataGrid())
             {
-                xml = ((IDataGrid)obj).ToXml().Stringify();
+                xml = ((IDataGrid)obj!).ToXml().Stringify();
             }
             else if (type == typeof(XmlDocument))
             {
-                xml = ((XmlDocument)obj).Stringify();
+                xml = ((XmlDocument)obj!).Stringify();
             }
             else
             {

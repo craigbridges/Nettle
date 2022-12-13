@@ -3,6 +3,7 @@
     using CsvHelper;
     using CsvHelper.Configuration;
     using Nettle.Common.Serialization.Grid;
+    using System.Globalization;
     using System.IO;
 
     /// <summary>
@@ -15,14 +16,14 @@
         /// </summary>
         /// <param name="grid">The data grid binder to convert</param>
         /// <returns>A string that represents the data grid in CSV format</returns>
-        public string Serialize(IDataGrid grid)
+        public static string Serialize(IDataGrid grid)
         {
             if (grid == null || false == grid.Any())
             {
                 return String.Empty;
             }
 
-            var configuration = new CsvConfiguration()
+            var configuration = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
                 Delimiter = ",",
                 HasHeaderRecord = true,
@@ -54,7 +55,7 @@
                 // Reset the memory stream and writers
                 writer.Flush();
                 stream.Position = 0;
-                
+
                 return new StreamReader(stream).ReadToEnd();
             }
         }

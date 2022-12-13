@@ -12,29 +12,12 @@
     /// </summary>
     public class ToJsonFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
         public ToJsonFunction()
         {
-            DefineRequiredParameter
-            (
-                "Object",
-                "The object to convert.",
-                typeof(object)
-            );
+            DefineRequiredParameter("Object", "The object to convert.", typeof(object));
         }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Converts an object to a JSON string.";
-            }
-        }
+        public override string Description => "Converts an object to a JSON string.";
 
         /// <summary>
         /// Converts an object to a JSON string
@@ -42,22 +25,14 @@
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The data grid</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
-            var obj = GetParameterValue<object>
-            (
-                "Object",
-                parameterValues
-            );
+            var obj = GetParameterValue<object>("Object", parameterValues);
+            var type = obj?.GetType() ?? typeof(object);
 
-            var json = String.Empty;
-            var type = obj.GetType();
+            string json;
 
             if (type.IsDataGrid())
             {

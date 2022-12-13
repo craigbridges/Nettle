@@ -9,29 +9,12 @@
     /// </summary>
     public class ReadCsvFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
         public ReadCsvFunction()
         {
-            DefineRequiredParameter
-            (
-                "FilePath",
-                "The CSV file path",
-                typeof(string)
-            );
+            DefineRequiredParameter("FilePath", "The CSV file path", typeof(string));
         }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Reads a CSV file into a data grid.";
-            }
-        }
+        public override string Description => "Reads a CSV file into a data grid.";
 
         /// <summary>
         /// Reads the CSV file into a data grid
@@ -39,22 +22,12 @@
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The data grid</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
-            var filePath = GetParameterValue<string>
-            (
-                "FilePath",
-                parameterValues
-            );
-
-            var serializer = new CsvToGridSerializer();
-            var grid = serializer.ReadCsvFile(filePath);
+            var filePath = GetParameterValue<string>("FilePath", parameterValues);
+            var grid = CsvToGridSerializer.ReadCsvFile(filePath ?? String.Empty);
 
             return grid;
         }

@@ -153,19 +153,13 @@ public class DataGridRow : IDataGridRow
     /// Gets an enumerator for the collection of rows managed by the data grid
     /// </summary>
     /// <returns>The enumerator</returns>
-    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
-    {
-        return _columnValues.GetEnumerator();
-    }
+    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() => _columnValues.GetEnumerator();
 
     /// <summary>
     /// Gets a generic enumerator for the collection of rows managed by the data grid
     /// </summary>
     /// <returns>The generic enumerator</returns>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return this.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Generates a tabbed representation of the data grid

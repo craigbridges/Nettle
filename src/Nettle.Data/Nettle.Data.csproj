@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net7.0</TargetFramework>
 	<Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Nettle.Data</Product>
     <Description>An extension for the Nettle templating engine that provides support for database and file querying.</Description>
     <Copyright>Copyright © Craig Bridges 2022</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <Version>2.0.0</Version>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <Version>2.1.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
     <PackageIcon>Icon.png</PackageIcon>
-	<PackageReleaseNotes>Complete overhaul of the code-base, including making the APIs asynchronous, removing redundant code, plus upgraded to .NET 6 and C# 10.</PackageReleaseNotes>
+	<PackageReleaseNotes>Upgraded to .NET 7.0 and updated all NuGet packages.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="27.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nettle\Nettle.csproj" />

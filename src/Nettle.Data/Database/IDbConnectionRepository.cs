@@ -11,20 +11,14 @@
         /// Adds a new connection to the repository
         /// </summary>
         /// <param name="connection">The database connection</param>
-        void AddConnection
-        (
-            IDbConnection connection
-        );
+        void AddConnection(IDbConnection connection);
 
         /// <summary>
         /// Gets a single connection from the repository
         /// </summary>
         /// <param name="name">The connection name</param>
         /// <returns>The database connection</returns>
-        IDbConnection GetConnection
-        (
-            string name
-        );
+        IDbConnection GetConnection(string name);
 
         /// <summary>
         /// Gets all connections from the repository

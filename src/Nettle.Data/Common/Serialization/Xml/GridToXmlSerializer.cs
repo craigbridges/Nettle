@@ -14,10 +14,7 @@
         /// </summary>
         /// <param name="grid">The data grid</param>
         /// <returns>An XmlDocument containing the grids data</returns>
-        public XmlDocument Serialize
-            (
-                IDataGrid grid
-            )
+        public static XmlDocument Serialize(IDataGrid grid)
         {
             if (grid == null)
             {
@@ -26,47 +23,27 @@
 
             var document = new XmlDocument();
 
-            // The XML declaration is recommended, but not mandatory
-            var xmlDeclaration = document.CreateXmlDeclaration
-            (
-                "1.0",
-                "UTF-8",
-                null
-            );
-            
-            var rootNode = document.CreateElement
-            (
-                "DataGrid"
-            );
+            // NOTE: The XML declaration is recommended, but not mandatory
+            var xmlDeclaration = document.CreateXmlDeclaration("1.0", "UTF-8", null);
 
-            document.InsertBefore
-            (
-                xmlDeclaration,
-                document.DocumentElement
-            );
+            var rootNode = document.CreateElement("DataGrid");
+
+            document.InsertBefore(xmlDeclaration, document.DocumentElement);
 
             foreach (var row in grid)
             {
-                var rowNode = document.CreateElement
-                (
-                    "Item"
-                );
+                var rowNode = document.CreateElement("Item");
 
                 foreach (var cell in row)
                 {
                     // Get a string representation of the cells value
-                    var value = 
-                    (
-                        cell.Value == null ? String.Empty : cell.Value.ToString()
-                    );
+                    var value = cell.Value == null ? String.Empty : cell.Value.ToString();
 
                     // Create the cell node and append it to the row node
-                    var cellNode = document.CreateElement
-                    (
-                        cell.Key
-                    );
+                    var cellNode = document.CreateElement(cell.Key);
 
-                    cellNode.InnerText = value;
+                    cellNode.InnerText = value!;
+
                     rowNode.AppendChild(cellNode);
                 }
 

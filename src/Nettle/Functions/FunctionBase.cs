@@ -376,7 +376,7 @@ public abstract class FunctionBase : IFunction
 
         var parameterCount = 0;
 
-        foreach (var parameter in this.Parameters)
+        foreach (var parameter in Parameters)
         {
             if (parameterCount > 0)
             {

@@ -12,20 +12,20 @@
         /// </summary>
         /// <param name="grid">The data grid to serialize</param>
         /// <returns>The CSV content generated</returns>
-        public static string ToCsv(this IDataGrid grid) => new GridToCsvSerializer().Serialize(grid);
+        public static string ToCsv(this IDataGrid grid) => GridToCsvSerializer.Serialize(grid);
 
         /// <summary>
         /// Converts a data grid to an XML document representation
         /// </summary>
         /// <param name="grid">The data grid to serialize</param>
         /// <returns>The XML document generated</returns>
-        public static XmlDocument ToXml(this IDataGrid grid) => new GridToXmlSerializer().Serialize(grid);
+        public static XmlDocument ToXml(this IDataGrid grid) => GridToXmlSerializer.Serialize(grid);
 
         /// <summary>
         /// Converts a data grid to a JSON string representation
         /// </summary>
         /// <param name="grid">The data grid to serialize</param>
         /// <returns>The JSON content generated</returns>
-        public static string ToJson(this IDataGrid grid) => new GridToJsonSerializer().Serialize(grid);
+        public static string ToJson(this IDataGrid grid) => GridToJsonSerializer.Serialize(grid);
     }
 }

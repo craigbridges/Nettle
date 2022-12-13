@@ -29,7 +29,7 @@ internal class FlagParser : NettleParser, IBlockParser
     public virtual CodeBlock Parse(ref string templateContent, ref int positionOffSet, string signature)
     {
         var body = UnwrapSignatureBody(signature);
-        var nameIndex = this.Prefix.Length;
+        var nameIndex = Prefix.Length;
         var flagName = body.Crop(nameIndex).Trim();
 
         if (String.IsNullOrEmpty(flagName))

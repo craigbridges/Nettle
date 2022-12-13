@@ -9,29 +9,12 @@
     /// </summary>
     public class ReadXmlFunction : FunctionBase
     {
-        /// <summary>
-        /// Constructs the function by defining the parameters
-        /// </summary>
         public ReadXmlFunction()
         {
-            DefineOptionalParameter
-            (
-                "FilePath",
-                "The XML file path",
-                typeof(string)
-            );
+            DefineOptionalParameter("FilePath", "The XML file path", typeof(string));
         }
 
-        /// <summary>
-        /// Gets a description of the function
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "Reads an XML file into an XmlDocument.";
-            }
-        }
+        public override string Description => "Reads an XML file into an XmlDocument.";
 
         /// <summary>
         /// Reads the XML file into an XmlDocument
@@ -39,23 +22,14 @@
         /// <param name="context">The template context</param>
         /// <param name="parameterValues">The parameter values</param>
         /// <returns>The XML document</returns>
-        protected override object GenerateOutput
-            (
-                TemplateContext context,
-                params object[] parameterValues
-            )
+        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
         {
             Validate.IsNotNull(context);
 
-            var filePath = GetParameterValue<string>
-            (
-                "FilePath",
-                parameterValues
-            );
-
+            var filePath = GetParameterValue<string>("FilePath", parameterValues);
             var document = new XmlDocument();
 
-            document.Load(filePath);
+            document.Load(filePath ?? String.Empty);
 
             return document;
         }

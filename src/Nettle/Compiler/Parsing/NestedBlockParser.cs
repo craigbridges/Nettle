@@ -81,7 +81,7 @@ internal abstract class NestedBlockParser : NettleParser, IBlockParser
         var partitionSignature = String.Empty;
         var endFound = false;
 
-        foreach (var tagName in this.BodyPartitionTagNames)
+        foreach (var tagName in BodyPartitionTagNames)
         {
             partitionTags.Add(@"{{" + tagName);
         }

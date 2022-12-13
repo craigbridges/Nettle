@@ -10,18 +10,14 @@
         /// </summary>
         /// <param name="name">The connection name</param>
         /// <param name="connectionString">The connection string</param>
-        public SqlClientConnection
-            (
-                string name,
-                string connectionString
-            )
+        public SqlClientConnection(string name, string connectionString)
         {
             Validate.IsNotEmpty(name);
             Validate.IsNotEmpty(connectionString);
 
-            this.Adapter = new SqlClientAdapter();
-            this.Name = name;
-            this.ConnectionString = connectionString;
+            Adapter = new SqlClientAdapter();
+            Name = name;
+            ConnectionString = connectionString;
         }
 
         /// <summary>

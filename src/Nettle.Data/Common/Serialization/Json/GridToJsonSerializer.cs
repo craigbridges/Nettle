@@ -15,12 +15,9 @@
         /// </summary>
         /// <param name="grid">The data grid</param>
         /// <returns>A JSON string containing the grids data</returns>
-        public string Serialize
-            (
-                IDataGrid grid
-            )
+        public static string Serialize(IDataGrid grid)
         {
-            if (grid == null || grid.Count() == 0)
+            if (grid == null || false == grid.Any())
             {
                 return String.Empty;
             }
@@ -29,16 +26,9 @@
             var rowCount = grid.Count();
             var columnCount = grid.GetColumnNames().Length;
             var rowNumber = 1;
-            
-            jsonBuilder.Append("{\n");
 
-            jsonBuilder.Append
-            (
-                "\t\"{0}\": [\n".With
-                (
-                    grid.Name
-                )
-            );
+            jsonBuilder.Append("{\n");
+            jsonBuilder.Append($"\t\"{grid.Name}\": [\n");
 
             foreach (var row in grid)
             {
@@ -49,38 +39,26 @@
                 foreach (var cell in row)
                 {
                     // Get a string representation of the cells value
-                    var value = 
-                    (
-                        cell.Value == null ? String.Empty : cell.Value.ToString()
-                    );
-
-                    // Create a JSON property template
-                    var template = 
-                    (
-                        (columnNumber < columnCount) 
-                            ? "\t\t\"{0}\": \"{1}\",\n" 
-                            : "\t\t\"{0}\": \"{1}\"\n"
-                    );
+                    var value = cell.Value == null ? String.Empty : cell.Value.ToString();
 
                     // Add the column name and value to the JSON items properties
-                    jsonBuilder.Append
-                    (
-                        template.With(cell.Key, value)
-                    );
+                    if (columnNumber < columnCount)
+                    {
+                        jsonBuilder.Append($"\t\t\"{cell.Key}\": \"{value}\",\n");
+                    }
+                    else
+                    {
+                        jsonBuilder.Append($"\t\t\"{cell.Key}\": \"{value}\"\n");
+                    }
 
                     columnNumber++;
                 }
 
-                jsonBuilder.Append
-                (
-                    (rowNumber < rowCount) 
-                        ? "\t},\n" 
-                        : "\t}\n"
-                );
+                jsonBuilder.Append((rowNumber < rowCount) ? "\t},\n" : "\t}\n");
 
                 rowNumber++;
             }
-            
+
             jsonBuilder.Append("]}");
 
             return jsonBuilder.ToString();

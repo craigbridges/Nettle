@@ -23,10 +23,7 @@
             var url = GetParameterValue<string>("URL", parameterValues);
             var body = GetParameterValue<string>("Body", parameterValues);
 
-            if (body == null)
-            {
-                body = String.Empty;
-            }
+            body ??= String.Empty;
 
             var headerValues = ExtractKeyValuePairs<string, object>(parameterValues, 2);
 

@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class DbConnectionRepository : IDbConnectionRepository
     {
-        private Dictionary<string, IDbConnection> _connections;
+        private readonly Dictionary<string, IDbConnection> _connections;
 
         public DbConnectionRepository()
         {
@@ -20,10 +20,7 @@
         /// Adds a new connection to the repository
         /// </summary>
         /// <param name="connection">The database connection</param>
-        public void AddConnection
-            (
-                IDbConnection connection
-            )
+        public void AddConnection(IDbConnection connection)
         {
             Validate.IsNotNull(connection);
 
@@ -32,13 +29,7 @@
 
             if (nameConflict)
             {
-                throw new InvalidOperationException
-                (
-                    "A database connection named '{0}' already exists.".With
-                    (
-                        connection.Name
-                    )
-                );
+                throw new InvalidOperationException($"A database connection named '{connection.Name}' already exists.");
             }
 
             _connections.Add(name, connection);
@@ -49,10 +40,7 @@
         /// </summary>
         /// <param name="name">The connection name</param>
         /// <returns>The database connection</returns>
-        public IDbConnection GetConnection
-            (
-                string name
-            )
+        public IDbConnection GetConnection(string name)
         {
             Validate.IsNotEmpty(name);
 
@@ -60,13 +48,7 @@
 
             if (false == found)
             {
-                throw new KeyNotFoundException
-                (
-                    "No database connection named '{0}' was found.".With
-                    (
-                        name
-                    )
-                );
+                throw new KeyNotFoundException($"No database connection named '{name}' was found.");
             }
 
             return _connections[name];
@@ -78,10 +60,7 @@
         /// <returns>A collection of database connections</returns>
         public IEnumerable<IDbConnection> GetAllConnections()
         {
-            return _connections.Select
-            (
-                item => item.Value
-            );
+            return _connections.Select(item => item.Value);
         }
     }
 }

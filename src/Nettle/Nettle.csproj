@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net7.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Product>Nettle</Product>
@@ -9,12 +9,12 @@
 Nettle makes use of functions and variables to enable data to be dynamically loaded (and manipulated) into a template. This could be useful in situations where the model passed to the template is very basic, but a requirement means that some additional, related data needs to be displayed. Instead of having to refactor, build and deploy the C# code (which could also create a code smell if the model becomes too cluttered), only the template needs to be edited.</Description>
     <Copyright>Copyright © Craig Bridges 2022</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <Version>2.0.0</Version>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <Version>2.1.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
 	<PackageIcon>Icon.png</PackageIcon>
-	<PackageReleaseNotes>Complete overhaul of the code-base, including making the APIs asynchronous, removing redundant code, plus upgraded to .NET 6 and C# 10.</PackageReleaseNotes>
+	<PackageReleaseNotes>Upgraded to .NET 7.0 and updated all NuGet packages.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
