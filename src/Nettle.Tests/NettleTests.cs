@@ -1,13 +1,13 @@
-using Shouldly;
-using System;
-using Xunit;
-
 namespace Nettle.Tests
 {
+    using Shouldly;
+    using System.Threading.Tasks;
+    using Xunit;
+
     public class NettleTests
     {
         [Fact]
-        public void CanTemplateString()
+        public async Task CanTemplateString()
         {
             var source = @"Welcome {{Name}}";
 
@@ -18,7 +18,8 @@ namespace Nettle.Tests
 
             var compiler = NettleEngine.GetCompiler();
             var template = compiler.Compile(source);
-            var output = template(model);
+            var output = await template(model);
+
             output.ShouldBe("Welcome John Smith");
 
             /* Result:

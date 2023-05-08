@@ -1,5 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
+using System.Threading.Tasks;
+
 internal class TemplateRenderer : NettleRendererBase, ITemplateRenderer
 {
     private readonly BlockCollectionRenderer _collectionRenderer;
@@ -12,7 +14,7 @@ internal class TemplateRenderer : NettleRendererBase, ITemplateRenderer
         _collectionRenderer = new BlockCollectionRenderer(functionRepository, templateRepository);
     }
 
-    public string Render(Template template, object model)
+    public async Task<string> Render(Template template, object model, CancellationToken cancellationToken)
     {
         Validate.IsNotNull(template);
 

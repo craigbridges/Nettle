@@ -1,6 +1,6 @@
 ﻿namespace Nettle.Functions;
 
-using Nettle.Compiler;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents a base class for a Nettle function
@@ -291,20 +291,19 @@ public abstract class FunctionBase : IFunction
     }
 
     /// <summary>
-    /// Executes the function against a template context and parameter values
+    /// Asynchronously executes the function
     /// </summary>
-    /// <param name="context">The template context</param>
-    /// <param name="parameterValues">The parameter values</param>
+    /// <param name="request">The execution request</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The execution result</returns>
-    public virtual FunctionExecutionResult Execute(TemplateContext context, params object?[] parameterValues)
+    public virtual async Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
-
         if (Disabled)
         {
             throw new InvalidOperationException($"The Nettle function '{Name}' has been disabled.");
         }
 
+        var parameterValues = request.ParameterValues;
         var expectedCount = GetRequiredParameters().Count();
         var parameterCount = 0;
 
@@ -349,18 +348,18 @@ public abstract class FunctionBase : IFunction
 
         parameterValues ??= Array.Empty<object?>();
 
-        var output = GenerateOutput(context, parameterValues);
+        var output = await GenerateOutput(request, cancellationToken);
 
         return new FunctionExecutionResult(this, output, parameterValues);
     }
 
     /// <summary>
-    /// When implemented in derived class, generates the functions output value
+    /// When implemented in derived class, asynchronously generates the functions output value
     /// </summary>
-    /// <param name="context">The template context</param>
-    /// <param name="parameterValues">The parameter values</param>
-    /// <returns>The output value</returns>
-    protected abstract object? GenerateOutput(TemplateContext context, params object?[] parameterValues);
+    /// <param name="request">The execution request</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>The output value generated</returns>
+    protected abstract Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Provides a syntax description of the content function

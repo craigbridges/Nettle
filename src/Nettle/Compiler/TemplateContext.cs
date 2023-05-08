@@ -356,12 +356,7 @@ public sealed class TemplateContext
 
         Variables[name] = value;
 
-        var parent = Parent;
-
-        if (parent != null)
-        {
-            parent.ReassignVariable(name, value);
-        }
+        Parent?.ReassignVariable(name, value);
     }
 
     /// <summary>

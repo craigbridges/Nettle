@@ -1,5 +1,7 @@
 ﻿namespace Nettle.Compiler
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Defines a contract for Nettle compiler
     /// </summary>
@@ -10,7 +12,7 @@
         /// </summary>
         /// <param name="templateContent">The template content</param>
         /// <returns>A function that will generate rendered content</returns>
-        Func<object, string> Compile(string templateContent);
+        Func<object, Task<string>> Compile(string templateContent);
 
         /// <summary>
         /// Compiles the view specified as a template
@@ -20,10 +22,11 @@
         Func<object, string> CompileView(string templatePath);
 
         /// <summary>
-        /// Automatically registers all views found in a directory
+        /// Asynchronously automatically registers all views found in a directory
         /// </summary>
         /// <param name="directoryPath">The directory path</param>
-        void AutoRegisterViews(string directoryPath);
+        /// <param name="cancellationToken">The cancellation token</param>
+        Task AutoRegisterViewsAsync(string directoryPath, CancellationToken cancellationToken);
 
         /// <summary>
         /// Registers a template to be used with the compiler

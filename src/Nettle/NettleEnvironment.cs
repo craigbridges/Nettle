@@ -34,7 +34,7 @@
                 throw new ArgumentNullException("The variable name must be a non empty string.");
             }
 
-            return _variables.ContainsKey(name) ? _variables[name] : null;
+            return _variables.TryGetValue(name, out object? value) ? value : null;
         }
 
         /// <summary>

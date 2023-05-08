@@ -1,6 +1,6 @@
 ﻿namespace Nettle.Functions
 {
-    using Nettle.Compiler;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines a contract for a Nettle function
@@ -57,11 +57,11 @@
         FunctionParameter GetParameter(string name);
 
         /// <summary>
-        /// Executes the function against a template context and parameter values
+        /// Asynchronously executes the function
         /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
+        /// <param name="request">The execution request</param>
+        /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The execution result</returns>
-        FunctionExecutionResult Execute(TemplateContext context, params object?[] parameterValues);
+        Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken);
     }
 }
