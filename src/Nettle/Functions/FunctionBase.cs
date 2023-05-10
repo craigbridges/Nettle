@@ -23,6 +23,77 @@ public abstract class FunctionBase : IFunction
     public abstract string Description { get; }
 
     /// <summary>
+    /// Asynchronously executes the function
+    /// </summary>
+    /// <param name="request">The execution request</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>The execution result</returns>
+    public virtual async Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        if (Disabled)
+        {
+            throw new InvalidOperationException($"The Nettle function '{Name}' has been disabled.");
+        }
+
+        var parameterValues = request.ParameterValues;
+        var expectedCount = GetRequiredParameters().Count();
+        var parameterCount = 0;
+
+        if (parameterValues != null)
+        {
+            parameterCount = parameterValues.Length;
+        }
+
+        if (expectedCount > 0)
+        {
+            if (parameterValues == null || parameterCount < expectedCount)
+            {
+                throw new ArgumentException
+                (
+                    $"{expectedCount} parameters were expected, {parameterCount} were supplied."
+                );
+            }
+        }
+
+        if (parameterValues != null && Parameters.Any())
+        {
+            var counter = 0;
+
+            foreach (var value in parameterValues)
+            {
+                if (counter < Parameters.Count)
+                {
+                    var parameter = Parameters[counter];
+
+                    if (false == parameter.IsValidParameterValue(value))
+                    {
+                        throw new ArgumentException
+                        (
+                            $"'{value}' is not valid for the parameter {parameter.Name}."
+                        );
+                    }
+                }
+
+                counter++;
+            }
+        }
+
+        parameterValues ??= Array.Empty<object?>();
+
+        var output = await GenerateOutput(request, cancellationToken);
+
+        return new FunctionExecutionResult(this, output, parameterValues);
+    }
+
+    /// <summary>
+    /// When implemented in derived class, asynchronously generates the functions output value
+    /// </summary>
+    /// <param name="request">The execution request</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>The output value generated</returns>
+    protected abstract Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets a flag indicating if the function is disabled
     /// </summary>
     public bool Disabled { get; private set; }
@@ -177,23 +248,23 @@ public abstract class FunctionBase : IFunction
     }
 
     /// <summary>
-    /// Gets a specific parameter value
+    ///  Gets a specific parameter value
     /// </summary>
     /// <param name="parameterName">The parameter name</param>
-    /// <param name="parameterValues">An array of values</param>
+    /// <param name="executionRequest">The function execution request</param>
     /// <returns>The parameter value found</returns>
-    protected virtual object? GetParameterValue(string parameterName, params object?[] parameterValues)
+    protected virtual object? GetParameterValue(string parameterName, FunctionExecutionRequest executionRequest)
     {
         var parameter = GetParameter(parameterName);
         var index = Parameters.IndexOf(parameter);
 
-        if (index >= parameterValues.Length)
+        if (index >= executionRequest.ParameterValues.Length)
         {
             return parameter.DefaultValue;
         }
         else
         {
-            return parameterValues[index];
+            return executionRequest.ParameterValues[index];
         }
     }
 
@@ -202,11 +273,11 @@ public abstract class FunctionBase : IFunction
     /// </summary>
     /// <typeparam name="T">The value type</typeparam>
     /// <param name="parameterName">The parameter name</param>
-    /// <param name="parameterValues">An array of values</param>
+    /// <param name="executionRequest">The function execution request</param>
     /// <returns>The parameter value found</returns>
-    protected virtual T? GetParameterValue<T>(string parameterName, params object?[] parameterValues)
+    protected virtual T? GetParameterValue<T>(string parameterName, FunctionExecutionRequest executionRequest)
     {
-        var rawValue = GetParameterValue(parameterName, parameterValues);
+        var rawValue = GetParameterValue(parameterName, executionRequest);
 
         return new GenericObjectToTypeConverter<T>().Convert(rawValue);
     }
@@ -218,8 +289,6 @@ public abstract class FunctionBase : IFunction
     /// <returns>An array of doubles</returns>
     protected virtual double[] ConvertToNumbers(params object?[] parameterValues)
     {
-        Validate.IsNotNull(parameterValues);
-
         var numbers = new List<double>();
 
         foreach (var value in parameterValues)
@@ -289,77 +358,6 @@ public abstract class FunctionBase : IFunction
 
         return keyValuePairs;
     }
-
-    /// <summary>
-    /// Asynchronously executes the function
-    /// </summary>
-    /// <param name="request">The execution request</param>
-    /// <param name="cancellationToken">The cancellation token</param>
-    /// <returns>The execution result</returns>
-    public virtual async Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken)
-    {
-        if (Disabled)
-        {
-            throw new InvalidOperationException($"The Nettle function '{Name}' has been disabled.");
-        }
-
-        var parameterValues = request.ParameterValues;
-        var expectedCount = GetRequiredParameters().Count();
-        var parameterCount = 0;
-
-        if (parameterValues != null)
-        {
-            parameterCount = parameterValues.Length;
-        }
-
-        if (expectedCount > 0)
-        {
-            if (parameterValues == null || parameterCount < expectedCount)
-            {
-                throw new ArgumentException
-                (
-                    $"{expectedCount} parameters were expected, {parameterCount} were supplied."
-                );
-            }
-        }
-
-        if (parameterValues != null && Parameters.Any())
-        {
-            var counter = 0;
-
-            foreach (var value in parameterValues)
-            {
-                if (counter < Parameters.Count)
-                {
-                    var parameter = Parameters[counter];
-
-                    if (false == parameter.IsValidParameterValue(value))
-                    {
-                        throw new ArgumentException
-                        (
-                            $"'{value}' is not valid for the parameter {parameter.Name}."
-                        );
-                    }
-                }
-
-                counter++;
-            }
-        }
-
-        parameterValues ??= Array.Empty<object?>();
-
-        var output = await GenerateOutput(request, cancellationToken);
-
-        return new FunctionExecutionResult(this, output, parameterValues);
-    }
-
-    /// <summary>
-    /// When implemented in derived class, asynchronously generates the functions output value
-    /// </summary>
-    /// <param name="request">The execution request</param>
-    /// <param name="cancellationToken">The cancellation token</param>
-    /// <returns>The output value generated</returns>
-    protected abstract Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Provides a syntax description of the content function

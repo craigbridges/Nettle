@@ -1,23 +1,24 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System.Threading.Tasks;
+
+public sealed class TruncateFunction : FunctionBase
 {
-    public sealed class TruncateFunction : FunctionBase
+    public TruncateFunction() : base()
     {
-        public TruncateFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The text to truncate", typeof(string));
-            DefineRequiredParameter("Length", "The texts maximum number of characters.", typeof(int));
-        }
+        DefineRequiredParameter("Text", "The text to truncate", typeof(string));
+        DefineRequiredParameter("Length", "The texts maximum number of characters.", typeof(int));
+    }
 
-        public override string Description => "Truncates a string to the length specified.";
+    public override string Description => "Truncates a string to the length specified.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var originalText = GetParameterValue<string>("Text", request);
+        var length = GetParameterValue<int>("Length", request);
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-            var length = GetParameterValue<int>("Length", parameterValues);
+        var truncatedText = originalText?.Truncate(length);
 
-            return text?.Truncate(length);
-        }
+        return Task.FromResult<object?>(truncatedText);
     }
 }

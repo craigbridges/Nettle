@@ -1,25 +1,25 @@
-﻿namespace Nettle.Functions.Math
+﻿namespace Nettle.Functions.Math;
+
+using System;
+using System.Threading.Tasks;
+
+public sealed class RoundFunction : FunctionBase
 {
-    using System;
-
-    public sealed class RoundFunction : FunctionBase
+    public RoundFunction() : base()
     {
-        public RoundFunction() : base()
-        {
-            DefineRequiredParameter("Number", "The number to round", typeof(double));
-            DefineRequiredParameter("Decimals", "The number of decimal places.", typeof(int));
-        }
+        DefineRequiredParameter("Number", "The number to round", typeof(double));
+        DefineRequiredParameter("Decimals", "The number of decimal places.", typeof(int));
+    }
 
-        public override string Description => "Rounds a number to a set number of decimal places.";
+    public override string Description => "Rounds a number to a set number of decimal places.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var number = GetParameterValue<double>("Number", request);
+        var decimals = GetParameterValue<int>("Decimals", request);
 
-            var number = GetParameterValue<double>("Number", parameterValues);
-            var decimals = GetParameterValue<int>("Decimals", parameterValues);
+        number = Math.Round(number, decimals);
 
-            return Math.Round(number, decimals);
-        }
+        return Task.FromResult<object?>(number);
     }
 }

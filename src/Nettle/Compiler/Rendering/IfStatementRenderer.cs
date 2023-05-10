@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
 using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents an if statement renderer
@@ -27,33 +28,29 @@ internal class IfStatementRenderer : NettleRendererBase, IBlockRenderer
 
     public bool CanRender(CodeBlock block)
     {
-        Validate.IsNotNull(block);
-
         return block.GetType() == typeof(IfStatement);
     }
 
-    public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+    public async Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(block);
-
         var statement = (IfStatement)block;
         var renderedBody = String.Empty;
 
-        var result = _expressionEvaluator.Evaluate(ref context, statement.ConditionExpression);
+        var result = await _expressionEvaluator.Evaluate(context, statement.ConditionExpression, cancellationToken);
 
         if (result)
         {
-            renderedBody = _collectionRenderer.Render(ref context, statement.Blocks, flags);
+            renderedBody = await _collectionRenderer.Render(context, statement.Blocks, cancellationToken);
         }
         else if (statement.ElseIfConditions.Any())
         {
             foreach (var elseCondition in statement.ElseIfConditions)
             {
-                result = _expressionEvaluator.Evaluate(ref context, elseCondition.ConditionExpression);
+                result = await _expressionEvaluator.Evaluate(context, elseCondition.ConditionExpression, cancellationToken);
 
                 if (result)
                 {
-                    renderedBody = _collectionRenderer.Render(ref context, elseCondition.Blocks, flags);
+                    renderedBody = await _collectionRenderer.Render(context, elseCondition.Blocks, cancellationToken);
                     break;
                 }
             }
@@ -61,7 +58,7 @@ internal class IfStatementRenderer : NettleRendererBase, IBlockRenderer
 
         if (false == result && statement.ElseContent != null)
         {
-            renderedBody = _collectionRenderer.Render(ref context, statement.ElseContent.Blocks, flags);
+            renderedBody = await _collectionRenderer.Render(context, statement.ElseContent.Blocks, cancellationToken);
         }
 
         return renderedBody;

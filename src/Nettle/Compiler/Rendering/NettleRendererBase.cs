@@ -3,6 +3,7 @@
 using Nettle.Compiler.Parsing;
 using Nettle.Compiler.Parsing.Blocks;
 using System.Dynamic;
+using System.Threading.Tasks;
 using System.Xml;
 
 /// <summary>
@@ -28,85 +29,98 @@ internal abstract class NettleRendererBase
     /// <param name="context">The template context</param>
     /// <param name="rawValue">The raw value</param>
     /// <param name="type">The value type</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The resolved value</returns>
-    protected object? ResolveValue(ref TemplateContext context, object? rawValue, NettleValueType type)
+    protected async Task<object?> ResolveValue(TemplateContext context, object? rawValue, NettleValueType type, CancellationToken cancellationToken)
     {
         if (rawValue == null)
         {
             return null;
         }
-
-        var resolvedValue = default(object);
-
-        switch (type)
+        else
         {
-            case NettleValueType.ModelBinding:
+            return type switch
             {
-                resolvedValue = ResolveBindingValue(ref context, rawValue.ToString()!);
-                break;
-            }
-            case NettleValueType.Function:
-            {
-                if (rawValue != null && rawValue is FunctionCall call)
-                {
-                    var result = ExecuteFunction(ref context, call);
-
-                    resolvedValue = result.Output;
-                    break;
-                }
-                else
-                {
-                    throw new NettleRenderException("The function call is invalid.");
-                }
-            }
-            case NettleValueType.Variable:
-            {
-                resolvedValue = context.ResolveVariableValue(rawValue.ToString()!);
-                break;
-            }
-            case NettleValueType.KeyValuePair:
-            {
-                var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
-                var key = ResolveValue(ref context, unresolvedPair.ParsedKey, unresolvedPair.KeyType);
-                var value = ResolveValue(ref context, unresolvedPair.ParsedValue, unresolvedPair.ValueType);
-
-                resolvedValue = new KeyValuePair<object?, object?>(key, value);
-                break;
-            }
-            case NettleValueType.AnonymousType:
-            {
-                var unresolvedType = (UnresolvedAnonymousType)rawValue;
-                var resolvedProperties = new Dictionary<string, object?>();
-
-                foreach (var unresolvedProperty in unresolvedType.Properties)
-                {
-                    var propertyValue = ResolveValue(ref context, unresolvedProperty.RawValue, unresolvedProperty.ValueType);
-                    
-                    resolvedProperties.Add(unresolvedProperty.Name, propertyValue);
-                }
-
-                // Convert the property dictionary to an expando object
-                dynamic eo = resolvedProperties.Aggregate
-                (
-                    new ExpandoObject() as IDictionary<string, object?>,
-                    (a, p) =>
-                    {
-                        a.Add(p.Key, p.Value);
-                        return a;
-                    }
-                );
-                
-                resolvedValue = eo;
-                break;
-            }
-            default:
-            {
-                resolvedValue = rawValue;
-                break;
-            }   
+                NettleValueType.ModelBinding => ResolveModelBinding(),
+                NettleValueType.Function => await ResolveFunction(),
+                NettleValueType.Variable => ResolveVariable(),
+                NettleValueType.KeyValuePair => await ResolveKeyValuePair(),
+                NettleValueType.AnonymousType => await ResolveAnonymousType(),
+                _ => rawValue,
+            };
         }
 
-        return resolvedValue;
+        object? ResolveModelBinding()
+        {
+            return ResolveBindingValue(context, rawValue.ToString()!);
+        }
+
+        async Task<object?> ResolveFunction()
+        {
+            if (rawValue != null && rawValue is FunctionCall call)
+            {
+                var result = await ExecuteFunction(context, call, cancellationToken);
+
+                return result.Output;
+            }
+            else
+            {
+                throw new NettleRenderException($"The function call '{rawValue}' is invalid.");
+            }
+        }
+
+        object? ResolveVariable()
+        {
+            return context.ResolveVariableValue(rawValue.ToString()!);
+        }
+
+        async Task<object?> ResolveKeyValuePair()
+        {
+            var unresolvedPair = (UnresolvedKeyValuePair)rawValue;
+
+            var keyTask = ResolveValue(context, unresolvedPair.ParsedKey, unresolvedPair.KeyType, cancellationToken);
+            var valueTask = ResolveValue(context, unresolvedPair.ParsedValue, unresolvedPair.ValueType, cancellationToken);
+
+            var keyValueResults = await Task.WhenAll(keyTask, valueTask);
+
+            return new KeyValuePair<object?, object?>(keyValueResults[0], keyValueResults[1]);
+        }
+
+        async Task<object?> ResolveAnonymousType()
+        {
+            var unresolvedType = (UnresolvedAnonymousType)rawValue;
+            var resolveTasks = new List<Task<KeyValuePair<string, object?>>>();
+
+            foreach (var property in unresolvedType.Properties)
+            {
+                resolveTasks.Add(ResolveProperty(property));
+            }
+
+            var resolvedProperties = new Dictionary<string, object?>(await Task.WhenAll(resolveTasks));
+
+            async Task<KeyValuePair<string, object?>> ResolveProperty(UnresolvedAnonymousTypeProperty property)
+            {
+                var propertyRawValue = property.RawValue;
+                var propertyValueType = property.ValueType;
+
+                var propertyValue = await ResolveValue(context, propertyRawValue, propertyValueType, cancellationToken);
+
+                return new(property.Name, propertyValue);
+            }
+
+            // Convert the property dictionary to an expando object
+            dynamic eo = resolvedProperties.Aggregate
+            (
+                new ExpandoObject() as IDictionary<string, object?>,
+                (a, p) =>
+                {
+                    a.Add(p.Key, p.Value);
+                    return a;
+                }
+            );
+
+            return eo;
+        }
     }
 
     /// <summary>
@@ -119,10 +133,8 @@ internal abstract class NettleRendererBase
     /// A check is made to see if the binding path refers to a variable.
     /// If not variable is found then it is assumed to be a property.
     /// </remarks>
-    protected virtual object? ResolveBindingValue(ref TemplateContext context, string bindingPath)
+    protected virtual object? ResolveBindingValue(TemplateContext context, string bindingPath)
     {
-        Validate.IsNotEmpty(bindingPath);
-
         var pathInfo = new NettlePath(bindingPath);
         var name = pathInfo[0].Name;
         var variableFound = context.Variables.ContainsKey(name);
@@ -139,42 +151,47 @@ internal abstract class NettleRendererBase
     }
     
     /// <summary>
-    /// Executes a function call using the template context specified
+    /// Asynchronously executes a function call using the template context specified
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="call">The function call code block</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The function execution result</returns>
-    protected FunctionExecutionResult ExecuteFunction(ref TemplateContext context, FunctionCall call)
+    protected async Task<FunctionExecutionResult> ExecuteFunction(TemplateContext context, FunctionCall call, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(call);
-
         var function = FunctionRepository.GetFunction(call.FunctionName);
-        var parameterValues = ResolveParameterValues(ref context, call);
-        var result = function.Execute(context, parameterValues);
+        var parameterValues = await ResolveParameterValues(context, call, cancellationToken);
+        
+        var request = new FunctionExecutionRequest()
+        {
+            Context = context,
+            ParameterValues = parameterValues
+        };
+
+        var result = await function.Execute(request, cancellationToken);
 
         return result;
     }
 
     /// <summary>
-    /// Resolves the parameter values for a function call
+    /// Asynchronously resolves the parameter values for a function call
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="call">The function call</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>An array of resolved parameter values</returns>
-    protected object?[] ResolveParameterValues(ref TemplateContext context, FunctionCall call)
+    protected async Task<object?[]> ResolveParameterValues(TemplateContext context, FunctionCall call, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(call);
-
-        var parameterValues = new List<object?>();
+        var resolveTasks = new List<Task<object?>>();
 
         foreach (var parameter in call.ParameterValues)
         {
-            var value = ResolveValue(ref context, parameter.Value, parameter.Type);
-
-            parameterValues.Add(value);
+            resolveTasks.Add(ResolveValue(context, parameter.Value, parameter.Type, cancellationToken));
         }
 
-        return parameterValues.ToArray();
+        var parameterValues = await Task.WhenAll(resolveTasks);
+
+        return parameterValues;
     }
 
     /// <summary>

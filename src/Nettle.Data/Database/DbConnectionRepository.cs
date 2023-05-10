@@ -1,66 +1,49 @@
-﻿namespace Nettle.Data.Database
+﻿namespace Nettle.Data.Database;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public sealed class DbConnectionRepository : IDbConnectionRepository
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    private readonly Dictionary<string, IDbConnection> _connections;
 
-    /// <summary>
-    /// Represents the default implementation for the connection repository
-    /// </summary>
-    public sealed class DbConnectionRepository : IDbConnectionRepository
+    public DbConnectionRepository()
     {
-        private readonly Dictionary<string, IDbConnection> _connections;
+        _connections = new Dictionary<string, IDbConnection>();
+    }
 
-        public DbConnectionRepository()
+    public void AddConnection(IDbConnection connection)
+    {
+        Validate.IsNotNull(connection);
+
+        var name = connection.Name;
+        var nameConflict = _connections.ContainsKey(name);
+
+        if (nameConflict)
         {
-            _connections = new Dictionary<string, IDbConnection>();
+            throw new InvalidOperationException($"A database connection named '{connection.Name}' already exists.");
         }
 
-        /// <summary>
-        /// Adds a new connection to the repository
-        /// </summary>
-        /// <param name="connection">The database connection</param>
-        public void AddConnection(IDbConnection connection)
+        _connections.Add(name, connection);
+    }
+
+    public IDbConnection GetConnection(string name)
+    {
+        Validate.IsNotEmpty(name);
+
+        var found = _connections.ContainsKey(name);
+
+        if (false == found)
         {
-            Validate.IsNotNull(connection);
-
-            var name = connection.Name;
-            var nameConflict = _connections.ContainsKey(name);
-
-            if (nameConflict)
-            {
-                throw new InvalidOperationException($"A database connection named '{connection.Name}' already exists.");
-            }
-
-            _connections.Add(name, connection);
+            throw new KeyNotFoundException($"No database connection named '{name}' was found.");
         }
 
-        /// <summary>
-        /// Gets a single connection from the repository
-        /// </summary>
-        /// <param name="name">The connection name</param>
-        /// <returns>The database connection</returns>
-        public IDbConnection GetConnection(string name)
-        {
-            Validate.IsNotEmpty(name);
+        return _connections[name];
+    }
 
-            var found = _connections.ContainsKey(name);
-
-            if (false == found)
-            {
-                throw new KeyNotFoundException($"No database connection named '{name}' was found.");
-            }
-
-            return _connections[name];
-        }
-
-        /// <summary>
-        /// Gets all connections from the repository
-        /// </summary>
-        /// <returns>A collection of database connections</returns>
-        public IEnumerable<IDbConnection> GetAllConnections()
-        {
-            return _connections.Select(item => item.Value);
-        }
+    public IEnumerable<IDbConnection> GetAllConnections()
+    {
+        return _connections.Select(item => item.Value);
     }
 }

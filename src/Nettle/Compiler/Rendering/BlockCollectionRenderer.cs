@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
 using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
 
 internal sealed class BlockCollectionRenderer
 {
@@ -33,15 +34,16 @@ internal sealed class BlockCollectionRenderer
     }
 
     /// <summary>
-    /// Renders an array of code blocks to a string
+    /// Asynchronously renders an array of code blocks to a string
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="blocks">An array of blocks to render</param>
-    /// <param name="flags">The template flags</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The rendered code blocks</returns>
-    public string Render(ref TemplateContext context, CodeBlock[] blocks, params TemplateFlag[] flags)
+    public async Task<string> Render(TemplateContext context, CodeBlock[] blocks, CancellationToken cancellationToken)
     {
         var builder = new StringBuilder();
+        var flags = context.Flags;
 
         var autoFormat = flags.Contains(TemplateFlag.AutoFormat);
 
@@ -50,7 +52,7 @@ internal sealed class BlockCollectionRenderer
 
         foreach (var block in blocks)
         {
-            var blockOutput = RenderBlock(ref context, block, flags);
+            var blockOutput = await RenderBlock(context, block, cancellationToken);
 
             var formattedOutput = blockOutput;
             var blockType = block.GetType();
@@ -159,14 +161,15 @@ internal sealed class BlockCollectionRenderer
     }
 
     /// <summary>
-    /// Renders a single code block into a string
+    /// Asynchronously renders a single code block into a string
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="block">The code block to render</param>
-    /// <param name="flags">The template flags</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The rendered block</returns>
-    private string RenderBlock(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+    private async Task<string> RenderBlock(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
     {
+        var flags = context.Flags;
         var ignoreErrors = flags.Contains(TemplateFlag.IgnoreErrors);
 
         var renderer = FindRenderer(block);
@@ -174,7 +177,7 @@ internal sealed class BlockCollectionRenderer
 
         try
         {
-            blockOutput = renderer.Render(ref context, block, flags);
+            blockOutput = await renderer.Render(context, block, cancellationToken);
         }
         catch (Exception ex)
         {

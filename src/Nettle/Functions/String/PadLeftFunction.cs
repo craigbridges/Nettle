@@ -1,5 +1,7 @@
 ﻿namespace Nettle.Functions.String;
 
+using System.Threading.Tasks;
+
 public sealed class PadLeftFunction : FunctionBase
 {
     public PadLeftFunction() : base()
@@ -11,13 +13,11 @@ public sealed class PadLeftFunction : FunctionBase
 
     public override string Description => "Left pads a string to the length specified.";
 
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
-
-        var text = GetParameterValue<string>("Text", parameterValues);
-        var totalWidth = GetParameterValue<int>("TotalWidth", parameterValues);
-        var paddingText = GetParameterValue<string>("PaddingChar", parameterValues);
+        var text = GetParameterValue<string>("Text", request);
+        var totalWidth = GetParameterValue<int>("TotalWidth", request);
+        var paddingText = GetParameterValue<string>("PaddingChar", request);
 
         if (paddingText?.Length > 1)
         {
@@ -25,7 +25,8 @@ public sealed class PadLeftFunction : FunctionBase
         }
 
         var paddingChar = paddingText?.ToCharArray()[0] ?? ' ';
+        var paddedString = text?.PadLeft(totalWidth, paddingChar);
 
-        return text?.PadLeft(totalWidth, paddingChar);
+        return Task.FromResult<object?>(paddedString);
     }
 }

@@ -18,6 +18,14 @@
         string Description { get; }
 
         /// <summary>
+        /// Asynchronously executes the function
+        /// </summary>
+        /// <param name="request">The execution request</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The execution result</returns>
+        Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Gets a flag indicating if the function is disabled
         /// </summary>
         bool Disabled { get; }
@@ -55,13 +63,5 @@
         /// <param name="name">The name of the parameter to get</param>
         /// <returns>The matching parameter</returns>
         FunctionParameter GetParameter(string name);
-
-        /// <summary>
-        /// Asynchronously executes the function
-        /// </summary>
-        /// <param name="request">The execution request</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The execution result</returns>
-        Task<FunctionExecutionResult> Execute(FunctionExecutionRequest request, CancellationToken cancellationToken);
     }
 }

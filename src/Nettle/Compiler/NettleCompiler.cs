@@ -32,16 +32,19 @@ public sealed class NettleCompiler : INettleCompiler
         _templateRepository = templateRepository;
     }
 
-    public Func<object, Task<string>> Compile(string templateContent)
+    public Func<object, CancellationToken, Task<string>> Compile(string templateContent)
     {
         var parsedTemplate = ParseTemplate(templateContent);
 
         return Compile(parsedTemplate);
     }
     
-    private Func<object, string> Compile(Template parsedTemplate)
+    private Func<object, CancellationToken, Task<string>> Compile(Template parsedTemplate)
     {
-        Task<string> template(object model) => _renderer.Render(parsedTemplate, model);
+        Task<string> template(object model, CancellationToken cancellationToken)
+        {
+            return _renderer.Render(parsedTemplate, model, cancellationToken);
+        }
 
         return template;
     }
@@ -59,19 +62,15 @@ public sealed class NettleCompiler : INettleCompiler
         return parsedTemplate;
     }
 
-    public Func<object, string> CompileView(string templatePath)
+    public async Task<Func<object, CancellationToken, Task<string>>> CompileView(string templatePath, CancellationToken cancellationToken)
     {
-        Validate.IsNotEmpty(templatePath);
-
-        var view = ViewReader.Read(templatePath);
+        var view = await ViewReader.ReadAsync(templatePath, cancellationToken);
 
         return Compile(view.Content);
     }
 
-    public async Task AutoRegisterViewsAsync(string directoryPath, CancellationToken cancellationToken)
+    public async Task AutoRegisterViews(string directoryPath, CancellationToken cancellationToken)
     {
-        Validate.IsNotEmpty(directoryPath);
-
         var matchingViews = await ViewReader.ReadAllAsync(directoryPath, cancellationToken).ConfigureAwait(false);
 
         foreach (var view in matchingViews)
@@ -82,27 +81,25 @@ public sealed class NettleCompiler : INettleCompiler
 
     public void RegisterTemplate(string name, string templateContent)
     {
-        Validate.IsNotEmpty(name);
-
         var parsedTemplate = ParseTemplate(templateContent);
         var compiledTemplate = Compile(parsedTemplate);
 
-        var registeredTemplate = new RegisteredTemplate(name, parsedTemplate, compiledTemplate);
+        var registeredTemplate = new RegisteredTemplate(name)
+        {
+            ParsedTemplate = parsedTemplate,
+            CompiledTemplate = compiledTemplate
+        };
 
         _templateRepository.Add(registeredTemplate);
     }
 
     public void RegisterFunction(IFunction function)
     {
-        Validate.IsNotNull(function);
-
         _functionRepository.AddFunction(function);
     }
 
     public void DisableFunction(string functionName)
     {
-        Validate.IsNotEmpty(functionName);
-
         var function = _functionRepository.GetFunction(functionName);
 
         function.Disable();
@@ -123,8 +120,6 @@ public sealed class NettleCompiler : INettleCompiler
 
     public void EnableFunction(string functionName)
     {
-        Validate.IsNotEmpty(functionName);
-
         var function = _functionRepository.GetFunction(functionName);
 
         function.Enable();

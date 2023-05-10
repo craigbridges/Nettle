@@ -1,7 +1,8 @@
 ﻿namespace Nettle.Compiler.Rendering
 {
     using Nettle.Compiler.Parsing.Blocks;
-    
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Represents a variable adjuster renderer
     /// </summary>
@@ -14,26 +15,22 @@
         { }
 
         /// <summary>
-        /// Gets the adjustment amount
+        /// The amount to adjust the variable by
         /// </summary>
         protected abstract int Adjustment { get; }
 
         public virtual bool CanRender(CodeBlock block)
         {
-            Validate.IsNotNull(block);
-
             return block.GetType() == typeof(T);
         }
 
-        public virtual string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+        public Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
         {
-            Validate.IsNotNull(block);
-
             var adjuster = (T)block;
 
-            AdjustVariable(ref context, adjuster);
+            AdjustVariable(context, adjuster);
 
-            return String.Empty;
+            return Task.FromResult(String.Empty);
         }
 
         /// <summary>
@@ -41,10 +38,8 @@
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="adjuster">The adjuster code block</param>
-        protected virtual void AdjustVariable(ref TemplateContext context, T adjuster)
+        protected virtual void AdjustVariable(TemplateContext context, T adjuster)
         {
-            Validate.IsNotNull(adjuster);
-
             var variableName = adjuster.VariableName;
 
             var value = context.ResolveVariableValue(variableName);

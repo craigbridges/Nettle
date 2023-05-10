@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
 using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents a for each loop renderer
@@ -19,17 +20,13 @@ internal class ForEachLoopRenderer : NettleRendererBase, IBlockRenderer
 
     public bool CanRender(CodeBlock block)
     {
-        Validate.IsNotNull(block);
-
         return block.GetType() == typeof(ForEachLoop);
     }
 
-    public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+    public async Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(block);
-
         var loop = (ForEachLoop)block;
-        var collection = ResolveValue(ref context, loop.CollectionValue, loop.CollectionType);
+        var collection = await ResolveValue(context, loop.CollectionValue, loop.CollectionType, cancellationToken);
 
         if (collection == null)
         {
@@ -47,14 +44,19 @@ internal class ForEachLoopRenderer : NettleRendererBase, IBlockRenderer
         }
 
         var builder = new StringBuilder();
+        var renderTasks = new List<Task<string>>();
 
         foreach (var item in (IEnumerable)collection)
         {
             var nestedContext = context.CreateNestedContext(item);
-            var renderedContent = _collectionRenderer.Render(ref nestedContext, loop.Blocks, flags);
+            var task = _collectionRenderer.Render(nestedContext, loop.Blocks, cancellationToken);
 
-            builder.Append(renderedContent);
+            renderTasks.Add(task);
         }
+
+        var renderedContent = await Task.WhenAll(renderTasks);
+
+        renderedContent.ToList().ForEach(content => builder.Append(content));
 
         return builder.ToString();
     }

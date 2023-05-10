@@ -1,34 +1,34 @@
-﻿namespace Nettle.NCalc.Functions
+﻿namespace Nettle.NCalc.Functions;
+
+using global::NCalc;
+using Nettle.Functions;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+public class EvaluateFunction : FunctionBase
 {
-    using global::NCalc;
-    using Nettle.Compiler;
-    using Nettle.Functions;
-    using System;
-    using System.Linq;
-
-    public class EvaluateFunction : FunctionBase
+    public EvaluateFunction()
     {
-        public EvaluateFunction()
+        DefineRequiredParameter("Expression", "The mathematical expression to evaluate", typeof(string));
+    }
+
+    public override string Description => "Evaluates a single mathematical expression.";
+
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var expression = GetParameterValue<string>("Expression", request);
+
+        if (request.ParameterValues.Length > 1)
         {
-            DefineRequiredParameter("Expression", "The mathematical expression to evaluate", typeof(string));
+            var formatValues = request.ParameterValues.Skip(1);
+
+            expression = String.Format(expression ?? String.Empty, formatValues.ToArray());
         }
 
-        public override string Description => "Evaluates a single mathematical expression.";
+        var result = new Expression(expression).Evaluate();
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
-
-            var expression = GetParameterValue<string>("Expression", parameterValues);
-
-            if (parameterValues.Length > 1)
-            {
-                var formatValues = parameterValues.Skip(1);
-
-                expression = String.Format(expression ?? String.Empty, formatValues.ToArray());
-            }
-
-            return new Expression(expression).Evaluate();
-        }
+        return Task.FromResult<object?>(result);
     }
 }

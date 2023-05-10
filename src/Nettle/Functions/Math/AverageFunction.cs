@@ -1,22 +1,21 @@
-﻿namespace Nettle.Functions.Math
+﻿namespace Nettle.Functions.Math;
+
+using System.Linq;
+using System.Threading.Tasks;
+
+public sealed class AverageFunction : FunctionBase
 {
-    using System.Linq;
+    public AverageFunction() 
+        : base()
+    { }
 
-    public sealed class AverageFunction : FunctionBase
+    public override string Description => "Computes the average from a sequence of numeric values.";
+
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public AverageFunction() 
-            : base()
-        { }
+        var numbers = ConvertToNumbers(request.ParameterValues);
+        var average = numbers.Average();
 
-        public override string Description => "Computes the average from a sequence of numeric values.";
-
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
-
-            var numbers = ConvertToNumbers(parameterValues);
-            
-            return numbers.Average();
-        }
+        return Task.FromResult<object?>(average);
     }
 }

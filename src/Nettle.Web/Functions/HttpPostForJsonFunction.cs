@@ -1,32 +1,30 @@
-﻿namespace Nettle.Data.Functions
+﻿namespace Nettle.Data.Functions;
+
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+
+/// <summary>
+/// Represents function for posting a single HTTP resource for JSON
+/// </summary>
+public class HttpPostForJsonFunction : HttpPostFunction
 {
-    using Newtonsoft.Json.Linq;
-    
-    /// <summary>
-    /// Represents function for posting a single HTTP resource for JSON
-    /// </summary>
-    public class HttpPostForJsonFunction : HttpPostFunction
+    public HttpPostForJsonFunction()
+        : base()
+    { }
+
+    public override string Description => "Posts to a HTTP resource for a JSON object.";
+
+    protected override async Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public HttpPostForJsonFunction()
-            : base()
-        { }
+        var content = (string)(await base.GenerateOutput(request, cancellationToken) ?? String.Empty);
 
-        public override string Description => "Posts to a HTTP resource for a JSON object.";
-
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        if (content.StartsWith("[") && content.EndsWith("]"))
         {
-            Validate.IsNotNull(context);
-
-            var content = (string)(base.GenerateOutput(context, parameterValues) ?? String.Empty);
-
-            if (content.StartsWith("[") && content.EndsWith("]"))
-            {
-                return JArray.Parse(content);
-            }
-            else
-            {
-                return JObject.Parse(content);
-            }
+            return JArray.Parse(content);
+        }
+        else
+        {
+            return JObject.Parse(content);
         }
     }
 }

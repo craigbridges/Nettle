@@ -1,8 +1,8 @@
 ﻿namespace Nettle.Data.Functions;
 
-using Nettle.Compiler;
 using Nettle.Data.Database;
 using Nettle.Functions;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents function for executing a stored procedure
@@ -28,22 +28,21 @@ public class ExecuteStoredProcedureFunction : FunctionBase
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="parameterValues">The parameter values</param>
-    /// <returns>The data grid</returns>
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    /// <returns>A new data grid with the data returned from the stored procedure</returns>
+    protected override async Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
-
-        var connectionName = GetParameterValue<string>("ConnectionName", parameterValues);
-        var procedureName = GetParameterValue<string>("ProcedureName", parameterValues);
-        var procedureParameters = ExtractKeyValuePairs<string, object>(parameterValues, 2);
+        var connectionName = GetParameterValue<string>("ConnectionName", request);
+        var procedureName = GetParameterValue<string>("ProcedureName", request);
+        var procedureParameters = ExtractKeyValuePairs<string, object>(request.ParameterValues, 2);
         
         var connection = _connectionRepository.GetConnection(connectionName ?? String.Empty);
 
-        var grid = connection.Adapter.ExecuteStoredProcedure
+        var grid = await connection.Adapter.ExecuteStoredProcedure
         (
             connection.ConnectionString,
             procedureName ?? String.Empty,
-            procedureParameters
+            procedureParameters,
+            cancellationToken
         );
 
         return grid;

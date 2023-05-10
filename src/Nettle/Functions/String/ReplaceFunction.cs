@@ -1,27 +1,27 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System;
+using System.Threading.Tasks;
+
+public sealed class ReplaceFunction : FunctionBase
 {
-    using System;
-
-    public sealed class ReplaceFunction : FunctionBase
+    public ReplaceFunction() : base()
     {
-        public ReplaceFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The original text", typeof(string));
-            DefineRequiredParameter("OldValue", "The old value", typeof(string));
-            DefineRequiredParameter("NewValue", "The new value", typeof(string));
-        }
+        DefineRequiredParameter("Text", "The original text", typeof(string));
+        DefineRequiredParameter("OldValue", "The old value", typeof(string));
+        DefineRequiredParameter("NewValue", "The new value", typeof(string));
+    }
 
-        public override string Description => "Replaces text in a string with other text.";
+    public override string Description => "Replaces text in a string with other text.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var oldText = GetParameterValue<string>("Text", request);
+        var oldValue = GetParameterValue<string>("OldValue", request);
+        var newValue = GetParameterValue<string>("NewValue", request);
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-            var oldValue = GetParameterValue<string>("OldValue", parameterValues);
-            var newValue = GetParameterValue<string>("NewValue", parameterValues);
+        var newText = oldText?.Replace(oldValue ?? String.Empty, newValue);
 
-            return text?.Replace(oldValue ?? String.Empty, newValue);
-        }
+        return Task.FromResult<object?>(newText);
     }
 }

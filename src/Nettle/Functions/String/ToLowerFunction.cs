@@ -1,21 +1,20 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System.Threading.Tasks;
+
+public sealed class ToLowerFunction : FunctionBase
 {
-    public sealed class ToLowerFunction : FunctionBase
+    public ToLowerFunction() : base()
     {
-        public ToLowerFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The text to convert.", typeof(string));
-        }
+        DefineRequiredParameter("Text", "The text to convert.", typeof(string));
+    }
 
-        public override string Description => "Converts a string to lower case.";
+    public override string Description => "Converts a string to lower case.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var text = GetParameterValue<string>("Text", request);
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-
-            return text?.ToLower();
-        }
+        return Task.FromResult<object?>(text?.ToLower());
     }
 }

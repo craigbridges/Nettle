@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a content renderer
@@ -13,16 +14,12 @@
 
         public bool CanRender(CodeBlock block)
         {
-            Validate.IsNotNull(block);
-
             return block.GetType() == typeof(ContentBlock);
         }
 
-        public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+        public Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
         {
-            Validate.IsNotNull(block);
-
-            return block.Signature;
+            return Task.FromResult(block.Signature);
         }
     }
 }

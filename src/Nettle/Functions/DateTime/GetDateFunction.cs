@@ -1,29 +1,26 @@
-﻿namespace Nettle.Functions.DateTime
+﻿namespace Nettle.Functions.DateTime;
+
+using System;
+using System.Threading.Tasks;
+
+public sealed class GetDateFunction : FunctionBase
 {
-    using System;
+    public GetDateFunction() 
+        : base()
+    { }
 
-    public sealed class GetDateFunction : FunctionBase
+    public override string Description => "Gets the current date and time.";
+
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public GetDateFunction() 
-            : base()
-        { }
+        var forceUtc = request.Context.IsFlagSet(TemplateFlag.UseUtc);
+        var date = DateTime.UtcNow;
 
-        public override string Description => "Gets the current date and time.";
-
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        if (false == forceUtc)
         {
-            Validate.IsNotNull(context);
-
-            var forceUtc = context.IsFlagSet(TemplateFlag.UseUtc);
-
-            if (forceUtc)
-            {
-                return DateTime.UtcNow;
-            }
-            else
-            {
-                return TimeZoneInfo.ConvertTime(DateTime.UtcNow, NettleEngine.DefaultTimeZone);
-            }
+            date = TimeZoneInfo.ConvertTime(date, NettleEngine.DefaultTimeZone);
         }
+
+        return Task.FromResult<object?>(date);
     }
 }

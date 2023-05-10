@@ -1,28 +1,27 @@
-﻿namespace Nettle.Functions.Math
+﻿namespace Nettle.Functions.Math;
+
+using System.Threading.Tasks;
+
+public sealed class SumFunction : FunctionBase
 {
-    public sealed class SumFunction : FunctionBase
+    public SumFunction() 
+        : base()
+    { }
+
+    public override string Description => "Computes the sum of a sequence of numeric values.";
+
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public SumFunction() 
-            : base()
-        { }
+        var numbers = ConvertToNumbers(request);
+        var total = numbers.Sum();
 
-        public override string Description => "Computes the sum of a sequence of numeric values.";
-
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        if (total.IsWholeNumber())
         {
-            Validate.IsNotNull(context);
-
-            var numbers = ConvertToNumbers(parameterValues);
-            var total = numbers.Sum();
-
-            if (total.IsWholeNumber())
-            {
-                return Convert.ToInt64(total);
-            }
-            else
-            {
-                return total;
-            }
+            return Task.FromResult<object?>(Convert.ToInt64(total));
+        }
+        else
+        {
+            return Task.FromResult<object?>(total);
         }
     }
 }

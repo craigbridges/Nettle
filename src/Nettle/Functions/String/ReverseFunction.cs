@@ -1,21 +1,21 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System.Threading.Tasks;
+
+public sealed class ReverseFunction : FunctionBase
 {
-    public sealed class ReverseFunction : FunctionBase
+    public ReverseFunction() : base()
     {
-        public ReverseFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The text to reverse.", typeof(string));
-        }
+        DefineRequiredParameter("Text", "The text to reverse.", typeof(string));
+    }
 
-        public override string Description => "Reverses the order of a string.";
+    public override string Description => "Reverses the order of a string.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var originalText = GetParameterValue<string>("Text", request);
+        var reversedText = new string(originalText?.Reverse().ToArray());
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-
-            return new string(text?.Reverse().ToArray());
-        }
+        return Task.FromResult<object?>(reversedText);
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace Nettle.Functions.String;
 
+using System.Threading.Tasks;
+
 public sealed class JoinFunction : FunctionBase
 {
     public JoinFunction() : base()
@@ -9,16 +11,14 @@ public sealed class JoinFunction : FunctionBase
 
     public override string Description => "Joins an array of items, using the specified separator between each element.";
 
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
+        var separator = GetParameterValue<string>("Separator", request);
 
-        var separator = GetParameterValue<string>("Separator", parameterValues);
-
-        var values = parameterValues.Skip(1).ToArray();
+        var values = request.ParameterValues.Skip(1).ToArray();
         var output = Join(separator, values);
 
-        return output;
+        return Task.FromResult<object?>(output);
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering
 {
     using Nettle.Compiler.Parsing.Blocks;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines a contract for a code block renderer
@@ -15,12 +16,12 @@
         bool CanRender(CodeBlock block);
 
         /// <summary>
-        /// Renders the code block specified into a string
+        /// Asynchronously renders the code block specified into a string
         /// </summary>
         /// <param name="context">The template context</param>
         /// <param name="block">The code block to render</param>
-        /// <param name="flags">The template flags</param>
+        /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The rendered block</returns>
-        string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags);
+        Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken);
     }
 }

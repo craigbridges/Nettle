@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Functions.DateTime;
 
 using System;
+using System.Threading.Tasks;
 
 public sealed class FormatDateFunction : FunctionBase
 {
@@ -12,13 +13,11 @@ public sealed class FormatDateFunction : FunctionBase
 
     public override string Description => "Replicates the String.Format method.";
 
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
+        var date = GetParameterValue<DateTime>("Date", request);
+        var format = GetParameterValue<string>("Format", request);
 
-        var date = GetParameterValue<DateTime>("Date", parameterValues);
-        var format = GetParameterValue<string>("Format", parameterValues);
-
-        return date.ToString(format);
+        return Task.FromResult<object?>(date.ToString(format));
     }
 }

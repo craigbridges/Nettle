@@ -497,7 +497,7 @@ public sealed class TemplateContext
             }
             case NettleValueType.Variable:
             {
-                var value = ResolveVariableValue(indexer.IndexerSignature);
+                var value = ResolveVariableValue(indexer.IndexerSignature ?? String.Empty);
 
                 if (value == null)
                 {

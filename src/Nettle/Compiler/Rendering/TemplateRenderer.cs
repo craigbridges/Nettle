@@ -25,7 +25,7 @@ internal class TemplateRenderer : NettleRendererBase, ITemplateRenderer
         var context = new TemplateContext(model, flags);
         var blocks = template.Blocks;
 
-        var output = _collectionRenderer.Render(ref context, blocks, flags);
+        var output = await _collectionRenderer.Render(context, blocks, cancellationToken);
 
         if (debugMode)
         {

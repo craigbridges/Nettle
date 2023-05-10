@@ -1,31 +1,27 @@
-﻿namespace Nettle.Compiler.Rendering
+﻿namespace Nettle.Compiler.Rendering;
+
+using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
+
+/// <summary>
+/// Represents a function block renderer
+/// </summary>
+internal class FunctionRenderer : NettleRendererBase, IBlockRenderer
 {
-    using Nettle.Compiler.Parsing.Blocks;
+    public FunctionRenderer(IFunctionRepository functionRepository)
+        : base(functionRepository)
+    { }
 
-    /// <summary>
-    /// Represents a function renderer
-    /// </summary>
-    internal class FunctionRenderer : NettleRendererBase, IBlockRenderer
+    public bool CanRender(CodeBlock block)
     {
-        public FunctionRenderer(IFunctionRepository functionRepository)
-            : base(functionRepository)
-        { }
+        return block.GetType() == typeof(FunctionCall);
+    }
 
-        public bool CanRender(CodeBlock block)
-        {
-            Validate.IsNotNull(block);
+    public async Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
+    {
+        var call = (FunctionCall)block;
+        var result = await ExecuteFunction(context, call, cancellationToken);
 
-            return block.GetType() == typeof(FunctionCall);
-        }
-
-        public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
-        {
-            Validate.IsNotNull(block);
-
-            var call = (FunctionCall)block;
-            var result = ExecuteFunction(ref context, call);
-
-            return ToString(result.Output, flags);
-        }
+        return ToString(result.Output, context.Flags);
     }
 }

@@ -1,23 +1,22 @@
-﻿namespace Nettle.Functions.DateTime
+﻿namespace Nettle.Functions.DateTime;
+
+using System;
+using System.Threading.Tasks;
+
+public sealed class ParseDateFunction : FunctionBase
 {
-    using System;
-
-    public sealed class ParseDateFunction : FunctionBase
+    public ParseDateFunction() : base()
     {
-        public ParseDateFunction() : base()
-        {
-            DefineRequiredParameter("Value", "The string value to parse.", typeof(string));
-        }
+        DefineRequiredParameter("Value", "The string value to parse.", typeof(string));
+    }
 
-        public override string Description => "Parses a string into a new date and time.";
+    public override string Description => "Parses a string into a new date and time.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var rawValue = GetParameterValue<string>("Value", request);
+        var date = DateTime.Parse(rawValue ?? String.Empty);
 
-            var value = GetParameterValue<string>("Value", parameterValues);
-
-            return DateTime.Parse(value ?? String.Empty);
-        }
+        return Task.FromResult<object?>(date);
     }
 }

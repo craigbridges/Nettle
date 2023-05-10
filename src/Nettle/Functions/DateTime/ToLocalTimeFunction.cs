@@ -1,23 +1,22 @@
-﻿namespace Nettle.Functions.DateTime
+﻿namespace Nettle.Functions.DateTime;
+
+using System;
+using System.Threading.Tasks;
+
+public sealed class ToLocalTimeFunction : FunctionBase
 {
-    using System;
-
-    public sealed class ToLocalTimeFunction : FunctionBase
+    public ToLocalTimeFunction() : base()
     {
-        public ToLocalTimeFunction() : base()
-        {
-            DefineRequiredParameter("Date", "The date and time to convert.", typeof(DateTime));
-        }
+        DefineRequiredParameter("Date", "The date and time to convert.", typeof(DateTime));
+    }
 
-        public override string Description => "Converts the value of a date to local time.";
+    public override string Description => "Converts a date to local time.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var originalDate = GetParameterValue<DateTime>("Date", request);
+        var convertedDate = TimeZoneInfo.ConvertTime(originalDate, NettleEngine.DefaultTimeZone);
 
-            var date = GetParameterValue<DateTime>("Date", parameterValues);
-
-            return TimeZoneInfo.ConvertTime(date, NettleEngine.DefaultTimeZone);
-        }
+        return Task.FromResult<object?>(convertedDate);
     }
 }

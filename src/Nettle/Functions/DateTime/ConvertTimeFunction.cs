@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Functions.DateTime;
 
 using System;
+using System.Threading.Tasks;
 
 public sealed class ConvertTimeFunction : FunctionBase
 {
@@ -12,15 +13,12 @@ public sealed class ConvertTimeFunction : FunctionBase
 
     public override string Description => "Converts a date to a specific time zone.";
 
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
+        var date = GetParameterValue<DateTime>("Date", request);
+        var timeZoneId = GetParameterValue<string>("DestinationTimeZoneId", request) ?? TimeZoneInfo.Local.Id;
+        var convertedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, timeZoneId);
 
-        var date = GetParameterValue<DateTime>("Date", parameterValues);
-        var timeZoneId = GetParameterValue<string>("DestinationTimeZoneId", parameterValues);
-
-        timeZoneId ??= TimeZoneInfo.Local.Id;
-
-        return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, timeZoneId);
+        return Task.FromResult<object?>(convertedDate);
     }
 }

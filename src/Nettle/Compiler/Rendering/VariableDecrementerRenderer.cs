@@ -11,9 +11,6 @@
             : base(functionRepository)
         { }
 
-        /// <summary>
-        /// Gets the adjustment amount
-        /// </summary>
         protected override int Adjustment => -1;
     }
 }

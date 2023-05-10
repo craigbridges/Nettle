@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
 using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents a conditional binding renderer
@@ -24,25 +25,23 @@ internal class ConditionalBindingRenderer : NettleRendererBase, IBlockRenderer
         return block.GetType() == typeof(ConditionalBinding);
     }
 
-    public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
+    public async Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(block);
-
         var binding = (ConditionalBinding)block;
 
-        var result = _expressionEvaluator.Evaluate(ref context, binding.ConditionExpression);
+        var result = await _expressionEvaluator.Evaluate(context, binding.ConditionExpression, cancellationToken);
 
         object? value;
 
         if (result)
         {
-            value = ResolveValue(ref context, binding.TrueValue, binding.TrueValueType);
+            value = await ResolveValue(context, binding.TrueValue, binding.TrueValueType, cancellationToken);
         }
         else
         {
-            value = ResolveValue(ref context, binding.FalseValue, binding.FalseValueType);
+            value = await ResolveValue(context, binding.FalseValue, binding.FalseValueType, cancellationToken);
         }
 
-        return ToString(value, flags);
+        return ToString(value, context.Flags);
     }
 }

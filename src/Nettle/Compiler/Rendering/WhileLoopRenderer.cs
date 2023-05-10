@@ -1,56 +1,52 @@
-﻿namespace Nettle.Compiler.Rendering
+﻿namespace Nettle.Compiler.Rendering;
+
+using Nettle.Compiler.Parsing.Blocks;
+using System.Threading.Tasks;
+
+/// <summary>
+/// Represents a while loop renderer
+/// </summary>
+internal class WhileLoopRenderer : NettleRendererBase, IBlockRenderer
 {
-    using Nettle.Compiler.Parsing.Blocks;
+    private readonly BooleanExpressionEvaluator _expressionEvaluator;
+    private readonly BlockCollectionRenderer _collectionRenderer;
 
-    /// <summary>
-    /// Represents a while loop renderer
-    /// </summary>
-    internal class WhileLoopRenderer : NettleRendererBase, IBlockRenderer
+    public WhileLoopRenderer
+        (
+            IFunctionRepository functionRepository,
+            BooleanExpressionEvaluator expressionEvaluator,
+            BlockCollectionRenderer collectionRenderer
+        )
+        : base(functionRepository)
     {
-        private readonly BooleanExpressionEvaluator _expressionEvaluator;
-        private readonly BlockCollectionRenderer _collectionRenderer;
+        Validate.IsNotNull(expressionEvaluator);
+        Validate.IsNotNull(collectionRenderer);
 
-        public WhileLoopRenderer
-            (
-                IFunctionRepository functionRepository,
-                BooleanExpressionEvaluator expressionEvaluator,
-                BlockCollectionRenderer collectionRenderer
-            )
-            : base(functionRepository)
+        _expressionEvaluator = expressionEvaluator;
+        _collectionRenderer = collectionRenderer;
+    }
+
+    public bool CanRender(CodeBlock block)
+    {
+        return block.GetType() == typeof(WhileLoop);
+    }
+
+    public async Task<string> Render(TemplateContext context, CodeBlock block, CancellationToken cancellationToken)
+    {
+        var loop = (WhileLoop)block;
+        var result = await _expressionEvaluator.Evaluate(context, loop.ConditionExpression, cancellationToken);
+
+        var builder = new StringBuilder();
+        
+        while (result)
         {
-            Validate.IsNotNull(expressionEvaluator);
-            Validate.IsNotNull(collectionRenderer);
+            var renderedBody = await _collectionRenderer.Render(context, loop.Blocks, cancellationToken);
 
-            _expressionEvaluator = expressionEvaluator;
-            _collectionRenderer = collectionRenderer;
+            builder.Append(renderedBody);
+
+            result = await _expressionEvaluator.Evaluate(context, loop.ConditionExpression, cancellationToken);
         }
 
-        public bool CanRender(CodeBlock block)
-        {
-            Validate.IsNotNull(block);
-
-            return block.GetType() == typeof(WhileLoop);
-        }
-
-        public string Render(ref TemplateContext context, CodeBlock block, params TemplateFlag[] flags)
-        {
-            Validate.IsNotNull(block);
-
-            var loop = (WhileLoop)block;
-            var result = _expressionEvaluator.Evaluate(ref context, loop.ConditionExpression);
-
-            var builder = new StringBuilder();
-            
-            while (result)
-            {
-                var renderedBody = _collectionRenderer.Render(ref context, loop.Blocks, flags);
-
-                builder.Append(renderedBody);
-
-                result = _expressionEvaluator.Evaluate(ref context, loop.ConditionExpression);
-            }
-
-            return builder.ToString();
-        }
+        return builder.ToString();
     }
 }

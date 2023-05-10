@@ -1,21 +1,20 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System.Threading.Tasks;
+
+public sealed class ToTitleCaseFunction : FunctionBase
 {
-    public sealed class ToTitleCaseFunction : FunctionBase
+    public ToTitleCaseFunction() : base()
     {
-        public ToTitleCaseFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The text to convert.", typeof(string));
-        }
+        DefineRequiredParameter("Text", "The text to convert.", typeof(string));
+    }
 
-        public override string Description => "Converts a string to title case.";
+    public override string Description => "Converts a string to title case.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var text = GetParameterValue<string>("Text", request);
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-
-            return text?.ToTitleCase();
-        }
+        return Task.FromResult<object?>(text?.ToTitleCase());
     }
 }

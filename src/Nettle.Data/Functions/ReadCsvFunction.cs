@@ -1,35 +1,32 @@
-﻿namespace Nettle.Data.Functions
+﻿namespace Nettle.Data.Functions;
+
+using Nettle.Data.Common.Serialization.Csv;
+using Nettle.Functions;
+using System.Threading.Tasks;
+
+/// <summary>
+/// Represents function for reading a CSV file into a data grid
+/// </summary>
+public class ReadCsvFunction : FunctionBase
 {
-    using Nettle.Compiler;
-    using Nettle.Data.Common.Serialization.Csv;
-    using Nettle.Functions;
+    public ReadCsvFunction()
+    {
+        DefineRequiredParameter("FilePath", "The CSV file path", typeof(string));
+    }
+
+    public override string Description => "Reads a CSV file into a data grid.";
 
     /// <summary>
-    /// Represents function for reading a CSV file into a data grid
+    /// Asynchronously reads the CSV file into a data grid
     /// </summary>
-    public class ReadCsvFunction : FunctionBase
+    /// <param name="context">The template context</param>
+    /// <param name="parameterValues">The parameter values</param>
+    /// <returns>A new data grid containing the CSV data</returns>
+    protected override async Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public ReadCsvFunction()
-        {
-            DefineRequiredParameter("FilePath", "The CSV file path", typeof(string));
-        }
+        var filePath = GetParameterValue<string>("FilePath", request);
+        var grid = await CsvToGridSerializer.ReadCsvFile(filePath ?? String.Empty);
 
-        public override string Description => "Reads a CSV file into a data grid.";
-
-        /// <summary>
-        /// Reads the CSV file into a data grid
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The data grid</returns>
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
-
-            var filePath = GetParameterValue<string>("FilePath", parameterValues);
-            var grid = CsvToGridSerializer.ReadCsvFile(filePath ?? String.Empty);
-
-            return grid;
-        }
+        return grid;
     }
 }

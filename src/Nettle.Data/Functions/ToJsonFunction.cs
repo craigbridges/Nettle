@@ -1,11 +1,10 @@
 ﻿namespace Nettle.Data.Functions
 {
     using Nettle.Common.Serialization.Grid;
-    using Nettle.Compiler;
     using Nettle.Functions;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
-    using System;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents function for converting an object to a JSON string
@@ -19,22 +18,18 @@
 
         public override string Description => "Converts an object to a JSON string.";
 
-        /// <summary>
-        /// Converts an object to a JSON string
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The data grid</returns>
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
         {
-            Validate.IsNotNull(context);
-
-            var obj = GetParameterValue<object>("Object", parameterValues);
+            var obj = GetParameterValue<object>("Object", request);
             var type = obj?.GetType() ?? typeof(object);
 
             string json;
 
-            if (type.IsDataGrid())
+            if (obj == null)
+            {
+                json = String.Empty;
+            }
+            else if (type.IsDataGrid())
             {
                 json = ((IDataGrid)obj).ToJson();
             }
@@ -51,7 +46,7 @@
                 json = JsonConvert.SerializeObject(obj);
             }
 
-            return json;
+            return Task.FromResult<object?>(json);
         }
     }
 }

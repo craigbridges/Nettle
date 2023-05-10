@@ -4,7 +4,8 @@
     using Nettle.Common.Serialization.Grid;
     using System.Globalization;
     using System.IO;
-    
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Represents a class for serializing a CSV file into a data grid
     /// </summary>
@@ -15,16 +16,14 @@
         /// </summary>
         /// <param name="filePath">The CSV file path</param>
         /// <returns>A data grid containing the CSV data</returns>
-        public static IDataGrid ReadCsvFile(string filePath)
+        public static async Task<IDataGrid> ReadCsvFile(string filePath)
         {
-            Nettle.Validate.IsNotEmpty(filePath);
-
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, CultureInfo.CurrentCulture);
 
             var grid = new DataGrid(filePath);
 
-            while (csv.Read())
+            while (await csv.ReadAsync())
             {
                 var rowValues = new Dictionary<string, object?>();
 

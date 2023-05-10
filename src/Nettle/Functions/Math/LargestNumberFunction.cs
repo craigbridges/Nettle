@@ -1,27 +1,28 @@
-﻿namespace Nettle.Functions.Math
+﻿namespace Nettle.Functions.Math;
+
+using System.Threading.Tasks;
+
+public sealed class LargestNumberFunction : FunctionBase
 {
-    public sealed class LargestNumberFunction : FunctionBase
+    public LargestNumberFunction() 
+        : base()
+    { }
+
+    public override string Description => "Gets the largest number of a sequence.";
+
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public LargestNumberFunction() 
-            : base()
-        { }
+        var numbers = ConvertToNumbers(request.ParameterValues);
 
-        public override string Description => "Gets the largest number of a sequence.";
-
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+        if (numbers.Length == 0)
         {
-            Validate.IsNotNull(context);
+            throw new ArgumentException("The sequence does not contain any numbers.");
+        }
+        else
+        {
+            var largestNumber = numbers.OrderByDescending(number => number).First();
 
-            var numbers = ConvertToNumbers(parameterValues);
-
-            if (numbers.Length == 0)
-            {
-                throw new ArgumentException("The sequence does not contain any numbers.");
-            }
-            else
-            {
-                return numbers.OrderByDescending(number => number).First();
-            }
+            return Task.FromResult<object?>(largestNumber);
         }
     }
 }

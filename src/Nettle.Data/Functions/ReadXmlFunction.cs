@@ -1,37 +1,35 @@
-﻿namespace Nettle.Data.Functions
+﻿namespace Nettle.Data.Functions;
+
+using Nettle.Functions;
+using System.IO;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+/// <summary>
+/// Represents function for reading an XML file into an XmlDocument
+/// </summary>
+public class ReadXmlFunction : FunctionBase
 {
-    using Nettle.Compiler;
-    using Nettle.Functions;
-    using System.Xml;
+    public ReadXmlFunction()
+    {
+        DefineOptionalParameter("FilePath", "The XML file path", typeof(string));
+    }
+
+    public override string Description => "Reads an XML file into an XmlDocument.";
 
     /// <summary>
-    /// Represents function for reading an XML file into an XmlDocument
+    /// Reads the XML file into an XmlDocument
     /// </summary>
-    public class ReadXmlFunction : FunctionBase
+    /// <param name="context">The template context</param>
+    /// <param name="parameterValues">The parameter values</param>
+    /// <returns>The XML document</returns>
+    protected override async Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        public ReadXmlFunction()
-        {
-            DefineOptionalParameter("FilePath", "The XML file path", typeof(string));
-        }
+        var filePath = GetParameterValue<string>("FilePath", request) ?? String.Empty;
 
-        public override string Description => "Reads an XML file into an XmlDocument.";
+        using var reader = new StreamReader(filePath);
+        var document = await XDocument.LoadAsync(reader, LoadOptions.None, cancellationToken);
 
-        /// <summary>
-        /// Reads the XML file into an XmlDocument
-        /// </summary>
-        /// <param name="context">The template context</param>
-        /// <param name="parameterValues">The parameter values</param>
-        /// <returns>The XML document</returns>
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
-
-            var filePath = GetParameterValue<string>("FilePath", parameterValues);
-            var document = new XmlDocument();
-
-            document.Load(filePath ?? String.Empty);
-
-            return document;
-        }
+        return document;
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Nettle.Compiler.Rendering;
 
 using Nettle.Compiler.Parsing.Conditions;
+using System.Threading.Tasks;
 
 internal sealed class BooleanExpressionEvaluator : NettleRendererBase
 {
@@ -9,21 +10,20 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     { }
 
     /// <summary>
-    /// Evaluates a boolean expression against a template context
+    /// Asynchronously evaluates a boolean expression against a template context
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The evaluation result</returns>
-    public bool Evaluate(ref TemplateContext context, BooleanExpression expression)
+    public async Task<bool> Evaluate(TemplateContext context, BooleanExpression expression, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(expression);
-
         var expressionResult = false;
         var previousConditionResult = false;
 
         foreach (var condition in expression.Conditions)
         {
-            var conditionResult = Evaluate(ref context, condition);
+            var conditionResult = await Evaluate(context, condition, cancellationToken);
 
             if (condition.JoinOperator.HasValue)
             {
@@ -69,40 +69,39 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     }
 
     /// <summary>
-    /// Evaluates a boolean condition against a template context
+    /// Asynchronously evaluates a boolean condition against a template context
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="condition">The condition</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The evaluation result</returns>
-    private bool Evaluate(ref TemplateContext context, BooleanCondition condition)
+    private async Task<bool> Evaluate(TemplateContext context, BooleanCondition condition, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(condition);
-
         var result = false;
 
         if (condition.RightValue == null)
         {
-            result = Evaluate(ref context, condition.LeftValue);
+            result = await Evaluate(context, condition.LeftValue, cancellationToken);
         }
         else
         {
-            var leftValue = ResolveValue(ref context, condition.LeftValue, condition.LeftValue.ValueType);
-            var rightValue = ResolveValue(ref context, condition.RightValue, condition.RightValue.ValueType);
+            var leftValue = await ResolveValue(context, condition.LeftValue, condition.LeftValue.ValueType, cancellationToken);
+            var rightValue = await ResolveValue(context, condition.RightValue, condition.RightValue.ValueType, cancellationToken);
 
             switch (condition.CompareOperator)
             {
                 case BooleanConditionOperator.And:
                 {
-                    var leftResult = ToBool(ref context, leftValue);
-                    var rightResult = ToBool(ref context, rightValue);
+                    var leftResult = await ToBool(context, leftValue, cancellationToken);
+                    var rightResult = await ToBool(context, rightValue, cancellationToken);
 
                     result = (leftResult && rightResult);
                     break;
                 }
                 case BooleanConditionOperator.Or:
                 {
-                    var leftResult = ToBool(ref context, leftValue);
-                    var rightResult = ToBool(ref context, rightValue);
+                    var leftResult = await ToBool(context, leftValue, cancellationToken);
+                    var rightResult = await ToBool(context, rightValue, cancellationToken);
 
                     result = (leftResult || rightResult);
                     break;
@@ -156,18 +155,17 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     }
 
     /// <summary>
-    /// Evaluates a boolean condition value against a template context
+    /// Asynchronously evaluates a boolean condition value against a template context
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="conditionValue">The condition value</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The evaluation result</returns>
-    private bool Evaluate(ref TemplateContext context, BooleanConditionValue conditionValue)
+    private async Task<bool> Evaluate(TemplateContext context, BooleanConditionValue conditionValue, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(conditionValue);
+        var resolvedValue = await ResolveValue(context, conditionValue.Value, conditionValue.ValueType, cancellationToken);
 
-        var resolvedValue = ResolveValue(ref context, conditionValue.Value, conditionValue.ValueType);
-
-        return ToBool(ref context, resolvedValue);
+        return await ToBool(context, resolvedValue, cancellationToken);
     }
 
     /// <summary>
@@ -176,7 +174,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     /// <param name="value1">The first value</param>
     /// <param name="value2">The second value</param>
     /// <returns>True, if both values are equal; otherwise false</returns>
-    private static bool Compare(object value1, object value2)
+    private static bool Compare(object? value1, object? value2)
     {
         if (value1 == null && value2 == null)
         {
@@ -204,7 +202,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     /// </summary>
     /// <param name="value">The value to convert</param>
     /// <returns>The double representation</returns>
-    private static double ToNumber(object value)
+    private static double ToNumber(object? value)
     {
         var result = default(double);
 
@@ -230,12 +228,13 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     }
 
     /// <summary>
-    /// Converts an object into a boolean representation
+    /// Asynchronously converts an object into a boolean representation
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="value">The value to convert</param>
+    /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>The boolean representation</returns>
-    private bool ToBool(ref TemplateContext context, object value)
+    private async Task<bool> ToBool(TemplateContext context, object? value, CancellationToken cancellationToken)
     {
         var result = default(bool);
 
@@ -247,7 +246,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
             }
             else if (value is BooleanExpression expression)
             {
-                return Evaluate(ref context, expression);
+                return await Evaluate(context, expression, cancellationToken);
             }
             else if (value.GetType().IsNumeric())
             {

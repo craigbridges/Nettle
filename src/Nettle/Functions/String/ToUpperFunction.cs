@@ -1,21 +1,20 @@
-﻿namespace Nettle.Functions.String
+﻿namespace Nettle.Functions.String;
+
+using System.Threading.Tasks;
+
+public sealed class ToUpperFunction : FunctionBase
 {
-    public sealed class ToUpperFunction : FunctionBase
+    public ToUpperFunction() : base()
     {
-        public ToUpperFunction() : base()
-        {
-            DefineRequiredParameter("Text", "The text to convert.", typeof(string));
-        }
+        DefineRequiredParameter("Text", "The text to convert.", typeof(string));
+    }
 
-        public override string Description => "Converts a string to upper case.";
+    public override string Description => "Converts a string to upper case.";
 
-        protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
-        {
-            Validate.IsNotNull(context);
+    protected override Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
+    {
+        var text = GetParameterValue<string>("Text", request);
 
-            var text = GetParameterValue<string>("Text", parameterValues);
-
-            return text?.ToUpper();
-        }
+        return Task.FromResult<object?>(text?.ToUpper());
     }
 }

@@ -1,6 +1,7 @@
 namespace Nettle.Tests
 {
     using Shouldly;
+    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -18,7 +19,7 @@ namespace Nettle.Tests
 
             var compiler = NettleEngine.GetCompiler();
             var template = compiler.Compile(source);
-            var output = await template(model);
+            var output = await template(model, new CancellationToken());
 
             output.ShouldBe("Welcome John Smith");
 

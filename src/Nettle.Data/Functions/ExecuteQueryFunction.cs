@@ -1,8 +1,8 @@
 ﻿namespace Nettle.Data.Functions;
 
-using Nettle.Compiler;
 using Nettle.Data.Database;
 using Nettle.Functions;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents function for executing an SQL query
@@ -28,17 +28,15 @@ public class ExecuteQueryFunction : FunctionBase
     /// </summary>
     /// <param name="context">The template context</param>
     /// <param name="parameterValues">The parameter values</param>
-    /// <returns>The data grid</returns>
-    protected override object? GenerateOutput(TemplateContext context, params object?[] parameterValues)
+    /// <returns>A new data grid with the results of the query</returns>
+    protected override async Task<object?> GenerateOutput(FunctionExecutionRequest request, CancellationToken cancellationToken)
     {
-        Validate.IsNotNull(context);
-
-        var connectionName = GetParameterValue<string>("ConnectionName", parameterValues);
-        var sql = GetParameterValue<string>("SQL", parameterValues);
+        var connectionName = GetParameterValue<string>("ConnectionName", request);
+        var sql = GetParameterValue<string>("SQL", request);
 
         var connection = _connectionRepository.GetConnection(connectionName ?? String.Empty);
-        var grid = connection.Adapter.ExecuteQuery(connection.ConnectionString, sql ?? String.Empty);
+        var grid = await connection.Adapter.ExecuteQuery(connection.ConnectionString, sql ?? String.Empty, cancellationToken);
 
-        return grid;
+        return Task.FromResult<object?>(grid);
     }
 }
