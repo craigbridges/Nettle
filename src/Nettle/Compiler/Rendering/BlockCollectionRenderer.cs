@@ -42,18 +42,26 @@ internal sealed class BlockCollectionRenderer
     /// <returns>The rendered code blocks</returns>
     public async Task<string> Render(TemplateContext context, CodeBlock[] blocks, CancellationToken cancellationToken)
     {
-        var builder = new StringBuilder();
         var flags = context.Flags;
-
         var autoFormat = flags.Contains(TemplateFlag.AutoFormat);
 
-        var previousBlockType = default(Type);
-        var previousRawOutput = String.Empty;
+        var renderTasks = new List<Task<string>>();
 
         foreach (var block in blocks)
         {
-            var blockOutput = await RenderBlock(context, block, cancellationToken);
+            renderTasks.Add(RenderBlock(context, block, cancellationToken));
+        }
 
+        var blockOutputs = await Task.WhenAll(renderTasks);
+
+        var previousBlockType = default(Type);
+        var previousRawOutput = String.Empty;
+        var builder = new StringBuilder();
+        var index = 0;
+
+        foreach (var blockOutput in blockOutputs)
+        {
+            var block = blocks[index];
             var formattedOutput = blockOutput;
             var blockType = block.GetType();
 
@@ -102,6 +110,7 @@ internal sealed class BlockCollectionRenderer
 
             previousBlockType = block.GetType();
             previousRawOutput = blockOutput;
+            index++;
         }
 
         // Check if we should minify the output (this overrides auto format)

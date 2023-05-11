@@ -135,14 +135,14 @@ internal abstract class NestedBlockParser : NettleParser, IBlockParser
 
         if (endedOnPartition)
         {
-            signature += body[..^partitionSignature.Length];
+            body = body[..^partitionSignature.Length];
+            signature += body;
         }
         else
         {
             signature += body;
+            body = body[..^closeTagSyntax.Length];
         }
-
-        body = body[..^closeTagSyntax.Length];
 
         var blocks = Blockifier.Blockify(body);
         var startPosition = positionOffSet;
