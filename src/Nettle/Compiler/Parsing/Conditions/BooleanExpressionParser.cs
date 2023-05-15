@@ -90,23 +90,18 @@ internal sealed class BooleanExpressionParser : NettleParser
                     }
 
                     var @operator = ResolveOperator(token);
+                    var isJoin = @operator.IsJoin();
 
-                    if (conditions.Any() && currentJoinOperator == null)
+                    if ((isJoin && currentJoinOperator != null) || (currentCompareOperator != null))
                     {
-                        switch (@operator)
-                        {
-                            case BooleanConditionOperator.And:
-                            case BooleanConditionOperator.Or:
-                                break;
-
-                            default:
-                                throw new NettleParseException
-                                (
-                                    $"The boolean expression '{expression}' is invalid. " +
-                                    $"The operator {@operator} is not allowed here."
-                                );
-                        }
-
+                        throw new NettleParseException
+                        (
+                            $"The boolean expression '{expression}' is invalid. " +
+                            $"The operator {@operator} is not allowed here."
+                        );
+                    }
+                    else if (isJoin)
+                    {
                         currentJoinOperator = @operator;
                     }
                     else

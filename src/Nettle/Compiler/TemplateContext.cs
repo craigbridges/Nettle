@@ -206,7 +206,7 @@ public sealed class TemplateContext
             {
                 throw new NettleRenderException
                 (
-                    $"The path '{path}' contains a null reference at '{segmentName}'."
+                    $"The path '{path.FullPath}' contains a null reference at '{segmentName}'."
                 );
             }
 
@@ -262,7 +262,7 @@ public sealed class TemplateContext
             {
                 throw new NettleRenderException
                 (
-                    $"The path '{path}' does not contain a property named '{propertyName}'."
+                    $"The path '{path.FullPath}' does not contain a property named '{propertyName}'."
                 );
             }
         }

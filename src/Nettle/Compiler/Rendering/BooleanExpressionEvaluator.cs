@@ -85,8 +85,8 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
         }
         else
         {
-            var leftValue = await ResolveValue(context, condition.LeftValue, condition.LeftValue.ValueType, cancellationToken);
-            var rightValue = await ResolveValue(context, condition.RightValue, condition.RightValue.ValueType, cancellationToken);
+            var leftValue = await ResolveValue(context, condition.LeftValue.Signature, condition.LeftValue.ValueType, cancellationToken);
+            var rightValue = await ResolveValue(context, condition.RightValue.Signature, condition.RightValue.ValueType, cancellationToken);
 
             switch (condition.CompareOperator)
             {
@@ -250,7 +250,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
             }
             else if (value.GetType().IsNumeric())
             {
-                result = (double)value > 0;
+                result = (int)value > 0;
             }
             else
             {
