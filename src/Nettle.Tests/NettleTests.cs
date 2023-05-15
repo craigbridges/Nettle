@@ -92,9 +92,85 @@ namespace Nettle.Tests
             var template = _compiler.Compile(source);
             var output = await template(_model, new CancellationToken());
 
-            output.EndsWith("Has Addresses");
+            output.Trim().ShouldBe("Has Addresses");
         }
 
-        // TODO: test foreach, while, render partial, different functions, different flags, different models and bindings, assigning variables to async function calls
+        [Fact]
+        public async Task BasicForEachLoop()
+        {
+            var source = @"{{each $.Addresses}}{{$.City}}{{/each}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("LondonDreamland");
+        }
+
+        [Fact]
+        public async Task NestedForEachLoop()
+        {
+            var source = @"{{each $.Addresses}}{{each $.City}}{{$}}{{/each}}{{/each}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("LondonDreamland");
+        }
+
+        [Fact]
+        public async Task WhileLoopCounter()
+        {
+            var source = @"{{var counter = 1}}
+                           {{while counter < 10}}
+	                           {{counter++}}
+                           {{/while}}
+                           {{counter}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("10");
+        }
+
+        [Fact]
+        public async Task RenderBasicPartialTemplate()
+        {
+            _compiler.RegisterTemplate("BasicPartial", "Partial");
+
+            var source = @"[{{> BasicPartial $}}]";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("[Partial]");
+        }
+
+        [Fact]
+        public async Task RenderPartialTemplateInForEachStatement()
+        {
+            _compiler.RegisterTemplate("AddressPartial", "{{$.City}}");
+
+            var source = @"{{each $.Addresses}}{{> AddressPartial $}}{{/each}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("LondonDreamland");
+        }
+
+        [Fact]
+        public async Task AutoRegisterViewsAndRenderPartialTemplates()
+        {
+            await _compiler.AutoRegisterViews(@"..\..\..\Templates", new CancellationToken());
+
+            var source = @"{{> Template1 $}}{{> Template2 $}}{{> Template3 $}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("123");
+        }
+
+        // TODO: different functions (web call, date manipulation), different flags, different models and bindings, assigning variables to async function calls
     }
 }
