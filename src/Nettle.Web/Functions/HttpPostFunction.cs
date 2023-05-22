@@ -42,7 +42,7 @@ public class HttpPostFunction : FunctionBase
             var content = new StringContent(body);
 
             var message = await client.PostAsync(url, content, cancellationToken);
-            var response = message.Content.ReadAsStringAsync(cancellationToken);
+            var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
             return response;
         }

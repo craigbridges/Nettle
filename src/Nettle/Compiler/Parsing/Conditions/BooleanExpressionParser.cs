@@ -1,4 +1,6 @@
-﻿namespace Nettle.Compiler.Parsing.Conditions;
+﻿using System.Numerics;
+
+namespace Nettle.Compiler.Parsing.Conditions;
 
 /// <summary>
 /// Represents a boolean expression parser
@@ -102,6 +104,13 @@ internal sealed class BooleanExpressionParser : NettleParser
                     }
                     else if (isJoin)
                     {
+                        // Add the current left value as a condition if the next condition follows a join
+                        if (currentLeftValue != null)
+                        {
+                            conditions.Add(new BooleanCondition(currentLeftValue));
+                            currentLeftValue = null;
+                        }
+
                         currentJoinOperator = @operator;
                     }
                     else
@@ -117,35 +126,24 @@ internal sealed class BooleanExpressionParser : NettleParser
                     if (currentLeftValue == null)
                     {
                         currentLeftValue = new BooleanConditionValue(token, valueType, value);
+                        currentJoinOperator = null;
                     }
                     else
                     {
                         BooleanConditionValue? currentRightValue = new(token, valueType, value);
 
-                        if (currentJoinOperator.HasValue)
-                        {
-                            conditions.Add
-                            (
-                                new BooleanCondition(currentLeftValue)
-                                {
-                                    JoinOperator = currentJoinOperator,
-                                    CompareOperator = currentCompareOperator
-                                }
-                            );
-                        }
-                        else
-                        {
-                            conditions.Add
-                            (
-                                new BooleanCondition(currentLeftValue)
-                                {
-                                    CompareOperator = currentCompareOperator,
-                                    RightValue = currentRightValue
-                                }
-                            );
-                        }
+                        conditions.Add
+                        (
+                            new BooleanCondition(currentLeftValue)
+                            {
+                                JoinOperator = currentJoinOperator,
+                                CompareOperator = currentCompareOperator,
+                                RightValue = currentRightValue
+                            }
+                        );
 
                         currentLeftValue = null;
+                        currentJoinOperator = null;
                         currentCompareOperator = null;
                         currentRightValue = null;
                     }

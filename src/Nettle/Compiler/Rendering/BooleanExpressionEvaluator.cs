@@ -19,7 +19,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
     public async Task<bool> Evaluate(TemplateContext context, BooleanExpression expression, CancellationToken cancellationToken)
     {
         var expressionResult = false;
-        var previousConditionResult = false;
+        var previousConditionResult = true;
 
         foreach (var condition in expression.Conditions)
         {
@@ -85,10 +85,15 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
         }
         else
         {
-            var leftValue = await ResolveValue(context, condition.LeftValue.Signature, condition.LeftValue.ValueType, cancellationToken);
-            var rightValue = await ResolveValue(context, condition.RightValue.Signature, condition.RightValue.ValueType, cancellationToken);
+            var leftCondition = condition.LeftValue;
+            var leftValue = await ResolveValue(context, leftCondition.Signature, leftCondition.ValueType, cancellationToken);
 
-            switch (condition.CompareOperator)
+            var rightCondition = condition.RightValue;
+            var rightValue = await ResolveValue(context, rightCondition.Signature, rightCondition.ValueType, cancellationToken);
+
+            var @operator = condition.CompareOperator ?? condition.JoinOperator;
+
+            switch (@operator)
             {
                 case BooleanConditionOperator.And:
                 {
@@ -250,7 +255,7 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
             }
             else if (value.GetType().IsNumeric())
             {
-                result = (int)value > 0;
+                result = Convert.ToInt32(value) > 0;
             }
             else
             {
