@@ -86,10 +86,10 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
         else
         {
             var leftCondition = condition.LeftValue;
-            var leftValue = await ResolveValue(context, leftCondition.Signature, leftCondition.ValueType, cancellationToken);
+            var leftValue = await ResolveValue(context, leftCondition.Value, leftCondition.ValueType, cancellationToken);
 
             var rightCondition = condition.RightValue;
-            var rightValue = await ResolveValue(context, rightCondition.Signature, rightCondition.ValueType, cancellationToken);
+            var rightValue = await ResolveValue(context, rightCondition.Value, rightCondition.ValueType, cancellationToken);
 
             var @operator = condition.CompareOperator ?? condition.JoinOperator;
 
@@ -213,11 +213,17 @@ internal sealed class BooleanExpressionEvaluator : NettleRendererBase
 
         if (value != null)
         {
-            if (value is double || value.GetType().IsNumeric())
+            var type = value.GetType();
+
+            if (value is double || type.IsNumeric())
             {
                 result = Convert.ToDouble(value);
             }
-            else if (value.GetType() == typeof(string))
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                return ((DateTime)value).Ticks;
+            }
+            else if (type == typeof(string))
             {
                 _ = Double.TryParse((string)value, out double number);
 

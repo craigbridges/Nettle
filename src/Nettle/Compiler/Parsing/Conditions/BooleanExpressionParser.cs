@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace Nettle.Compiler.Parsing.Conditions;
+﻿namespace Nettle.Compiler.Parsing.Conditions;
 
 /// <summary>
 /// Represents a boolean expression parser

@@ -107,7 +107,7 @@ namespace Nettle.Tests
         }
 
         [Fact]
-        public async Task IfStatement_Complex_Condition()
+        public async Task IfStatement_Complex_Condition1()
         {
             var source = @"{{var available = true}}
                            {{var number1 = 15}}
@@ -118,6 +118,28 @@ namespace Nettle.Tests
                            {{if available & (number1 > number2) | (name1 != name2)}}
 	                           Success
                            {{/if}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("Success");
+        }
+
+        [Fact]
+        public async Task IfStatement_Complex_Condition2()
+        {
+            var source = "{{if 1 == 1 & (11 > 10 | 9 < 10) | (@Trim(\"Craig \") != \"Craig \")}}Success{{/if}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldBe("Success");
+        }
+
+        [Fact]
+        public async Task IfStatement_Complex_Condition3()
+        {
+            var source = "{{if 1 != 1 | (11 > 10 | 9 < 10 & 0 < 1) & (@Trim(\"Craig \") != \"Craig \") & (@GetDate() < @AddDays(@GetDate(), 1))}}Success{{/if}}";
 
             var template = _compiler.Compile(source);
             var output = await template(_model, new CancellationToken());
@@ -258,6 +280,95 @@ namespace Nettle.Tests
             output.ShouldBe("20");
         }
 
-        // TODO: different flags, different models and bindings, assigning variables to async function calls
+        [Fact]
+        public async Task Flags_IgnoreErrors()
+        {
+            var source = "{{#IgnoreErrors}}{{@Fake('Test')}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("");
+        }
+
+        [Fact]
+        public async Task Flags_DebugMode()
+        {
+            var source = "{{#DebugMode}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.Trim().ShouldStartWith("Debug Information");
+        }
+
+        [Fact]
+        public async Task Flags_AllowImplicitBindings()
+        {
+            var source = "{{#AllowImplicitBindings}}{{Fake}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("");
+        }
+
+        [Fact]
+        public async Task Flags_EnforceStrictReassign()
+        {
+            var source = "{{#EnforceStrictReassign}}" +
+                         "{{var name = \"Craig\"}}" +
+                         "{{reassign name = [FirstName = \"Craig\", LastName = \"Bridges\"]}}";
+
+            var template = _compiler.Compile(source);
+            
+            await Assert.ThrowsAsync<NettleRenderException>(async () => await template(_model, new CancellationToken()));
+        }
+
+        [Fact]
+        public async Task Flags_DisableModelInheritance()
+        {
+            var source = "{{#DisableModelInheritance}}" +
+                         "{{each $.Addresses}}" +
+                         "{{$.Name}}" +
+                         "{{/each}}";
+
+            var template = _compiler.Compile(source);
+            
+            await Assert.ThrowsAsync<NettleRenderException>(async () => await template(_model, new CancellationToken()));
+        }
+
+        [Fact]
+        public async Task Flags_AutoFormat()
+        {
+            var source = "{{#AutoFormat}}\t\nHello\nWorld\t\t\n";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("Hello\nWorld");
+        }
+
+        [Fact]
+        public async Task Flags_Minify()
+        {
+            var source = "{{#Minify}}\n\tThis \n\t\nIs \t\t\nMinified\n\n\t";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("This Is Minified");
+        }
+
+        [Fact]
+        public async Task Flags_UseUtc()
+        {
+            var source = "{{#UseUtc}}{{@GetDate()}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe(DateTime.UtcNow.ToString());
+        }
     }
 }
