@@ -7,12 +7,12 @@
     <Description>An extension for the Nettle templating engine that provides support for web based operations.</Description>
     <Copyright>Copyright © Craig Bridges 2022</Copyright>
     <Authors>Craig Bridges</Authors>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <Version>2.1.0</Version>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
     <PackageLicenseUrl>https://github.com/craigbridges/Nettle/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/craigbridges/Nettle</PackageProjectUrl>
     <PackageIcon>Icon.png</PackageIcon>
-    <PackageReleaseNotes>Upgraded to .NET 7.0 and updated all NuGet packages.</PackageReleaseNotes>
+	<PackageReleaseNotes>Upgraded to Nettle 3.0</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/craigbridges/Nettle</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
