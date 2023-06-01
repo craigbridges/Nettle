@@ -25,7 +25,7 @@ internal sealed class AnonymousTypeParser : NettleParser
     /// </summary>
     /// <param name="signature">The block signature</param>
     /// <returns>The parsed code block</returns>
-    public UnresolvedAnonymousType Parse(string signature)
+    public static UnresolvedAnonymousType Parse(string signature)
     {
         var signatureBody = UnwrapSignatureBody(signature);
 

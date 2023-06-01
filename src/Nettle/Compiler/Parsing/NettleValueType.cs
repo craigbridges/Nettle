@@ -23,10 +23,20 @@
         Number = 1,
 
         /// <summary>
+        /// Represents an enumeration value type
+        /// </summary>
+        /// <remarks>
+        /// The enumeration value can represent a single C# enum named value, 
+        /// which will internally be translated into its integer representation.
+        /// </remarks>
+        [Description("Enumeration")]
+        Enum = 2,
+
+        /// <summary>
         /// Represents either true or false
         /// </summary>
         [Description("Boolean")]
-        Boolean = 2,
+        Boolean = 4,
 
         /// <summary>
         /// Represents a model binding path
@@ -40,7 +50,7 @@
         /// using the [0] syntax and can be used with any enumerable types.
         /// </remarks>
         [Description("Model Binding")]
-        ModelBinding = 4,
+        ModelBinding = 8,
 
         /// <summary>
         /// Represents the name of a variable
@@ -49,13 +59,13 @@
         /// Variables are defined and managed by the template context
         /// </remarks>
         [Description("Variable")]
-        Variable = 8,
+        Variable = 16,
 
         /// <summary>
         /// Represents a call to a specific function
         /// </summary>
         [Description("Function Call")]
-        Function = 16,
+        Function = 32,
 
         /// <summary>
         /// Represents a boolean expression
@@ -69,7 +79,7 @@
         /// that evaluates to true or false, or a comparison of two values.
         /// </remarks>
         [Description("Boolean Expression")]
-        BooleanExpression = 32,
+        BooleanExpression = 64,
 
         /// <summary>
         /// Represents a key value pair of type object-object
@@ -78,7 +88,7 @@
         /// The key and value types can be any of the Nettle value types
         /// </remarks>
         [Description("Key Value Pair")]
-        KeyValuePair = 64,
+        KeyValuePair = 128,
 
         /// <summary>
         /// Represents an anonymous type object
@@ -89,6 +99,6 @@
         /// to explicitly define a type first.
         /// </remarks>
         [Description("Anonymous Type")]
-        AnonymousType = 128
+        AnonymousType = 256
     }
 }

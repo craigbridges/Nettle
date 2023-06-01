@@ -25,7 +25,7 @@
         /// </summary>
         /// <param name="signature">The block signature</param>
         /// <returns>The parsed code block</returns>
-        public UnresolvedKeyValuePair Parse(string signature)
+        public static UnresolvedKeyValuePair Parse(string signature)
         {
             var signatureBody = UnwrapSignatureBody(signature);
 
@@ -37,10 +37,7 @@
 
             if (tokens.Length != 2)
             {
-                throw new NettleParseException
-                (
-                    $"'{signature}' is not a valid key value pair signature."
-                );
+                throw new NettleParseException($"'{signature}' is not a valid key value pair signature.");
             }
 
             // Parse the key and value parts

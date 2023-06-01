@@ -79,6 +79,28 @@ namespace Nettle.Tests
         }
 
         [Fact]
+        public async Task IfStatement_Simple_Enum_Comparison()
+        {
+            var source = "{{if $.Gender == Enum.Gender.Male}}Male{{/if}}";
+
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("Male");
+        }
+
+        [Fact]
+        public async Task IfStatement_FullyQuantified_Enum_Comparison()
+        {
+            var source = "{{if $.Gender == Enum.Nettle.Tests.Gender.Male}}Male{{/if}}";
+            
+            var template = _compiler.Compile(source);
+            var output = await template(_model, new CancellationToken());
+
+            output.ShouldBe("Male");
+        }
+
+        [Fact]
         public async Task IfStatement_Single_Else()
         {
             var source = "{{if $.IsEmployed}}Employed{{else}}Not Employed{{/if}}";

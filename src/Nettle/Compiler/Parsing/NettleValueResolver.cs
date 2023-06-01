@@ -46,6 +46,10 @@
             {
                 type = NettleValueType.AnonymousType;
             }
+            else if (value.StartsWith("Enum.", StringComparison.OrdinalIgnoreCase))
+            {
+                type = NettleValueType.Enum;
+            }
             else
             {
                 // Decide if the value looks like a number or variable

@@ -56,7 +56,7 @@ internal abstract class NettleParser
     /// </summary>
     /// <param name="value">The raw value</param>
     /// <returns>The value type resolved</returns>
-    protected NettleValueType ResolveType(string value) => NettleValueResolver.ResolveType(value);
+    protected static NettleValueType ResolveType(string value) => NettleValueResolver.ResolveType(value);
 
     /// <summary>
     /// Trims the signature from the template content specified

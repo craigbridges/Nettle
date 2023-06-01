@@ -66,7 +66,7 @@ internal sealed class BooleanExpressionParser : NettleParser
             var valueType = ResolveType(token);
             var value = valueType.ParseValue(token);
 
-            conditions.Add(new BooleanCondition(new BooleanConditionValue(token, valueType, value)));
+            conditions.Add(new(new BooleanConditionValue(token, valueType, value)));
         }
         else
         {

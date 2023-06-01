@@ -41,6 +41,7 @@ internal abstract class NettleRendererBase
         {
             return type switch
             {
+                NettleValueType.Enum => ResolveEnum(),
                 NettleValueType.ModelBinding => ResolveModelBinding(),
                 NettleValueType.Function => await ResolveFunction(),
                 NettleValueType.Variable => ResolveVariable(),
@@ -48,6 +49,22 @@ internal abstract class NettleRendererBase
                 NettleValueType.AnonymousType => await ResolveAnonymousType(),
                 _ => rawValue,
             };
+        }
+
+        object ResolveEnum()
+        {
+            if (rawValue.GetType().IsEnum)
+            {
+                return rawValue;
+            }
+            else if (rawValue is string enumSignature)
+            {
+                return EnumParser.Parse(enumSignature);
+            }
+            else
+            {
+                throw new NettleRenderException($"The enum signature '{rawValue}' is invalid.");
+            }
         }
 
         object? ResolveModelBinding()
